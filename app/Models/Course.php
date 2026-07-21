@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Course extends Model {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'category_id', 'subcategory_id', 'teacher_id', 'title', 'course_code', 'slug', 'description', 'thumbnail', 'is_active'
+        'department_id', 'category_id', 'subcategory_id', 'teacher_id', 'title', 'subtitle', 'course_code', 'slug', 'description', 'thumbnail', 'is_active'
     ];
     protected $casts = [
         'is_active' => 'boolean',
     ];
+    public function department() {
+        return $this->belongsTo(Department::class);
+    }
     public function category() {
         return $this->belongsTo(Category::class);
     }
