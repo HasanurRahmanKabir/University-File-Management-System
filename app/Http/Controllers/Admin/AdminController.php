@@ -12,7 +12,24 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::where('role', 'admin')->latest()->paginate(15);
+        $query = User::where('role', 'admin');
+        
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('contact_number', 'like', "%{$search}%");
+                  
+                if (strtolower(trim($search)) === 'active') {
+                    $q->orWhere('is_active', true);
+                } elseif (strtolower(trim($search)) === 'inactive') {
+                    $q->orWhere('is_active', false);
+                }
+            });
+        }
+        
+        $users = $query->latest()->paginate(15)->appends($request->all());
         return view('admin.admins', compact('users'));
     }
 
@@ -21,15 +38,16 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'contact_number' => 'required|string|max:20',
             'password' => ['required', Password::defaults()],
+            'is_active' => 'required|boolean',
         ]);
         
         $validated['role'] = 'admin';
         $validated['password'] = Hash::make($validated['password']);
-        $validated['is_active'] = true;
 
         User::create($validated);
-        return back()->with('success', 'Admin created successfully.');
+        return back()->with('success', 'Admin registered successfully.');
     }
 
     public function update(Request $request, $id)
@@ -38,6 +56,8 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'contact_number' => 'required|string|max:20',
+            'is_active' => 'required|boolean',
         ]);
 
         if ($request->filled('password')) {

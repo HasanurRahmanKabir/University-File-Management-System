@@ -1,9 +1,8 @@
-@extends('layouts.admin')
-@section('title', 'Admins - Admin Dashboard')
-@section('page-title', 'Admin Accounts')
-@section('breadcrumb', 'Admin Accounts')
+<?php $__env->startSection('title', 'Admins - Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Admin Accounts'); ?>
+<?php $__env->startSection('breadcrumb', 'Admin Accounts'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header">
     <div class="heading-group"><h2>Authorized Administrators</h2><p>Manage admin accounts, credentials, and access privileges.</p></div>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAdminModal"><i class="fas fa-user-plus"></i> Add Admin</button>
@@ -12,15 +11,15 @@
 <div class="data-card">
     <div class="card-header">
         <div><h5 class="card-title"><i class="fas fa-shield-halved"></i> Admin Accounts</h5><p class="card-subtitle">All users with administrative access</p></div>
-        <form action="{{ route('admin.admins.index') }}" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
+        <form action="<?php echo e(route('admin.admins.index')); ?>" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.admins.index') }}'" title="Clear Search">
+                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.admins.index')); ?>'" title="Clear Search">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-weight: 500;">Search</button>
         </form>
@@ -29,86 +28,87 @@
         <table class="premium-table">
             <thead><tr><th>Admin Name</th><th>Email Address</th><th>Contact</th><th>Status</th><th class="text-center">Action</th></tr></thead>
             <tbody>
-                @forelse($users as $admin)
+                <?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $admin): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr>
                     <td>
                         <div class="user-cell">
-                            @if($admin->profile_image)
-                                <img src="{{ asset('storage/' . $admin->profile_image) }}" alt="{{ $admin->name }}" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
-                            @else
-                                @php $colors = ['rose', 'purple', 'primary', 'success', 'warning']; @endphp
-                                <div class="avatar-sm {{ $colors[strlen($admin->name) % 5] }} d-flex align-items-center justify-content-center text-white fw-bold">{{ strtoupper(substr($admin->name, 0, 2)) }}</div>
-                            @endif
+                            <?php if($admin->profile_image): ?>
+                                <img src="<?php echo e(asset('storage/' . $admin->profile_image)); ?>" alt="<?php echo e($admin->name); ?>" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
+                            <?php else: ?>
+                                <?php $colors = ['rose', 'purple', 'primary', 'success', 'warning']; ?>
+                                <div class="avatar-sm <?php echo e($colors[strlen($admin->name) % 5]); ?> d-flex align-items-center justify-content-center text-white fw-bold"><?php echo e(strtoupper(substr($admin->name, 0, 2))); ?></div>
+                            <?php endif; ?>
                             <div>
-                                <div class="user-name">{{ $admin->name }}</div>
+                                <div class="user-name"><?php echo e($admin->name); ?></div>
                                 <div class="user-sub">Administrator</div>
                             </div>
                         </div>
                     </td>
-                    <td><span style="color:var(--text-secondary);font-size:0.82rem;">{{ $admin->email }}</span></td>
+                    <td><span style="color:var(--text-secondary);font-size:0.82rem;"><?php echo e($admin->email); ?></span></td>
                     <td>
-                        @if($admin->contact_number)
-                            <span class="badge neutral"><i class="fas fa-phone"></i> {{ $admin->contact_number }}</span>
-                        @else
+                        <?php if($admin->contact_number): ?>
+                            <span class="badge neutral"><i class="fas fa-phone"></i> <?php echo e($admin->contact_number); ?></span>
+                        <?php else: ?>
                             <span class="text-muted small">Not provided</span>
-                        @endif
+                        <?php endif; ?>
                     </td>
                     <td>
-                        @if($admin->is_active)
+                        <?php if($admin->is_active): ?>
                             <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                        @else
+                        <?php else: ?>
                             <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                        @endif
+                        <?php endif; ?>
                     </td>
                     <td>
                         <div class="action-group">
                             <button class="action-btn edit edit-admin-btn" data-bs-toggle="modal" data-bs-target="#editAdminModal"
-                                data-id="{{ $admin->id }}"
-                                data-name="{{ $admin->name }}"
-                                data-email="{{ $admin->email }}"
-                                data-contact="{{ $admin->contact_number }}"
-                                data-active="{{ $admin->is_active ? 1 : 0 }}">
+                                data-id="<?php echo e($admin->id); ?>"
+                                data-name="<?php echo e($admin->name); ?>"
+                                data-email="<?php echo e($admin->email); ?>"
+                                data-contact="<?php echo e($admin->contact_number); ?>"
+                                data-active="<?php echo e($admin->is_active ? 1 : 0); ?>">
                                 <i class="fas fa-pen"></i>
                             </button>
-                            <form action="{{ route('admin.admins.destroy', $admin->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                @csrf
-                                @method('DELETE')
+                            <form action="<?php echo e(route('admin.admins.destroy', $admin->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
                                 <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                             </form>
                         </div>
                     </td>
                 </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="5" class="text-center py-5">
                         <div class="empty-state">
                             <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                            @if(request('search'))
-                                <h6 class="text-heading fw-bold">No results found for "{{ request('search') }}"</h6>
+                            <?php if(request('search')): ?>
+                                <h6 class="text-heading fw-bold">No results found for "<?php echo e(request('search')); ?>"</h6>
                                 <p class="text-muted small">We couldn't find any admin matching your search criteria.</p>
-                                <a href="{{ route('admin.admins.index') }}" class="btn btn-sm btn-primary mt-3">Clear Search</a>
-                            @else
+                                <a href="<?php echo e(route('admin.admins.index')); ?>" class="btn btn-sm btn-primary mt-3">Clear Search</a>
+                            <?php else: ?>
                                 <h6 class="text-heading fw-bold">No admins found</h6>
                                 <p class="text-muted small">Add your first admin to see them listed here.</p>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
-    @if($users->hasPages())
+    <?php if($users->hasPages()): ?>
         <div class="px-4 py-3 border-top">
-            {{ $users->links() }}
+            <?php echo e($users->links()); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('modals')
-<div class="modal fade" id="addAdminModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Admin</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="{{ route('admin.admins.store') }}" method="POST">@csrf
+<?php $__env->startPush('modals'); ?>
+<div class="modal fade" id="addAdminModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Admin</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="<?php echo e(route('admin.admins.store')); ?>" method="POST"><?php echo csrf_field(); ?>
         <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" class="form-input" placeholder="Enter admin name" required></div>
         <div class="form-group"><label class="form-label">Email Address</label><input type="email" name="email" class="form-input" placeholder="admin@system.com" required></div>
         <div class="form-group"><label class="form-label">Contact Number</label><input type="text" name="contact_number" class="form-input" placeholder="+880 1XXX-XXXXXX" required></div>
@@ -130,7 +130,7 @@
     </form></div></div></div></div>
 
     <!-- EDIT ADMIN -->
-    <div class="modal fade" id="editAdminModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Update Admin</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editAdminForm" action="" method="POST">@csrf @method('PUT')
+    <div class="modal fade" id="editAdminModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Update Admin</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editAdminForm" action="" method="POST"><?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
         <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" id="edit_name" class="form-input" required></div>
         <div class="form-group"><label class="form-label">Email</label><input type="email" name="email" id="edit_email" class="form-input" required></div>
         <div class="form-group"><label class="form-label">Contact</label><input type="text" name="contact_number" id="edit_contact" class="form-input" required></div>
@@ -150,9 +150,9 @@
         </div>
         <div class="form-actions"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Save</button></div>
     </form></div></div></div></div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Password Visibility Toggle
@@ -184,7 +184,7 @@
                 document.getElementById('edit_contact').value = this.getAttribute('data-contact');
                 document.getElementById('edit_is_active').value = this.getAttribute('data-active');
                 
-                let actionUrl = "{{ route('admin.admins.update', ':id') }}";
+                let actionUrl = "<?php echo e(route('admin.admins.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
             });
         });
@@ -224,15 +224,17 @@
             customClass: { popup: 'premium-toast' }
         });
 
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: "{{ session('success') }}" });
-        @endif
-        @if(session('error'))
-            Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
-        @endif
-        @if($errors->any())
-            Toast.fire({ icon: 'error', title: "Validation Error", text: "{{ $errors->first() }}" });
-        @endif
+        <?php if(session('success')): ?>
+            Toast.fire({ icon: 'success', title: "<?php echo e(session('success')); ?>" });
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            Toast.fire({ icon: 'error', title: "<?php echo e(session('error')); ?>" });
+        <?php endif; ?>
+        <?php if($errors->any()): ?>
+            Toast.fire({ icon: 'error', title: "Validation Error", text: "<?php echo e($errors->first()); ?>" });
+        <?php endif; ?>
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/admin/admins.blade.php ENDPATH**/ ?>
