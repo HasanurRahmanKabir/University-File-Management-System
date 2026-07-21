@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'student_id', 'semester', 'email', 'password', 'role', 'is_active', 'enrolled_courses', 'profile_image'])]
+#[Fillable(['name', 'student_id', 'semester', 'email', 'password', 'role', 'is_active', 'enrolled_courses', 'profile_image', 'department_id', 'designation'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -45,5 +45,13 @@ class User extends Authenticatable
     public function uploadedMaterials()
     {
         return $this->hasMany(CourseMaterial::class, 'uploaded_by');
+    }
+
+    /**
+     * Get the department of this user.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }
