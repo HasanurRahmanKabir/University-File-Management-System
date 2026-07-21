@@ -66,6 +66,11 @@
             <span class="nav-group-label">Academics</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
+                    <a href="{{ route('admin.semesters.index') }}" class="nav-link {{ request()->routeIs('admin.semesters.*') ? 'active' : '' }}">
+                        <i class="fas fa-calendar-alt"></i> Semesters
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
                         <i class="fas fa-book-open"></i> Courses
                     </a>

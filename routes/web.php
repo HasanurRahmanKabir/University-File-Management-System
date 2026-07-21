@@ -43,6 +43,7 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     // Core Data
     Route::resource('categories', CategoryController::class);
     Route::resource('subcategories', SubcategoryController::class);
+    Route::resource('semesters', App\Http\Controllers\Admin\SemesterController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('course-materials', CourseMaterialController::class);
 });

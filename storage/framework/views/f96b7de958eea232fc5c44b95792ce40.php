@@ -35,8 +35,8 @@
                             <?php if($admin->profile_image): ?>
                                 <img src="<?php echo e(asset('storage/' . $admin->profile_image)); ?>" alt="<?php echo e($admin->name); ?>" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
                             <?php else: ?>
-                                <?php $colors = ['rose', 'purple', 'primary', 'success', 'warning']; ?>
-                                <div class="avatar-sm <?php echo e($colors[strlen($admin->name) % 5]); ?> d-flex align-items-center justify-content-center text-white fw-bold"><?php echo e(strtoupper(substr($admin->name, 0, 2))); ?></div>
+                                <?php $colors = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'slate']; ?>
+                                <div class="avatar-sm <?php echo e($colors[strlen($admin->name) % 8]); ?> d-flex align-items-center justify-content-center text-white fw-bold"><?php echo e(strtoupper(substr($admin->name, 0, 2))); ?></div>
                             <?php endif; ?>
                             <div>
                                 <div class="user-name"><?php echo e($admin->name); ?></div>

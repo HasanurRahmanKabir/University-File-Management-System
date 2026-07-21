@@ -36,8 +36,8 @@
                             @if($admin->profile_image)
                                 <img src="{{ asset('storage/' . $admin->profile_image) }}" alt="{{ $admin->name }}" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
                             @else
-                                @php $colors = ['rose', 'purple', 'primary', 'success', 'warning']; @endphp
-                                <div class="avatar-sm {{ $colors[strlen($admin->name) % 5] }} d-flex align-items-center justify-content-center text-white fw-bold">{{ strtoupper(substr($admin->name, 0, 2)) }}</div>
+                                @php $colors = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'slate']; @endphp
+                                <div class="avatar-sm {{ $colors[strlen($admin->name) % 8] }} d-flex align-items-center justify-content-center text-white fw-bold">{{ strtoupper(substr($admin->name, 0, 2)) }}</div>
                             @endif
                             <div>
                                 <div class="user-name">{{ $admin->name }}</div>
