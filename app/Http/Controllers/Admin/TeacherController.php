@@ -36,12 +36,7 @@ class TeacherController extends Controller
         return view('admin.teachers', compact('users', 'departments', 'courses'));
     }
 
-    public function storeDepartment(Request $request)
-    {
-        $request->validate(['name' => 'required|string|max:255|unique:departments']);
-        Department::create($request->only('name'));
-        return back()->with('success', 'Department added successfully.');
-    }
+
 
     public function store(Request $request)
     {

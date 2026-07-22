@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\UserController;
 
 use App\Http\Controllers\Admin\CourseFileController;
+use App\Http\Controllers\Admin\DepartmentController;
 
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
@@ -37,7 +38,6 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     // User Management
     Route::resource('student-info', App\Http\Controllers\Admin\StudentInfoController::class);
     Route::resource('teacher-info', App\Http\Controllers\Admin\TeacherController::class);
-    Route::post('departments/store', [App\Http\Controllers\Admin\TeacherController::class, 'storeDepartment'])->name('departments.store');
     Route::resource('admins', App\Http\Controllers\Admin\AdminController::class);
     
     // Core Data
@@ -48,6 +48,7 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     Route::resource('course-files', CourseFileController::class)->parameters([
         'course-files' => 'courseMaterial'
     ]);
+    Route::resource('departments', DepartmentController::class);
 });
 
 // Teacher Routes

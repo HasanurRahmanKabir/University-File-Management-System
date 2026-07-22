@@ -1950,3 +1950,26 @@ img { max-width: 100%; }
         font-size: 0.65rem;
     }
 }
+
+/* ============================================================
+   X. FIX SEARCH CROSS
+   ============================================================ */
+.btn-clear-search {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--duration-fast) var(--ease);
+}
+.btn-clear-search:hover, .btn-clear-search:active, .btn-clear-search:focus {
+    color: var(--danger);
+    outline: none;
+}
