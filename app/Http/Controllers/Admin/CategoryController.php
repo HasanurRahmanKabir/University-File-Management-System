@@ -9,10 +9,26 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::latest()->paginate(10);
-        return view('admin.category', compact('categories'));
+        $query = Category::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = strtolower($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+                  
+                if (str_contains('active', $search)) {
+                    $q->orWhere('is_active', true);
+                } elseif (str_contains('inactive', $search)) {
+                    $q->orWhere('is_active', false);
+                }
+            });
+        }
+
+        $categories = $query->latest()->paginate(10)->appends($request->all());
+        return view('admin.categories', compact('categories'));
     }
 
     public function store(Request $request)
@@ -23,10 +39,21 @@ class CategoryController extends Controller
             'is_active' => 'boolean'
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        $slug = Str::slug($validated['name']);
+        if (Category::where('slug', $slug)->exists()) {
+            $slug = $slug . '-' . substr(uniqid(), -4);
+        }
+        $validated['slug'] = $slug;
         $validated['is_active'] = $request->has('is_active');
 
         Category::create($validated);
+        
+        \App\Models\ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created_category',
+            'description' => 'Created new category <strong>' . e($validated['name']) . '</strong>'
+        ]);
+        
         return back()->with('success', 'Category created successfully.');
     }
 
@@ -39,17 +66,45 @@ class CategoryController extends Controller
         ]);
 
         if ($request->name !== $category->name) {
-            $validated['slug'] = Str::slug($validated['name']);
+            $slug = Str::slug($validated['name']);
+            if (Category::where('slug', $slug)->where('id', '!=', $category->id)->exists()) {
+                $slug = $slug . '-' . substr(uniqid(), -4);
+            }
+            $validated['slug'] = $slug;
         }
         $validated['is_active'] = $request->has('is_active');
 
         $category->update($validated);
+        
+        \App\Models\ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'updated_category',
+            'description' => 'Updated category <strong>' . e($validated['name']) . '</strong>'
+        ]);
+        
         return back()->with('success', 'Category updated successfully.');
     }
 
     public function destroy(Category $category)
     {
+        $name = $category->name;
+
+        if ($category->subcategories()->count() > 0) {
+            return back()->with('error', 'Cannot delete category with assigned subcategories.');
+        }
+
+        if ($category->courses()->count() > 0) {
+            return back()->with('error', 'Cannot delete category with assigned courses.');
+        }
+
         $category->delete();
+        
+        \App\Models\ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted_category',
+            'description' => 'Deleted category <strong>' . e($name) . '</strong>'
+        ]);
+        
         return back()->with('success', 'Category deleted successfully.');
     }
 }

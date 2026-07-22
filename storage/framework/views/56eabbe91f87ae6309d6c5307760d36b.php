@@ -1,9 +1,8 @@
-@extends('layouts.admin')
-@section('title', 'Categories - Admin Dashboard')
-@section('page-title', 'Categories')
-@section('breadcrumb', 'Categories')
+<?php $__env->startSection('title', 'Categories - Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Categories'); ?>
+<?php $__env->startSection('breadcrumb', 'Categories'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div class="heading-group">
         <h2>Core Course Categories</h2>
@@ -22,15 +21,15 @@
             <h5 class="card-title"><i class="fas fa-tags"></i> Course Categories</h5>
             <p class="card-subtitle">Main academic subject categories</p>
         </div>
-        <form action="{{ route('admin.categories.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
+        <form action="<?php echo e(route('admin.categories.index')); ?>" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search category..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.categories.index') }}'" title="Clear Search">
+                <input type="text" name="search" id="searchInput" placeholder="Search category..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.categories.index')); ?>'" title="Clear Search">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
         </form>
@@ -47,11 +46,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($categories as $category)
+                    <?php $__empty_1 = true; $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td>
                             <div class="icon-cell">
-                                @php
+                                <?php
                                     $gradients = [
                                         'linear-gradient(135deg,#3b82f6,#60a5fa)',
                                         'linear-gradient(135deg,#8b5cf6,#a78bfa)',
@@ -62,41 +61,41 @@
                                     $icons = ['fa-code', 'fa-microchip', 'fa-database', 'fa-network-wired', 'fa-laptop-code', 'fa-book'];
                                     $gradient = $gradients[strlen($category->name) % count($gradients)];
                                     $icon = $icons[strlen($category->name) % count($icons)];
-                                @endphp
-                                <div class="icon-wrap" style="background:{{ $gradient }};">
-                                    <i class="fas {{ $icon }}" style="font-size:0.7rem;"></i>
+                                ?>
+                                <div class="icon-wrap" style="background:<?php echo e($gradient); ?>;">
+                                    <i class="fas <?php echo e($icon); ?>" style="font-size:0.7rem;"></i>
                                 </div>
-                                <div class="user-name">{{ $category->name }}</div>
+                                <div class="user-name"><?php echo e($category->name); ?></div>
                             </div>
                         </td>
                         <td>
-                            <span style="color:var(--text-secondary);font-size:0.82rem;">{{ $category->description ?? 'No topic description' }}</span>
+                            <span style="color:var(--text-secondary);font-size:0.82rem;"><?php echo e($category->description ?? 'No topic description'); ?></span>
                         </td>
                         <td>
-                            @if($category->is_active)
+                            <?php if($category->is_active): ?>
                                 <span class="badge success"><span class="status-indicator active"></span> Active</span>
-                            @else
+                            <?php else: ?>
                                 <span class="badge danger"><span class="status-indicator inactive" style="background: var(--danger)"></span> Inactive</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td>
                             <div class="action-group justify-content-center">
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-                                    data-id="{{ $category->id }}"
-                                    data-name="{{ $category->name }}"
-                                    data-description="{{ $category->description }}"
-                                    data-status="{{ $category->is_active ? '1' : '0' }}">
+                                    data-id="<?php echo e($category->id); ?>"
+                                    data-name="<?php echo e($category->name); ?>"
+                                    data-description="<?php echo e($category->description); ?>"
+                                    data-status="<?php echo e($category->is_active ? '1' : '0'); ?>">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('admin.categories.destroy', $category->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="4" class="text-center py-5">
                             <div class="empty-state">
@@ -106,20 +105,21 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
-        @if($categories->hasPages())
+        <?php if($categories->hasPages()): ?>
             <div class="px-4 py-3 border-top">
-                {{ $categories->links() }}
+                <?php echo e($categories->links()); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
 <!-- ADD CATEGORY MODAL -->
 <div class="modal fade" id="addCategoryModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -129,8 +129,8 @@
                 <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="modal-body-content">
-                <form action="{{ route('admin.categories.store') }}" method="POST">
-                    @csrf
+                <form action="<?php echo e(route('admin.categories.store')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label class="form-label">Category Name</label>
                         <input type="text" name="name" class="form-input" placeholder="e.g. Networking" required>
@@ -165,8 +165,8 @@
             </div>
             <div class="modal-body-content">
                 <form id="editCategoryForm" method="POST">
-                    @csrf
-                    @method('PUT')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('PUT'); ?>
                     <div class="form-group">
                         <label class="form-label">Category Name</label>
                         <input type="text" name="name" id="edit_name" class="form-input" required>
@@ -191,9 +191,9 @@
         </div>
     </div>
 </div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Edit Modal Population
@@ -210,7 +210,7 @@
                 const status = this.getAttribute('data-status');
                 document.getElementById('edit_status').checked = (status === '1');
                 
-                let actionUrl = "{{ route('admin.categories.update', ':id') }}";
+                let actionUrl = "<?php echo e(route('admin.categories.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
             });
         });
@@ -250,15 +250,17 @@
             customClass: { popup: 'premium-toast' }
         });
 
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: {!! json_encode(session('success')) !!} });
-        @endif
-        @if(session('error'))
-            Toast.fire({ icon: 'error', title: {!! json_encode(session('error')) !!} });
-        @endif
-        @if($errors->any())
-            Toast.fire({ icon: 'error', title: "Validation Error", text: {!! json_encode($errors->first()) !!} });
-        @endif
+        <?php if(session('success')): ?>
+            Toast.fire({ icon: 'success', title: <?php echo json_encode(session('success')); ?> });
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            Toast.fire({ icon: 'error', title: <?php echo json_encode(session('error')); ?> });
+        <?php endif; ?>
+        <?php if($errors->any()): ?>
+            Toast.fire({ icon: 'error', title: "Validation Error", text: <?php echo json_encode($errors->first()); ?> });
+        <?php endif; ?>
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/admin/categories.blade.php ENDPATH**/ ?>
