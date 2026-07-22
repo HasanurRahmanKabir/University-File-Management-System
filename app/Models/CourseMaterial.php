@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'course_id', 
@@ -18,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class CourseMaterial extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $casts = [
         'is_active' => 'boolean',

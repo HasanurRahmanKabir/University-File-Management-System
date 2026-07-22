@@ -51,8 +51,8 @@
 <div class="data-card">
     <div class="card-header">
         <div><h5 class="card-title"><i class="fas fa-book-open"></i> Available Courses</h5><p class="card-subtitle">All registered courses with department info</p></div>
-        <form action="<?php echo e(route('admin.courses.index')); ?>" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
-            <div class="search-box position-relative">
+        <form action="<?php echo e(route('admin.courses.index')); ?>" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
+            <div class="search-box position-relative flex-grow-1">
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" name="search" id="searchInput" placeholder="Search by title, subtitle, dept or status..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
                 <?php if(request('search')): ?>
@@ -78,8 +78,8 @@
                         </td>
                         <td>
                             <?php $deptColors = ['primary', 'cyan', 'rose', 'emerald', 'amber', 'purple', 'indigo']; ?>
-                            <span class="badge <?php echo e($deptColors[strlen($course->department->name ?? 'A') % count($deptColors)]); ?>">
-                                <i class="fas fa-building-columns"></i> <?php echo e($course->department->name ?? 'N/A'); ?>
+                            <span class="badge <?php echo e($deptColors[strlen($course->department?->name ?? 'A') % count($deptColors)]); ?>">
+                                <i class="fas fa-building-columns"></i> <?php echo e($course->department?->name ?? 'N/A'); ?>
 
                             </span>
                         </td>

@@ -76,7 +76,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.course-materials.index') }}" class="nav-link {{ request()->routeIs('admin.course-files.*', 'admin.course-materials.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.course-files.index') }}" class="nav-link {{ request()->routeIs('admin.course-files.*') ? 'active' : '' }}">
                         <i class="fas fa-file-alt"></i> Course Files
                     </a>
                 </li>

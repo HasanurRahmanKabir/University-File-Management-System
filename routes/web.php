@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\UserController;
 
-use App\Http\Controllers\Admin\CourseMaterialController;
+use App\Http\Controllers\Admin\CourseFileController;
 
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
@@ -45,7 +45,9 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     Route::resource('subcategories', SubcategoryController::class);
     Route::resource('semesters', App\Http\Controllers\Admin\SemesterController::class);
     Route::resource('courses', CourseController::class);
-    Route::resource('course-materials', CourseMaterialController::class);
+    Route::resource('course-files', CourseFileController::class)->parameters([
+        'course-files' => 'courseMaterial'
+    ]);
 });
 
 // Teacher Routes

@@ -1106,10 +1106,17 @@ img { max-width: 100%; }
     font-size: 0.78rem;
 }
 
-.action-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
-.action-btn.edit:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary-subtle); }
-.action-btn.delete:hover { background: var(--danger-light); color: var(--danger); border-color: var(--danger-border); }
-.action-btn.view:hover { background: var(--info-light); color: var(--info); border-color: var(--info-border); }
+.action-btn:hover, .action-btn:active, .action-btn:focus { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.action-btn.edit:hover, .action-btn.edit:active, .action-btn.edit:focus { background: var(--primary-light); color: var(--primary); border-color: var(--primary-subtle); }
+.action-btn.delete:hover, .action-btn.delete:active, .action-btn.delete:focus { background: var(--danger-light); color: var(--danger); border-color: var(--danger-border); }
+.action-btn.view:hover, .action-btn.view:active, .action-btn.view:focus { background: var(--info-light); color: var(--info); border-color: var(--info-border); }
+
+/* On mobile, permanently color action buttons for better visibility since there is no hover */
+@media (max-width: 768px) {
+    .action-btn.edit { background: var(--primary-light); color: var(--primary); border-color: var(--primary-subtle); }
+    .action-btn.delete { background: var(--danger-light); color: var(--danger); border-color: var(--danger-border); }
+    .action-btn.view { background: var(--info-light); color: var(--info); border-color: var(--info-border); }
+}
 
 /* ============================================================
    13. MODALS
@@ -1268,6 +1275,9 @@ img { max-width: 100%; }
 }
 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 576px) {
+    .form-grid { grid-template-columns: 1fr; gap: 10px; }
+}
 
 .form-divider {
     font-size: 0.82rem;
@@ -1384,6 +1394,8 @@ img { max-width: 100%; }
     font-size: 0.8rem;
     color: var(--text-secondary);
     margin-bottom: 8px;
+    word-break: break-all; /* Prevents long file names from breaking layout */
+    flex-wrap: wrap; /* Allows wrapping on tiny screens */
 }
 
 .file-info-bar i { color: var(--danger); font-size: 0.9rem; }
@@ -1846,4 +1858,95 @@ img { max-width: 100%; }
 /* Search Dropdown */
 .search-dropdown {
     width: 300px;
+}
+
+/* Make search form stack on extremely tiny screens */
+@media (max-width: 350px) {
+    #searchForm {
+        flex-direction: column;
+        width: 100%;
+    }
+    #searchForm .search-box, 
+    #searchForm button {
+        width: 100%;
+    }
+    #searchForm .search-box input {
+        width: 100%;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN (Media Queries for Stats Grid)
+   ============================================================ */
+@media (max-width: 1200px) {
+    .stats-grid, .stats-grid.grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid, .stats-grid.grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .stat-card {
+        padding: 15px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .stat-card .stat-icon-wrap {
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid, .stats-grid.grid-3 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .stat-card {
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+        padding: 12px;
+    }
+    .stat-card .stat-icon-wrap {
+        margin-bottom: 0;
+        width: 38px;
+        height: 38px;
+        font-size: 0.95rem;
+    }
+    .stat-card .stat-number {
+        font-size: 1.25rem;
+    }
+    .stat-card .stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* For extremely thin devices (e.g. < 280px) */
+@media (max-width: 280px) {
+    .stats-grid, .stats-grid.grid-3 {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .stat-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 10px;
+    }
+    .stat-card .stat-icon-wrap {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+    }
+    .stat-card .stat-number {
+        font-size: 1.1rem;
+    }
+    .stat-card .stat-label {
+        font-size: 0.65rem;
+    }
 }
