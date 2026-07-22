@@ -1,9 +1,8 @@
-@extends('layouts.admin')
-@section('title', 'Subcategories - Admin Dashboard')
-@section('page-title', 'Subcategories')
-@section('breadcrumb', 'Subcategories')
+<?php $__env->startSection('title', 'Subcategories - Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Subcategories'); ?>
+<?php $__env->startSection('breadcrumb', 'Subcategories'); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
     /* Ensure TomSelect perfectly matches the standard form-select design */
@@ -116,9 +115,9 @@
         overflow-y: auto;
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div class="heading-group">
         <h2>Subcategory Management</h2>
@@ -137,15 +136,15 @@
             <h5 class="card-title"><i class="fas fa-layer-group"></i> Minor & Allied Subcategories</h5>
             <p class="card-subtitle">Secondary subjects under main departments</p>
         </div>
-        <form action="{{ route('admin.subcategories.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
+        <form action="<?php echo e(route('admin.subcategories.index')); ?>" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search Subcategories..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.subcategories.index') }}'" title="Clear Search">
+                <input type="text" name="search" id="searchInput" placeholder="Search Subcategories..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.subcategories.index')); ?>'" title="Clear Search">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
         </form>
@@ -162,11 +161,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($subcategories as $subcat)
+                    <?php $__empty_1 = true; $__currentLoopData = $subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td>
                             <div class="icon-cell">
-                                @php
+                                <?php
                                     $gradients = [
                                         'linear-gradient(135deg,#10b981,#34d399)',
                                         'linear-gradient(135deg,#f59e0b,#fbbf24)',
@@ -177,47 +176,47 @@
                                     $icons = ['fa-chart-line', 'fa-calculator', 'fa-scale-balanced', 'fa-microscope', 'fa-globe'];
                                     $gradient = $gradients[strlen($subcat->name) % count($gradients)];
                                     $icon = $icons[strlen($subcat->name) % count($icons)];
-                                @endphp
-                                <div class="icon-wrap" style="background:{{ $gradient }};">
-                                    <i class="fas {{ $icon }}" style="font-size:0.7rem;"></i>
+                                ?>
+                                <div class="icon-wrap" style="background:<?php echo e($gradient); ?>;">
+                                    <i class="fas <?php echo e($icon); ?>" style="font-size:0.7rem;"></i>
                                 </div>
                                 <div>
-                                    <div class="user-name">{{ $subcat->name }}</div>
-                                    @if($subcat->description)
-                                        <div class="user-sub" style="font-size: 0.75rem; color: var(--text-muted);">{{ Str::limit($subcat->description, 30) }}</div>
-                                    @endif
+                                    <div class="user-name"><?php echo e($subcat->name); ?></div>
+                                    <?php if($subcat->description): ?>
+                                        <div class="user-sub" style="font-size: 0.75rem; color: var(--text-muted);"><?php echo e(Str::limit($subcat->description, 30)); ?></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="badge primary"><i class="fas fa-tags"></i> {{ $subcat->category->name ?? 'N/A' }}</span>
+                            <span class="badge primary"><i class="fas fa-tags"></i> <?php echo e($subcat->category->name ?? 'N/A'); ?></span>
                         </td>
                         <td>
-                            @if($subcat->is_active)
+                            <?php if($subcat->is_active): ?>
                                 <span class="badge success"><span class="status-indicator active"></span> Active</span>
-                            @else
+                            <?php else: ?>
                                 <span class="badge danger"><span class="status-indicator inactive" style="background: var(--danger)"></span> Inactive</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td>
                             <div class="action-group justify-content-center">
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editSubCategoryModal"
-                                    data-id="{{ $subcat->id }}"
-                                    data-category-id="{{ $subcat->category_id }}"
-                                    data-name="{{ $subcat->name }}"
-                                    data-description="{{ $subcat->description }}"
-                                    data-status="{{ $subcat->is_active ? '1' : '0' }}">
+                                    data-id="<?php echo e($subcat->id); ?>"
+                                    data-category-id="<?php echo e($subcat->category_id); ?>"
+                                    data-name="<?php echo e($subcat->name); ?>"
+                                    data-description="<?php echo e($subcat->description); ?>"
+                                    data-status="<?php echo e($subcat->is_active ? '1' : '0'); ?>">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <form action="{{ route('admin.subcategories.destroy', $subcat->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('admin.subcategories.destroy', $subcat->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="4" class="text-center py-5">
                             <div class="empty-state">
@@ -227,20 +226,21 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
-        @if($subcategories->hasPages())
+        <?php if($subcategories->hasPages()): ?>
             <div class="px-4 py-3 border-top">
-                {{ $subcategories->links() }}
+                <?php echo e($subcategories->links()); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
 <!-- ADD SUBCATEGORY MODAL -->
 <div class="modal fade" id="addSubCategoryModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -250,15 +250,15 @@
                 <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="modal-body-content">
-                <form action="{{ route('admin.subcategories.store') }}" method="POST">
-                    @csrf
+                <form action="<?php echo e(route('admin.subcategories.store')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label class="form-label">Main Category</label>
                         <select name="category_id" id="add_category_id" class="form-select" required placeholder="Select Category...">
                             <option value="">Select Category...</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -295,14 +295,14 @@
             </div>
             <div class="modal-body-content">
                 <form id="editSubCategoryForm" method="POST">
-                    @csrf
-                    @method('PUT')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('PUT'); ?>
                     <div class="form-group">
                         <label class="form-label">Main Category</label>
                         <select name="category_id" id="edit_category_id" class="form-select" required>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -329,9 +329,9 @@
         </div>
     </div>
 </div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -384,7 +384,7 @@
                 const status = this.getAttribute('data-status');
                 document.getElementById('edit_status').checked = (status === '1');
                 
-                let actionUrl = "{{ route('admin.subcategories.update', ':id') }}";
+                let actionUrl = "<?php echo e(route('admin.subcategories.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
             });
         });
@@ -424,15 +424,17 @@
             customClass: { popup: 'premium-toast' }
         });
 
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: {!! json_encode(session('success')) !!} });
-        @endif
-        @if(session('error'))
-            Toast.fire({ icon: 'error', title: {!! json_encode(session('error')) !!} });
-        @endif
-        @if($errors->any())
-            Toast.fire({ icon: 'error', title: "Validation Error", text: {!! json_encode($errors->first()) !!} });
-        @endif
+        <?php if(session('success')): ?>
+            Toast.fire({ icon: 'success', title: <?php echo json_encode(session('success')); ?> });
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            Toast.fire({ icon: 'error', title: <?php echo json_encode(session('error')); ?> });
+        <?php endif; ?>
+        <?php if($errors->any()): ?>
+            Toast.fire({ icon: 'error', title: "Validation Error", text: <?php echo json_encode($errors->first()); ?> });
+        <?php endif; ?>
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/admin/subcategories.blade.php ENDPATH**/ ?>
