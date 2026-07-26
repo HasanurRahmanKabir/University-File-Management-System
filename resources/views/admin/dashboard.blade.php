@@ -91,7 +91,7 @@
                         <div class="qa-desc">Add to registry</div>
                     </div>
                 </a>
-                <a href="{{ route('admin.course-materials.index') }}" class="quick-action-card">
+                <a href="{{ route('admin.course-files.index') }}" class="quick-action-card">
                     <div class="qa-icon" style="background: #fffbeb; color: #f59e0b;"><i class="fas fa-cloud-upload-alt"></i></div>
                     <div class="qa-text">
                         <div class="qa-title">Upload File</div>
