@@ -22,7 +22,9 @@
         min-height: 42px !important;
         box-shadow: var(--shadow-sm) !important;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
+        gap: 4px;
         transition: all var(--duration-base) var(--ease);
     }
     .ts-wrapper.focus .ts-control {
@@ -343,7 +345,7 @@
                         <div class="form-divider"><i class="fas fa-book-open"></i> Course Enrollment</div>
                         <div class="form-group mb-4">
                             <label class="form-label text-muted small mb-2">Search & Select Courses (Multiple)</label>
-                            <select class="form-control choices-multiple" name="courses[]" multiple>
+                            <select class="form-select" name="courses[]" id="add_courses" multiple placeholder="Select courses...">
                                 <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($course->id); ?>"><?php echo e($course->course_code); ?> - <?php echo e($course->title ?? 'Course'); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -428,7 +430,7 @@
                         <div class="form-divider"><i class="fas fa-book-open"></i> Course Subscriptions</div>
                         <div class="form-group mb-4">
                             <label class="form-label text-muted small mb-2">Search & Select Courses (Multiple)</label>
-                            <select class="form-control choices-multiple edit-course-select" name="courses[]" id="edit_courses" multiple>
+                            <select class="form-select" name="courses[]" id="edit_courses" multiple placeholder="Select courses...">
                                 <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($course->id); ?>"><?php echo e($course->course_code); ?> - <?php echo e($course->title ?? 'Course'); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -447,46 +449,7 @@
 
 <?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-<!-- Choices.js CSS & JS for Premium Multi-Select -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
-<style>
-    /* Custom Styling for Choices.js to match Premium Theme */
-    .choices[data-type*="select-multiple"] .choices__inner {
-        border-radius: 8px;
-        border: 1px solid var(--border-light);
-        background-color: var(--bg-body);
-        padding: 4px 8px;
-        min-height: 48px;
-    }
-    .choices[data-type*="select-multiple"] .choices__button {
-        border-left: 1px solid rgba(255,255,255,0.3);
-        margin-left: 8px;
-    }
-    .choices__inner:focus-within {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    .choices__list--multiple .choices__item {
-        background-color: var(--primary);
-        border: none;
-        border-radius: 6px;
-        font-weight: 500;
-        font-family: 'Inter', sans-serif;
-    }
-    .choices__list--dropdown {
-        border-radius: 8px;
-        border: 1px solid var(--border-light);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        background: var(--bg-card);
-        color: var(--text-regular);
-        z-index: 1060; /* Above bootstrap modal */
-    }
-    .choices__list--dropdown .choices__item--selectable.is-highlighted {
-        background-color: rgba(59, 130, 246, 0.1);
-        color: var(--primary);
-    }
     .avatar-upload-container {
         display: flex;
         justify-content: center;
@@ -584,19 +547,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Choices.js
-        const choiceElements = document.querySelectorAll('.choices-multiple');
-        const choiceInstances = {};
-        
-        choiceElements.forEach((el, index) => {
-            choiceInstances[el.id || 'choice_' + index] = new Choices(el, {
-                removeItemButton: true,
-                searchPlaceholderValue: 'Search for courses...',
-                placeholderValue: 'Select courses',
-                itemSelectText: '',
-                shouldSort: false
-            });
-        });
+        // Choices.js replaced by TomSelect
 
         // Edit Modal Population
         const editButtons = document.querySelectorAll('.edit-student-btn');
@@ -641,17 +592,13 @@
                     removeBtn.style.display = 'none';
                 }
                 
-                // Set enrolled courses using Choices.js API
+                // Set enrolled courses using TomSelect API
                 const courses = JSON.parse(this.getAttribute('data-courses') || '[]');
                 
-                // Clear existing selections
-                const editSelectId = 'edit_courses';
-                if(choiceInstances[editSelectId]) {
-                    choiceInstances[editSelectId].removeActiveItems();
-                    
-                    // Set new selections
+                if (window.editCourseSelect) {
+                    window.editCourseSelect.clear();
                     if(courses && courses.length > 0) {
-                        choiceInstances[editSelectId].setChoiceByValue(courses.map(String));
+                        window.editCourseSelect.setValue(courses.map(String));
                     }
                 }
                 
@@ -691,6 +638,27 @@
             });
             let searchInput = window.editSemesterSelect.dropdown.querySelector('input');
             if(searchInput) searchInput.setAttribute('placeholder', 'Search semester...');
+        }
+
+        // Initialize TomSelect for Courses (Multiple)
+        if(document.getElementById('add_courses')) {
+            window.addCourseSelect = new TomSelect("#add_courses", {
+                plugins: ['remove_button'],
+                create: false,
+                maxOptions: null,
+                wrapperClass: 'ts-wrapper form-select ts-course',
+                sortField: { field: "text", direction: "asc" }
+            });
+        }
+        
+        if(document.getElementById('edit_courses')) {
+            window.editCourseSelect = new TomSelect("#edit_courses", {
+                plugins: ['remove_button'],
+                create: false,
+                maxOptions: null,
+                wrapperClass: 'ts-wrapper form-select ts-course',
+                sortField: { field: "text", direction: "asc" }
+            });
         }
 
         // Delete Confirmation
