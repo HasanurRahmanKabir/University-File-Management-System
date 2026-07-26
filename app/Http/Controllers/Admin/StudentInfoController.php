@@ -46,12 +46,13 @@ class StudentInfoController extends Controller
         $users->appends(['search' => $request->search]);
         
         $courses = \App\Models\Course::orderBy('course_code')->get();
+        $semesters = \App\Models\Semester::where('is_active', true)->latest()->get();
         
         $totalStudents = StudentInfo::where('role', 'student')->count();
         $activeStudents = StudentInfo::where('role', 'student')->where('is_active', 1)->count();
         $inactiveStudents = StudentInfo::where('role', 'student')->where('is_active', 0)->count();
 
-        return view('admin.students', compact('users', 'courses', 'totalStudents', 'activeStudents', 'inactiveStudents'));
+        return view('admin.students', compact('users', 'courses', 'semesters', 'totalStudents', 'activeStudents', 'inactiveStudents'));
     }
 
     public function store(Request $request)

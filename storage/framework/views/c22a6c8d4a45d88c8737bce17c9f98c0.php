@@ -2,6 +2,112 @@
 <?php $__env->startSection('page-title', 'Student Management'); ?>
 <?php $__env->startSection('breadcrumb', 'Student Management'); ?>
 
+<?php $__env->startPush('styles'); ?>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    /* Ensure TomSelect perfectly matches the standard form-select design */
+    .ts-wrapper.form-select {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .ts-control {
+        border: 1.5px solid var(--border) !important;
+        border-radius: var(--radius-md) !important;
+        background: var(--bg-input) !important;
+        color: var(--text-body) !important;
+        font-size: 0.85rem !important;
+        padding: 9px 13px !important;
+        min-height: 42px !important;
+        box-shadow: var(--shadow-sm) !important;
+        display: flex;
+        align-items: center;
+        transition: all var(--duration-base) var(--ease);
+    }
+    .ts-wrapper.focus .ts-control {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 3px var(--primary-glow) !important;
+        background: white !important;
+        outline: none !important;
+    }
+    /* Bulletproof placeholders */
+    .ts-wrapper.ts-semester:not(.has-items) .ts-control::before {
+        content: "Select Semester";
+        display: block !important;
+        color: var(--text-secondary) !important;
+        font-weight: 500 !important;
+    }
+    .ts-control .item[data-value=""] {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        color: var(--text-secondary) !important;
+        font-weight: 500 !important;
+    }
+    .ts-wrapper:not(.has-items) .ts-control .item[data-value=""] {
+        display: none !important;
+    }
+    .ts-dropdown {
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius-md) !important;
+        background-color: white !important;
+        box-shadow: var(--shadow-md) !important;
+        z-index: 9999 !important;
+    }
+    .ts-dropdown .option[data-value=""] {
+        display: none !important;
+    }
+    .ts-dropdown .option {
+        padding: 8px 14px !important;
+        color: var(--text-body) !important;
+        font-size: 0.85rem !important;
+    }
+    .ts-dropdown .option:hover, .ts-dropdown .active {
+        background-color: var(--bg-muted) !important;
+        color: var(--primary) !important;
+    }
+    .ts-dropdown .dropdown-input-wrap {
+        padding: 8px !important;
+        border-bottom: 1px solid var(--border-light) !important;
+    }
+    .ts-dropdown .dropdown-input {
+        border: 1px solid var(--border) !important;
+        border-radius: var(--radius-sm) !important;
+        padding: 6px 12px !important;
+        background: var(--bg-muted) !important;
+        color: var(--text-body) !important;
+        font-size: 0.85rem !important;
+    }
+    .ts-control::after {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid #888;
+        border-bottom: 2px solid #888;
+        transform: rotate(45deg);
+        position: absolute;
+        right: 15px;
+        top: 40%;
+        transition: transform 0.2s ease;
+    }
+    .ts-wrapper.dropdown-active .ts-control::after {
+        transform: rotate(-135deg);
+        top: 45%;
+    }
+    .ts-wrapper.dropdown-active .ts-control .item, 
+    .ts-wrapper.has-items .ts-control .item {
+        display: block !important;
+        opacity: 1 !important;
+    }
+    .ts-dropdown .ts-dropdown-content {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+</style>
+<?php $__env->stopPush(); ?>
+
 <?php $__env->startSection('content'); ?>
     <div class="page-header">
         <div class="heading-group">
@@ -213,16 +319,11 @@
                         <div class="form-grid">
                             <div class="form-group"><label class="form-label">Email Address <span class="text-danger">*</span></label><input type="email" name="email" class="form-input" placeholder="student@example.com" required></div>
                             <div class="form-group"><label class="form-label">Semester / Term <span class="text-danger">*</span></label>
-                                <select class="form-select" name="semester" required>
+                                <select class="form-select" name="semester" id="add_semester" required placeholder="Select Semester">
                                     <option value="">Select Semester</option>
-                                    <option value="L-1, T-1">L-1, T-1</option>
-                                    <option value="L-1, T-2">L-1, T-2</option>
-                                    <option value="L-2, T-1">L-2, T-1</option>
-                                    <option value="L-2, T-2">L-2, T-2</option>
-                                    <option value="L-3, T-1">L-3, T-1</option>
-                                    <option value="L-3, T-2">L-3, T-2</option>
-                                    <option value="L-4, T-1">L-4, T-1</option>
-                                    <option value="L-4, T-2">L-4, T-2</option>
+                                    <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($sem->name); ?>"><?php echo e($sem->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                         </div>
@@ -300,15 +401,11 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Semester</label>
-                                <select name="semester" id="edit_semester" class="form-select" required>
-                                    <option value="L-1, T-1">L-1, T-1</option>
-                                    <option value="L-1, T-2">L-1, T-2</option>
-                                    <option value="L-2, T-1">L-2, T-1</option>
-                                    <option value="L-2, T-2">L-2, T-2</option>
-                                    <option value="L-3, T-1">L-3, T-1</option>
-                                    <option value="L-3, T-2">L-3, T-2</option>
-                                    <option value="L-4, T-1">L-4, T-1</option>
-                                    <option value="L-4, T-2">L-4, T-2</option>
+                                <select name="semester" id="edit_semester" class="form-select" required placeholder="Select Semester">
+                                    <option value="">Select Semester</option>
+                                    <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($sem->name); ?>"><?php echo e($sem->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                         </div>
@@ -346,7 +443,10 @@
             </div>
         </div>
     </div>
+<?php $__env->stopPush(); ?>
+
 <?php $__env->startPush('scripts'); ?>
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <!-- Choices.js CSS & JS for Premium Multi-Select -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -510,7 +610,15 @@
                 document.getElementById('edit_name').value = this.getAttribute('data-name');
                 document.getElementById('edit_email').value = this.getAttribute('data-email');
                 document.getElementById('edit_student_id').value = this.getAttribute('data-studentid');
-                document.getElementById('edit_semester').value = this.getAttribute('data-semester');
+                
+                // Update TomSelect value
+                const semester = this.getAttribute('data-semester');
+                if (window.editSemesterSelect) {
+                    window.editSemesterSelect.setValue(semester);
+                } else {
+                    document.getElementById('edit_semester').value = semester;
+                }
+                
                 document.getElementById('edit_is_active').checked = this.getAttribute('data-isactive') === '1';
                 
                 // Image Handling
@@ -555,6 +663,35 @@
                 new bootstrap.Modal(document.getElementById('editStudentModal')).show();
             });
         });
+
+        // Initialize TomSelect for Semesters
+        if(document.getElementById('add_semester')) {
+            let addSem = new TomSelect("#add_semester", {
+                create: false,
+                controlInput: null,
+                maxOptions: null,
+                allowEmptyOption: true,
+                wrapperClass: 'ts-wrapper form-select ts-semester',
+                plugins: ['dropdown_input'],
+                sortField: { field: "text", direction: "asc" }
+            });
+            let searchInput = addSem.dropdown.querySelector('input');
+            if(searchInput) searchInput.setAttribute('placeholder', 'Search semester...');
+        }
+        
+        if(document.getElementById('edit_semester')) {
+            window.editSemesterSelect = new TomSelect("#edit_semester", {
+                create: false,
+                controlInput: null,
+                maxOptions: null,
+                allowEmptyOption: true,
+                wrapperClass: 'ts-wrapper form-select ts-semester',
+                plugins: ['dropdown_input'],
+                sortField: { field: "text", direction: "asc" }
+            });
+            let searchInput = window.editSemesterSelect.dropdown.querySelector('input');
+            if(searchInput) searchInput.setAttribute('placeholder', 'Search semester...');
+        }
 
         // Delete Confirmation
         const deleteButtons = document.querySelectorAll('.delete-btn');
