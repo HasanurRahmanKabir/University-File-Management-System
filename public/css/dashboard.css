@@ -1133,7 +1133,7 @@ img { max-width: 100%; }
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
-    overflow: hidden;
+    /* overflow: hidden removed to allow dropdowns to pop out */
 }
 
 /* ---- Modal Header Variants ---- */
@@ -1143,6 +1143,8 @@ img { max-width: 100%; }
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top-left-radius: calc(var(--radius-xl) - 1px);
+    border-top-right-radius: calc(var(--radius-xl) - 1px);
 }
 
 .modal-head.gradient {

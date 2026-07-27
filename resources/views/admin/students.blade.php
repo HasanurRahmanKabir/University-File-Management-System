@@ -58,6 +58,11 @@
         box-shadow: var(--shadow-md) !important;
         z-index: 9999 !important;
     }
+    .ts-dropdown .ts-dropdown-content {
+        max-height: 250px !important;
+        overflow-y: auto !important;
+        padding-bottom: 5px;
+    }
     .ts-dropdown .option[data-value=""] {
         display: none !important;
     }
@@ -329,7 +334,11 @@
                             </div>
                         </div>
                         <div class="form-grid">
-                            <div class="form-group"><label class="form-label">Set Password <span class="text-danger">*</span></label><input type="password" name="password" class="form-input" placeholder="Create a secure password" required minlength="8"></div>
+                            <div class="form-group" style="position: relative;">
+                                <label class="form-label">Set Password <span class="text-danger">*</span></label>
+                                <input type="password" id="add_password" name="password" class="form-input" placeholder="Create a secure password" required minlength="8" style="padding-right: 40px;">
+                                <i class="fas fa-eye toggle-password" onclick="togglePassword('add_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
+                            </div>
                             <div class="form-group">
                                 <label class="form-label">Account Status</label>
                                 <div class="custom-switch-container">
@@ -411,9 +420,10 @@
                             </div>
                         </div>
                         <div class="form-grid">
-                            <div class="form-group mt-3">
+                            <div class="form-group mt-3" style="position: relative;">
                                 <label class="form-label">Update Password</label>
-                                <input type="password" name="password" class="form-input" placeholder="Leave blank to keep current">
+                                <input type="password" id="edit_password" name="password" class="form-input" placeholder="Leave blank to keep current" style="padding-right: 40px;">
+                                <i class="fas fa-eye toggle-password" onclick="togglePassword('edit_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
                             </div>
                             <div class="form-group mt-3">
                                 <label class="form-label">Account Status</label>
@@ -449,6 +459,7 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
+<style>
     .avatar-upload-container {
         display: flex;
         justify-content: center;
@@ -714,15 +725,15 @@
 
     // Professional Image Preview Helper
     // Avatar Preview Helper
-    function previewAvatar(input, previewId, placeholderId, removeBtnId) {
+    function previewAvatar(input, imgId, placeholderId, removeBtnId) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById(previewId).src = e.target.result;
-                document.getElementById(previewId).style.display = 'block';
+                document.getElementById(imgId).src = e.target.result;
+                document.getElementById(imgId).style.display = 'block';
                 document.getElementById(placeholderId).style.display = 'none';
                 document.getElementById(removeBtnId).style.display = 'flex';
-                if(previewId === 'edit_preview_img') {
+                if(imgId === 'edit_preview_img') {
                     document.getElementById('remove_image_hidden').value = "0";
                 }
             }
@@ -745,6 +756,19 @@
         document.getElementById('edit_placeholder').style.display = 'block';
         document.getElementById('edit_remove_btn').style.display = 'none';
         document.getElementById('remove_image_hidden').value = "1";
+    }
+
+    function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if(input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
     }
 </script>
 @endpush
