@@ -31,7 +31,7 @@ class TeacherController extends Controller
         
         $users = $query->latest()->paginate(15)->appends($request->all());
         $departments = Department::orderBy('name')->get();
-        $courses = Course::orderBy('course_code')->get();
+        $courses = Course::where('is_active', 1)->orderBy('course_code')->get();
         
         return view('admin.teachers', compact('users', 'departments', 'courses'));
     }
