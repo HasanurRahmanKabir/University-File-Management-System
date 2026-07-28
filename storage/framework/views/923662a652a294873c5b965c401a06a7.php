@@ -276,9 +276,10 @@
                             <label class="form-check-label ms-2" for="add_status" style="cursor: pointer; padding-top: 3px;">Active Subcategory</label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:4px;">
-                        <i class="fas fa-check-circle"></i> Register Subcategory
-                    </button>
+                    <div class="form-actions mt-3">
+                        <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Register Subcategory</button>
+                    </div>
                 </form>
             </div>
         </div>
