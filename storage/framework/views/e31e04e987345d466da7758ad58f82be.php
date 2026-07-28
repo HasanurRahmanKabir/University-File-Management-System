@@ -25,15 +25,6 @@
             </div>
         </div>
 
-        <div class="sidebar-profile">
-            <div class="profile-avatar">HR</div>
-            <div class="profile-info">
-                <div class="profile-name">Hasanur Rahman</div>
-                <div class="profile-role">Super Admin</div>
-            </div>
-            <div class="profile-status"></div>
-        </div>
-
         <nav class="sidebar-nav">
             <span class="nav-group-label">Overview</span>
             <ul class="nav flex-column">
