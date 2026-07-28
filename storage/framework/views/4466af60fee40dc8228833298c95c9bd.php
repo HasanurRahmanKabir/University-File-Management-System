@@ -137,9 +137,10 @@
                         <label class="form-label">Faculty</label>
                         <input type="text" name="faculty" class="form-input" placeholder="e.g. Faculty of Engineering">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:4px;">
-                        <i class="fas fa-check-circle"></i> Save Department
-                    </button>
+                    <div class="form-actions mt-3">
+                        <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Save Department</button>
+                    </div>
                 </form>
             </div>
         </div>
