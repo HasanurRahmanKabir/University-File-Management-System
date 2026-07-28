@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\GlobalSearchController;
 
 use App\Http\Controllers\Admin\CourseFileController;
 use App\Http\Controllers\Admin\DepartmentController;
@@ -34,6 +35,9 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     Route::post('/dashboard/store', [AdminDashboardController::class, 'storeRecord'])->name('dashboard.store');
     Route::put('/dashboard/update/{id}', [AdminDashboardController::class, 'updateRecord'])->name('dashboard.update');
     Route::delete('/dashboard/delete/{id}', [AdminDashboardController::class, 'deleteRecord'])->name('dashboard.delete');
+    
+    // Global Search
+    Route::get('/global-search', [GlobalSearchController::class, 'search'])->name('global-search');
     
     // User Management
     Route::resource('student-info', App\Http\Controllers\Admin\StudentInfoController::class);

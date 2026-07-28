@@ -124,20 +124,26 @@
             </div>
             <div class="header-right">
                 
-                <!-- Search Dropdown (Simulated Global Search) -->
-                <div class="header-search dropdown">
-                    <div class="search-input-wrapper" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" placeholder="Search..." autocomplete="off">
-                    </div>
-                    <div class="dropdown-menu dropdown-menu-end premium-dropdown search-dropdown">
-                        <div class="dropdown-header">Recent Searches</div>
-                        <a class="dropdown-item" href="#"><i class="fas fa-history text-muted me-2"></i> File Upload Guidelines</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-history text-muted me-2"></i> Student Registry 2026</a>
-                        <div class="dropdown-divider"></div>
-                        <div class="dropdown-header">Suggestions</div>
-                        <a class="dropdown-item" href="{{ route('admin.courses.index') }}"><i class="fas fa-book-open text-primary me-2"></i> Manage Courses</a>
-                        <a class="dropdown-item" href="{{ route('admin.student-info.index') }}"><i class="fas fa-user-graduate text-success me-2"></i> Manage Students</a>
+                <!-- Global Search -->
+                <div class="header-search dropdown" id="globalSearchContainer">
+                    <form onsubmit="event.preventDefault(); window.performGlobalSearch();" class="d-flex align-items-center m-0">
+                        <div class="search-input-wrapper position-relative" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="globalSearchInput" placeholder="Search..." autocomplete="off" style="padding-right: 30px; width: 100%;">
+                            <button type="button" id="globalSearchClearBtn" title="Clear" style="display:none; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background:none; border:none; color:var(--text-muted); padding: 0; z-index: 10;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button type="button" onclick="window.performGlobalSearch()" id="globalSearchSubmitBtn" class="btn btn-primary btn-sm ms-2" style="display:none; padding: 6px 14px; border-radius: 6px;">
+                            Search
+                        </button>
+                    </form>
+                    <div class="dropdown-menu dropdown-menu-end premium-dropdown search-dropdown" id="globalSearchDropdown" style="max-height: 400px; overflow-y: auto; min-width: 320px;">
+                        <div class="p-3 text-center text-muted" id="globalSearchInitialState">
+                            <i class="fas fa-search fa-2x mb-2" style="opacity: 0.2;"></i>
+                            <p class="mb-0" style="font-size: 0.85rem;">Type at least 2 characters to search...</p>
+                        </div>
+                        <div id="globalSearchResults"></div>
                     </div>
                 </div>
 
@@ -271,5 +277,117 @@
     @endif
     
     @stack('scripts')
+    <script>
+        // Global Search Logic
+        const searchInput = document.getElementById('globalSearchInput');
+        const clearBtn = document.getElementById('globalSearchClearBtn');
+        const submitBtn = document.getElementById('globalSearchSubmitBtn');
+        const resultsContainer = document.getElementById('globalSearchResults');
+        const initialState = document.getElementById('globalSearchInitialState');
+        let searchTimeout = null;
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const val = this.value.trim();
+                if (val.length > 0) {
+                    clearBtn.style.display = 'block';
+                    submitBtn.style.display = 'block';
+                    
+                    if (val.length < 2) {
+                        initialState.style.display = 'block';
+                        initialState.innerHTML = '<p class="mb-0 text-muted" style="font-size: 0.85rem;">Keep typing...</p>';
+                        resultsContainer.innerHTML = '';
+                    } else {
+                        initialState.style.display = 'block';
+                        initialState.innerHTML = '<p class="mb-0 text-muted" style="font-size: 0.85rem;">Press Search or Enter to find results.</p>';
+                        resultsContainer.innerHTML = '';
+                    }
+                } else {
+                    clearBtn.style.display = 'none';
+                    submitBtn.style.display = 'none';
+                    resetSearch();
+                }
+            });
+
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                clearBtn.style.display = 'none';
+                submitBtn.style.display = 'none';
+                resetSearch();
+                searchInput.focus();
+            });
+        }
+
+        function resetSearch() {
+            resultsContainer.innerHTML = '';
+            initialState.style.display = 'block';
+            initialState.innerHTML = '<i class="fas fa-search fa-2x mb-2" style="opacity: 0.2;"></i><p class="mb-0" style="font-size: 0.85rem;">Type at least 2 characters to search...</p>';
+        }
+
+        window.performGlobalSearch = function() {
+            const val = searchInput.value.trim();
+            if (val.length < 2) return;
+            
+            initialState.style.display = 'block';
+            initialState.innerHTML = '<div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div><p class="mb-0" style="font-size: 0.85rem;">Searching...</p>';
+            resultsContainer.innerHTML = '';
+            
+            // Ensure dropdown is open safely
+            try {
+                const dropdownMenu = document.getElementById('globalSearchDropdown');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.add('show');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+
+            fetch("{{ route('admin.global-search') }}?q=" + encodeURIComponent(val))
+                .then(response => response.json())
+                .then(data => {
+                    initialState.style.display = 'none';
+                    resultsContainer.innerHTML = '';
+
+                    if (Object.keys(data).length === 0) {
+                        resultsContainer.innerHTML = `
+                            <div class="p-4 text-center">
+                                <i class="fas fa-box-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                                <h6 class="text-heading fw-bold">No Results Found</h6>
+                                <p class="text-muted small mb-0">We couldn't find anything matching "${val}".<br>Try checking for typos or using different keywords.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    let html = '';
+                    for (const [group, items] of Object.entries(data)) {
+                        html += `<div class="dropdown-header" style="font-weight:700; color:var(--text-heading); background:var(--bg-muted); padding:6px 16px;">${group}</div>`;
+                        items.forEach(item => {
+                            html += `
+                                <a class="dropdown-item d-flex align-items-center py-2" href="${item.url}">
+                                    <div class="icon-wrap me-3 d-flex justify-content-center align-items-center" style="width:32px; height:32px; border-radius:8px; background:var(--bg-light); border:1px solid var(--border-light);">
+                                        <i class="fas ${item.icon} ${item.color}"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold" style="font-size:0.85rem; color:var(--text-body);">${item.title}</div>
+                                        <div class="text-muted" style="font-size:0.75rem;">${item.subtitle}</div>
+                                    </div>
+                                </a>
+                            `;
+                        });
+                    }
+                    resultsContainer.innerHTML = html;
+                })
+                .catch(error => {
+                    initialState.style.display = 'none';
+                    resultsContainer.innerHTML = `
+                        <div class="p-3 text-center text-danger">
+                            <i class="fas fa-exclamation-circle mb-2"></i>
+                            <p class="mb-0" style="font-size: 0.85rem;">An error occurred while searching.</p>
+                        </div>
+                    `;
+                });
+        };
+    </script>
 </body>
 </html>
