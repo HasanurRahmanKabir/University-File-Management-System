@@ -21,9 +21,7 @@ class DepartmentController extends Controller
             });
         }
 
-        $departments = $query->withCount(['users as teachers_count' => function($q) {
-            $q->where('role', 'teacher');
-        }])->latest()->paginate(15)->appends($request->all());
+        $departments = $query->withCount('teachers')->latest()->paginate(15)->appends($request->all());
         
         return view('admin.departments', compact('departments'));
     }

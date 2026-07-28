@@ -190,9 +190,9 @@
                 <thead>
                     <tr>
                         <th>Teacher</th>
-                        <th>Course</th>
+                        <th class="text-center">Course</th>
                         <th>Title</th>
-                        <th>File</th>
+                        <th class="text-center">File</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -214,12 +214,12 @@
                                 </div>
                             </div>
                         </td>
-                        <td><span class="badge dark">{{ $material->course->course_code ?? 'N/A' }}</span></td>
+                        <td class="text-center"><span class="badge dark">{{ $material->course->course_code ?? 'N/A' }}</span></td>
                         <td>
                             <div class="user-name">{{ $material->title }}</div>
                             <div class="user-sub">Uploaded {{ $material->created_at->diffForHumans() }}</div>
                         </td>
-                        <td>
+                        <td class="text-center">
                             @php
                                 $ext = strtolower($material->file_type ?? 'pdf');
                                 $icon = 'fa-file-alt';
@@ -347,9 +347,10 @@
                             <input type="file" id="upload_file_input" name="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" required style="z-index:10; cursor:pointer;">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:10px;">
-                        <i class="fas fa-check-circle"></i> Confirm Upload
-                    </button>
+                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                        <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" data-bs-dismiss="modal" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'"><i class="fas fa-times"></i> Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Confirm Upload</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -400,9 +401,9 @@
                         <input type="file" name="file" class="form-input" style="padding:8px;">
                         <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">Leave empty if you don't want to change the file.</small>
                     </div>
-                    <div class="form-actions mt-3">
-                        <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Save</button>
+                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                        <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" data-bs-dismiss="modal" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'"><i class="fas fa-times"></i> Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Update Material</button>
                     </div>
                 </form>
             </div>

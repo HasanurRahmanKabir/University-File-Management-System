@@ -16,6 +16,11 @@ class Department extends Model
         return $this->hasMany(User::class);
     }
 
+    public function teachers()
+    {
+        return $this->hasMany(User::class)->where('role', 'teacher');
+    }
+
     public function courses()
     {
         return $this->hasMany(Course::class);

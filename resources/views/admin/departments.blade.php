@@ -40,10 +40,10 @@
             <table class="premium-table w-100">
                 <thead>
                     <tr>
-                        <th>Department Name</th>
-                        <th>Short Code</th>
-                        <th>Total Faculty</th>
-                        <th class="text-center">Action</th>
+                        <th style="width: 16.6%;">Department Name</th>
+                        <th class="text-center" style="width: 33.4%;">Short Code</th>
+                        <th class="text-center" style="width: 33.4%;">Total Faculty</th>
+                        <th class="text-end" style="width: 16.6%;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,14 +67,14 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <span class="badge dark">{{ $dept->code ?? 'N/A' }}</span>
                         </td>
-                        <td>
-                            <span class="badge neutral"><i class="fas fa-users"></i> {{ $dept->teachers_count }} Teachers</span>
+                        <td class="text-center">
+                            <span class="badge neutral"><i class="fas fa-users"></i> {{ $dept->teachers_count }} Faculty</span>
                         </td>
-                        <td>
-                            <div class="action-group justify-content-center">
+                        <td class="text-end">
+                            <div class="action-group justify-content-end">
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editDeptModal"
                                     data-id="{{ $dept->id }}"
                                     data-name="{{ $dept->name }}"
