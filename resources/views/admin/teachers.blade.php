@@ -131,6 +131,7 @@
                 <label class="form-label">Account Status</label>
                 <div class="custom-switch-container" style="margin-top: 8px;">
                     <label class="custom-switch">
+                        <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" value="1" checked>
                         <span class="switch-slider"></span>
                     </label>
@@ -172,6 +173,7 @@
                 <label class="form-label">Account Status</label>
                 <div class="custom-switch-container" style="margin-top: 8px;">
                     <label class="custom-switch">
+                        <input type="hidden" name="is_active" value="0">
                         <input type="checkbox" name="is_active" id="edit_is_active" value="1">
                         <span class="switch-slider"></span>
                     </label>

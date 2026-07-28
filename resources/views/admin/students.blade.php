@@ -181,10 +181,10 @@
                 <thead>
                     <tr>
                         <th>Student Name</th>
-                        <th>Student ID</th>
-                        <th>Semester</th>
-                        <th>Enrolled Courses</th>
-                        <th>Status</th>
+                        <th class="text-center">Student ID</th>
+                        <th class="text-center">Semester</th>
+                        <th class="text-center">Enrolled Courses</th>
+                        <th class="text-center">Status</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -206,21 +206,21 @@
                                 </div>
                             </div>
                         </td>
-                        <td><span class="badge dark">{{ $student->student_id }}</span></td>
-                        <td>
+                        <td class="text-center"><span class="badge dark">{{ $student->student_id }}</span></td>
+                        <td class="text-center">
                             @if($student->semester)
                                 <span class="badge neutral">{{ $student->semester }}</span>
                             @else
                                 <span class="text-muted small">-</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="text-center">
                             @php
                                 $enrolled = json_decode($student->enrolled_courses, true) ?? [];
                                 $courseNames = $courses->whereIn('id', $enrolled)->pluck('course_code')->toArray();
                             @endphp
                             @if(count($courseNames) > 0)
-                                <div class="d-flex flex-wrap gap-1">
+                                <div class="d-flex flex-wrap justify-content-center gap-1">
                                     @foreach(array_slice($courseNames, 0, 3) as $code)
                                         <span class="badge info">{{ $code }}</span>
                                     @endforeach
@@ -234,7 +234,7 @@
                                 <span class="text-muted small">No courses</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="text-center">
                             @if($student->is_active)
                                 <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
                             @else
@@ -343,6 +343,7 @@
                                 <label class="form-label">Account Status</label>
                                 <div class="custom-switch-container">
                                     <label class="custom-switch">
+                                        <input type="hidden" name="is_active" value="0">
                                         <input type="checkbox" name="is_active" value="1" checked>
                                         <span class="switch-slider"></span>
                                     </label>
@@ -430,6 +431,7 @@
                                 <label class="form-label">Account Status</label>
                                 <div class="custom-switch-container">
                                     <label class="custom-switch">
+                                        <input type="hidden" name="is_active" value="0">
                                         <input type="checkbox" name="is_active" id="edit_is_active" value="1">
                                         <span class="switch-slider"></span>
                                     </label>
