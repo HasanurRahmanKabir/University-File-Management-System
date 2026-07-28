@@ -250,7 +250,6 @@
         <!-- Footer -->
         <div class="dashboard-footer" style="margin-top: auto;">
             <span>© 2026 University File Management System</span>
-            <span>UniAdmin Panel v2.0</span>
         </div>
     </div>
 
