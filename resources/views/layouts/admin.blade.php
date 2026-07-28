@@ -248,8 +248,8 @@
         </div>
 
         <!-- Footer -->
-        <div class="dashboard-footer" style="margin-top: auto;">
-            <span>© 2026 University File Management System</span>
+        <div class="dashboard-footer" style="margin-top: auto; justify-content: center; text-align: center; width: 100%;">
+            <span style="font-weight: 600; color: #64748b;">© 2026 University File Management System</span>
         </div>
     </div>
 
