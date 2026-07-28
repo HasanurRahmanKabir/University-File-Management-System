@@ -5,40 +5,32 @@
 <?php $__env->startPush('styles'); ?>
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
-    /* Custom premium styling for Tom Select */
-    .ts-control {
-        border: 1px solid var(--border-color) !important;
-        border-radius: var(--radius-md) !important;
-        background-color: var(--bg-surface) !important;
-        color: var(--text-primary) !important;
-        padding: 8px 14px !important;
-        min-height: 42px !important;
-        box-shadow: none !important;
-    }
-    .ts-dropdown {
-        border: 1px solid var(--border-color) !important;
-        border-radius: var(--radius-md) !important;
-        background-color: var(--bg-surface) !important;
-        box-shadow: var(--shadow-md) !important;
-        color: var(--text-primary) !important;
-        z-index: 9999 !important;
-    }
-    .ts-dropdown .option:hover, .ts-dropdown .active {
-        background-color: var(--primary-color) !important;
-        color: white !important;
-    }
-    .ts-control > input {
-        color: var(--text-primary) !important;
-    }
-    .ts-dropdown .dropdown-input-wrap {
-        padding: 8px !important;
-    }
-    .ts-dropdown .dropdown-input {
-        border: 1px solid var(--border-color) !important;
-        border-radius: var(--radius-sm) !important;
-        background-color: var(--bg-card) !important;
-        color: var(--text-primary) !important;
-    }
+    /* Premium Switch styles */
+    .custom-switch-container { display: flex; align-items: center; gap: 10px; }
+    .custom-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+    .custom-switch input { opacity: 0; width: 0; height: 0; }
+    .switch-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 24px; }
+    .switch-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    input:checked + .switch-slider { background-color: var(--primary); }
+    input:checked + .switch-slider:before { transform: translateX(24px); }
+
+    /* Ensure TomSelect perfectly matches the standard form-select design */
+    .ts-wrapper.form-select { padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; }
+    .ts-control { border: 1.5px solid var(--border) !important; border-radius: var(--radius-md) !important; background: var(--bg-input) !important; color: var(--text-body) !important; font-size: 0.85rem !important; padding: 9px 13px !important; min-height: 42px !important; box-shadow: var(--shadow-sm) !important; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; transition: all var(--duration-base) var(--ease); }
+    .ts-wrapper.focus .ts-control { border-color: var(--primary) !important; box-shadow: 0 0 0 3px var(--primary-glow) !important; background: white !important; outline: none !important; }
+    .ts-wrapper:not(.has-items) .ts-control::before { content: "Choose Department"; display: block !important; color: var(--text-secondary) !important; font-weight: 500 !important; }
+    .ts-control .item[data-value=""] { display: block !important; opacity: 1 !important; visibility: visible !important; color: var(--text-secondary) !important; font-weight: 500 !important; }
+    .ts-wrapper:not(.has-items) .ts-control .item[data-value=""] { display: none !important; }
+    .ts-dropdown { border: 1px solid var(--border) !important; border-radius: var(--radius-md) !important; background-color: white !important; box-shadow: var(--shadow-md) !important; z-index: 9999 !important; }
+    .ts-dropdown .ts-dropdown-content { max-height: 250px !important; overflow-y: auto !important; padding-bottom: 5px; }
+    .ts-dropdown .option[data-value=""] { display: none !important; }
+    .ts-dropdown .option { padding: 8px 14px !important; color: var(--text-body) !important; font-size: 0.85rem !important; }
+    .ts-dropdown .option:hover, .ts-dropdown .active { background-color: var(--bg-muted) !important; color: var(--primary) !important; }
+    .ts-dropdown .dropdown-input-wrap { padding: 8px !important; border-bottom: 1px solid var(--border-light) !important; }
+    .ts-dropdown .dropdown-input { border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; padding: 6px 12px !important; background: var(--bg-muted) !important; color: var(--text-body) !important; font-size: 0.85rem !important; }
+    .ts-control::after { content: ""; display: block; width: 10px; height: 10px; border-right: 2px solid #888; border-bottom: 2px solid #888; transform: rotate(45deg); position: absolute; right: 15px; top: 40%; transition: transform 0.2s ease; }
+    .ts-wrapper.dropdown-active .ts-control::after { transform: rotate(-135deg); top: 45%; }
+    .ts-wrapper.dropdown-active .ts-control .item, .ts-wrapper.has-items .ts-control .item { display: block !important; opacity: 1 !important; }
 </style>
 <?php $__env->stopPush(); ?>
 
@@ -67,23 +59,25 @@
     <div class="card-body">
         <div class="table-wrap">
             <table class="premium-table">
-                <thead><tr><th>Course Code</th><th>Course Title</th><th>Department</th><th>Status</th><th class="text-center">Action</th></tr></thead>
+                <thead><tr><th>Course Code</th><th>Course Title</th><th>Course Subtitle</th><th class="text-center">Department</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
                 <tbody>
                     <?php $__empty_1 = true; $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td><span class="badge dark"><i class="fas fa-hashtag"></i> <?php echo e($course->course_code); ?></span></td>
                         <td>
                             <div class="user-name"><?php echo e($course->title); ?></div>
-                            <div class="user-sub"><?php echo e($course->subtitle ?? 'N/A'); ?></div>
                         </td>
                         <td>
-                            <?php $deptColors = ['primary', 'cyan', 'rose', 'emerald', 'amber', 'purple', 'indigo']; ?>
+                            <span style="color:var(--text-secondary); font-size:0.85rem;"><?php echo e($course->subtitle ?? 'N/A'); ?></span>
+                        </td>
+                        <td class="text-center">
+                            <?php $deptColors = ['info', 'warning', 'success', 'dark', 'neutral']; ?>
                             <span class="badge <?php echo e($deptColors[strlen($course->department?->name ?? 'A') % count($deptColors)]); ?>">
                                 <i class="fas fa-building-columns"></i> <?php echo e($course->department?->name ?? 'N/A'); ?>
 
                             </span>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <?php if($course->is_active): ?>
                                 <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
                             <?php else: ?>
@@ -111,7 +105,7 @@
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
-                        <td colspan="5" class="text-center py-5">
+                        <td colspan="6" class="text-center py-5">
                             <div class="empty-state">
                                 <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                                 <?php if(request('search')): ?>
@@ -146,21 +140,28 @@
         <div class="form-group"><label class="form-label">Course Code <span class="text-danger">*</span></label><input type="text" name="course_code" class="form-input" placeholder="e.g. CSE-201" required></div>
         <div class="form-group"><label class="form-label">Course Title <span class="text-danger">*</span></label><input type="text" name="title" class="form-input" placeholder="e.g. Object Oriented Programming" required></div>
         <div class="form-group"><label class="form-label">Course Subtitle</label><input type="text" name="subtitle" class="form-input" placeholder="e.g. Theory + Lab"></div>
-        <div class="form-group"><label class="form-label">Status <span class="text-danger">*</span></label>
-            <select name="is_active" class="form-select" required>
-                <option value="1" selected>Active</option>
-                <option value="0">Inactive</option>
-            </select>
+        <div class="form-group"><label class="form-label">Status</label>
+            <div class="custom-switch-container" style="margin-top: 8px;">
+                <label class="custom-switch">
+                    <input type="hidden" name="is_active" value="0">
+                    <input type="checkbox" name="is_active" value="1" checked>
+                    <span class="switch-slider"></span>
+                </label>
+                <span class="switch-label text-muted small fw-bold">Active</span>
+            </div>
         </div>
         <div class="form-group"><label class="form-label">Department</label>
-            <select name="department_id" id="add_department" class="searchable-select" placeholder="Choose Department">
+            <select name="department_id" id="add_department" class="form-select" placeholder="Choose Department">
                 <option value="">Choose Department</option>
                 <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary btn-block" style="margin-top:4px;"><i class="fas fa-check-circle"></i> Add Course</button>
+        <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+            <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" data-bs-dismiss="modal" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'"><i class="fas fa-times"></i> Cancel</button>
+            <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Add Course</button>
+        </div>
     </form>
 </div></div></div></div>
 
@@ -172,21 +173,28 @@
         <div class="form-group"><label class="form-label">Course Code <span class="text-danger">*</span></label><input type="text" name="course_code" id="edit_code" class="form-input" required></div>
         <div class="form-group"><label class="form-label">Course Title <span class="text-danger">*</span></label><input type="text" name="title" id="edit_title" class="form-input" required></div>
         <div class="form-group"><label class="form-label">Course Subtitle</label><input type="text" name="subtitle" id="edit_subtitle" class="form-input"></div>
-        <div class="form-group"><label class="form-label">Status <span class="text-danger">*</span></label>
-            <select name="is_active" id="edit_status" class="form-select" required>
-                <option value="1">Active</option>
-                <option value="0">Inactive</option>
-            </select>
+        <div class="form-group"><label class="form-label">Status</label>
+            <div class="custom-switch-container" style="margin-top: 8px;">
+                <label class="custom-switch">
+                    <input type="hidden" name="is_active" value="0">
+                    <input type="checkbox" name="is_active" id="edit_status" value="1">
+                    <span class="switch-slider"></span>
+                </label>
+                <span class="switch-label text-muted small fw-bold">Active</span>
+            </div>
         </div>
         <div class="form-group"><label class="form-label">Department</label>
-            <select name="department_id" id="edit_department" class="searchable-select" placeholder="Choose Department">
+            <select name="department_id" id="edit_department" class="form-select" placeholder="Choose Department">
                 <option value="">Choose Department</option>
                 <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
-        <div class="form-actions"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Update</button></div>
+        <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+            <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" data-bs-dismiss="modal" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'"><i class="fas fa-times"></i> Cancel</button>
+            <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Update Course</button>
+        </div>
     </form>
 </div></div></div></div>
 <?php $__env->stopPush(); ?>
@@ -196,17 +204,23 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize TomSelect with dropdown_input plugin
-        let addDeptSelect = new TomSelect('#add_department', {
+        let tsConfig = {
             create: false,
+            controlInput: null,
+            maxOptions: null,
+            allowEmptyOption: true,
+            wrapperClass: 'ts-wrapper form-select',
             plugins: ['dropdown_input'],
             sortField: { field: "text", direction: "asc" }
-        });
+        };
+
+        let addDeptSelect = new TomSelect('#add_department', tsConfig);
+        let searchInputAdd = addDeptSelect.dropdown.querySelector('input');
+        if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search department...');
         
-        let editDeptSelect = new TomSelect('#edit_department', {
-            create: false,
-            plugins: ['dropdown_input'],
-            sortField: { field: "text", direction: "asc" }
-        });
+        let editDeptSelect = new TomSelect('#edit_department', tsConfig);
+        let searchInputEdit = editDeptSelect.dropdown.querySelector('input');
+        if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search department...');
 
         // Edit Modal Population
         const editButtons = document.querySelectorAll('.edit-course-btn');
@@ -218,7 +232,7 @@
                 document.getElementById('edit_code').value = this.getAttribute('data-code');
                 document.getElementById('edit_title').value = this.getAttribute('data-title');
                 document.getElementById('edit_subtitle').value = this.getAttribute('data-subtitle');
-                document.getElementById('edit_status').value = this.getAttribute('data-status');
+                document.getElementById('edit_status').checked = this.getAttribute('data-status') === '1';
                 
                 // Update TomSelect value
                 editDeptSelect.setValue(this.getAttribute('data-department'));

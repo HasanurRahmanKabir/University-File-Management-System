@@ -227,9 +227,9 @@
                             <span class="switch-label text-muted small fw-bold">Active</span>
                         </div>
                     </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Save Changes</button>
+                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                        <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" data-bs-dismiss="modal" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'"><i class="fas fa-times"></i> Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Save Changes</button>
                     </div>
                 </form>
             </div>
