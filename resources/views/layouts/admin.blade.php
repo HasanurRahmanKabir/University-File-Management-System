@@ -170,18 +170,6 @@
                     </div>
                 </div>
 
-                <!-- Settings Dropdown -->
-                <div class="dropdown">
-                    <button class="header-icon-btn dropdown-toggle-hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" title="Settings">
-                        <i class="fas fa-gear"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end premium-dropdown">
-                        <div class="dropdown-header">Quick Settings</div>
-                        <a class="dropdown-item" href="#"><i class="fas fa-sliders-h me-2"></i> System Preferences</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-shield-alt me-2"></i> Security Settings</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-database me-2"></i> Backup Data</a>
-                    </div>
-                </div>
 
                 <!-- Profile Dropdown -->
                 <div class="dropdown">
