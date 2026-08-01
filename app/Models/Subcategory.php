@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\LogsGlobalActivity;
 
 #[Fillable(['category_id', 'name', 'slug', 'description', 'is_active'])]
 class Subcategory extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsGlobalActivity;
 
     protected $casts = [
         'is_active' => 'boolean',

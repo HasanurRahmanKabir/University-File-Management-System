@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\LogsGlobalActivity;
 
 #[Fillable([
     'course_id', 
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class CourseMaterial extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsGlobalActivity;
 
     protected $casts = [
         'is_active' => 'boolean',

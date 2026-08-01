@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\LogsGlobalActivity;
 
 class Department extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsGlobalActivity;
 
     protected $fillable = ['code', 'name', 'faculty'];
 

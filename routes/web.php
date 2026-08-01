@@ -39,6 +39,11 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     // Global Search
     Route::get('/global-search', [GlobalSearchController::class, 'search'])->name('global-search');
     
+    // Notifications
+    Route::get('/notifications/fetch', [\App\Http\Controllers\Admin\NotificationController::class, 'fetch'])->name('notifications.fetch');
+    Route::post('/notifications/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markSingleAsRead'])->name('notifications.read.single');
+    
     // User Management
     Route::resource('student-info', App\Http\Controllers\Admin\StudentInfoController::class);
     Route::resource('teacher-info', App\Http\Controllers\Admin\TeacherController::class);

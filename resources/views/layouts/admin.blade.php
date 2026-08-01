@@ -148,44 +148,24 @@
                 </div>
 
                 <!-- Notifications Dropdown -->
-                <div class="dropdown">
-                    <button class="header-icon-btn dropdown-toggle-hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+                <div class="dropdown" id="globalNotificationContainer">
+                    <button class="header-icon-btn dropdown-toggle-hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications" id="notificationDropdownBtn">
                         <i class="fas fa-bell"></i>
-                        <span class="notif-badge"></span>
+                        <span class="notif-badge d-none" id="notificationBadgeCount"></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end premium-dropdown notif-dropdown">
                         <div class="dropdown-header d-flex justify-content-between align-items-center">
                             <span>Notifications</span>
-                            <span class="badge bg-primary rounded-pill">2 New</span>
+                            <span class="badge bg-primary rounded-pill d-none" id="notificationHeaderCount"></span>
                         </div>
-                        <div class="dropdown-body">
-                            <a class="dropdown-item notif-item unread" href="#">
-                                <div class="notif-icon bg-light-primary text-primary"><i class="fas fa-file-alt"></i></div>
-                                <div class="notif-content">
-                                    <div class="notif-title">New Course Material</div>
-                                    <div class="notif-desc">Software Engineering syllabus uploaded</div>
-                                    <div class="notif-time">2 mins ago</div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item notif-item unread" href="#">
-                                <div class="notif-icon bg-light-success text-success"><i class="fas fa-user-check"></i></div>
-                                <div class="notif-content">
-                                    <div class="notif-title">New Registration</div>
-                                    <div class="notif-desc">Jaden Austi registered as Student</div>
-                                    <div class="notif-time">1 hour ago</div>
-                                </div>
-                            </a>
-                            <a class="dropdown-item notif-item" href="#">
-                                <div class="notif-icon bg-light-warning text-warning"><i class="fas fa-exclamation-triangle"></i></div>
-                                <div class="notif-content">
-                                    <div class="notif-title">System Alert</div>
-                                    <div class="notif-desc">Server maintenance scheduled</div>
-                                    <div class="notif-time">Yesterday</div>
-                                </div>
-                            </a>
+                        <div class="dropdown-body" id="notificationBody">
+                            <div class="text-center py-4 text-muted">
+                                <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                                <p class="mb-0" style="font-size: 0.85rem;">Loading...</p>
+                            </div>
                         </div>
                         <div class="dropdown-footer text-center">
-                            <a href="#" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 500;">View All Activity</a>
+                            <a href="javascript:void(0)" onclick="markNotificationsAsRead()" class="text-primary text-decoration-none" style="font-size: 0.8rem; font-weight: 500;">Mark all as read</a>
                         </div>
                     </div>
                 </div>
@@ -387,6 +367,103 @@
                         </div>
                     `;
                 });
+        };
+
+        // --- Notification System JS ---
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchNotifications();
+            // Fetch periodically every 60 seconds
+            setInterval(fetchNotifications, 60000);
+        });
+
+        function fetchNotifications() {
+            fetch("{{ route('admin.notifications.fetch') }}")
+                .then(response => response.json())
+                .then(data => {
+                    if(data.error) return;
+                    
+                    const badgeCount = document.getElementById('notificationBadgeCount');
+                    const headerCount = document.getElementById('notificationHeaderCount');
+                    const body = document.getElementById('notificationBody');
+                    
+                    if(data.count > 0) {
+                        // Keep badge empty (just a red dot)
+                        badgeCount.textContent = '';
+                        badgeCount.classList.remove('d-none');
+                        headerCount.textContent = data.count + ' New';
+                        headerCount.classList.remove('d-none');
+                    } else {
+                        badgeCount.classList.add('d-none');
+                        headerCount.classList.add('d-none');
+                    }
+                    
+                    if(data.notifications.length === 0) {
+                        body.innerHTML = '<div class="text-center py-4 text-muted" style="font-size:0.85rem;">No notifications found</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    data.notifications.forEach(notif => {
+                        const icon = notif.data.icon || 'fa-info-circle';
+                        const color = notif.data.color || 'primary';
+                        // Format time
+                        const date = new Date(notif.created_at);
+                        const timeString = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        
+                        // Check if unread
+                        const unreadClass = notif.read_at === null ? 'unread' : '';
+                        
+                        const url = notif.data.url || 'javascript:void(0)';
+                        
+                        html += `
+                            <a class="dropdown-item notif-item ${unreadClass}" href="javascript:void(0)" onclick="markSingleAsReadAndRedirect('${notif.id}', '${url}')">
+                                <div class="notif-icon bg-light-${color} text-${color}"><i class="fas ${icon}"></i></div>
+                                <div class="notif-content">
+                                    <div class="notif-title">${notif.data.title}</div>
+                                    <div class="notif-desc">${notif.data.description}</div>
+                                    <div class="notif-time">${timeString}</div>
+                                </div>
+                            </a>
+                        `;
+                    });
+                    body.innerHTML = html;
+                })
+                .catch(err => console.error(err));
+        }
+
+        window.markSingleAsReadAndRedirect = function(id, url) {
+            fetch(`/admin/notifications/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(url && url !== 'javascript:void(0)') {
+                    window.location.href = url;
+                }
+            })
+            .catch(err => {
+                if(url && url !== 'javascript:void(0)') window.location.href = url;
+            });
+        };
+
+        window.markNotificationsAsRead = function() {
+            fetch("{{ route('admin.notifications.read') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    fetchNotifications();
+                }
+            });
         };
     </script>
 </body>

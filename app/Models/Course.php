@@ -3,9 +3,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\LogsGlobalActivity;
 
 class Course extends Model {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsGlobalActivity;
     protected $fillable = [
         'department_id', 'category_id', 'subcategory_id', 'teacher_id', 'title', 'subtitle', 'course_code', 'slug', 'description', 'thumbnail', 'is_active'
     ];
