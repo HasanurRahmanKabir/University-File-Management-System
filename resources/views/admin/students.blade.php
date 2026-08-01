@@ -697,33 +697,7 @@
             });
         });
 
-        // Toast Notifications
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            background: 'var(--bg-card)',
-            color: 'var(--text-heading)',
-            customClass: { popup: 'premium-toast' }
-        });
 
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: "{{ session('success') }}" });
-        @endif
-
-        @if(session('error'))
-            Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
-        @endif
-
-        @if($errors->any())
-            Toast.fire({
-                icon: 'error',
-                title: "Validation Error",
-                text: "{{ $errors->first() }}"
-            });
-        @endif
     });
 
     // Professional Image Preview Helper

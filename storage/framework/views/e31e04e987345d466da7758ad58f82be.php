@@ -193,8 +193,8 @@
                             <span class="text-muted small"><?php echo e($user ? $user->email : ''); ?></span>
                         </div>
                         <div class="dropdown-divider m-0"></div>
-                        <a class="dropdown-item" href="#"><i class="fas fa-user-circle me-2"></i> My Profile</a>
-                        <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Account Settings</a>
+                        <a class="dropdown-item" href="<?php echo e(route('admin.profile')); ?>"><i class="fas fa-user-circle me-2"></i> My Profile</a>
+                        <a class="dropdown-item" href="<?php echo e(route('admin.account-settings')); ?>"><i class="fas fa-cog me-2"></i> Account Settings</a>
                         <div class="dropdown-divider"></div>
                         <form method="POST" action="<?php echo e(route('logout')); ?>" class="m-0 p-0">
                             <?php echo csrf_field(); ?>

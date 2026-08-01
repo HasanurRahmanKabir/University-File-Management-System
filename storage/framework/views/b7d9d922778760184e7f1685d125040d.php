@@ -1,42 +1,36 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            background: 'var(--bg-card)',
+            color: 'var(--text-heading)',
+            customClass: { popup: 'premium-toast' }
+        });
+
         <?php if(session('success')): ?>
-            Swal.fire({
+            Toast.fire({
                 icon: 'success',
-                title: 'Success!',
-                text: "<?php echo e(session('success')); ?>",
-                showConfirmButton: false,
-                timer: 3000,
-                toast: true,
-                position: 'top-end'
+                title: "<?php echo e(session('success')); ?>"
             });
         <?php endif; ?>
 
         <?php if(session('error')): ?>
-            Swal.fire({
+            Toast.fire({
                 icon: 'error',
-                title: 'Error!',
-                text: "<?php echo e(session('error')); ?>",
-                showConfirmButton: false,
-                timer: 3000,
-                toast: true,
-                position: 'top-end'
+                title: "<?php echo e(session('error')); ?>"
             });
         <?php endif; ?>
 
         <?php if($errors->any()): ?>
-            Swal.fire({
+            Toast.fire({
                 icon: 'error',
-                title: 'Validation Error!',
-                html: `
-                    <ul class="text-start mb-0">
-                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li><?php echo e($error); ?></li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </ul>
-                `,
-                showConfirmButton: true
+                title: "Validation Error",
+                text: "<?php echo e($errors->first()); ?>"
             });
         <?php endif; ?>
 

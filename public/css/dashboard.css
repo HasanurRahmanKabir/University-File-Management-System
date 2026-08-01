@@ -1737,9 +1737,8 @@ img { max-width: 100%; }
     border-radius: 12px;
     border: 1px solid var(--border-light);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--bg-card);
+    z-index: 1050;
     margin-top: 10px !important;
     padding: 8px 0;
     min-width: 220px;
@@ -1847,7 +1846,7 @@ img { max-width: 100%; }
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(135deg, var(--primary), var(--primary-light, #8b5cf6));
     color: white;
     display: flex;
     align-items: center;
@@ -1900,6 +1899,15 @@ img { max-width: 100%; }
     .stat-card .stat-icon-wrap {
         margin-bottom: 8px;
     }
+}
+
+/* Fix Chrome Autofill Background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s !important;
+    -webkit-text-fill-color: var(--text-regular) !important;
 }
 
 @media (max-width: 480px) {
@@ -1974,4 +1982,35 @@ img { max-width: 100%; }
 .btn-clear-search:hover, .btn-clear-search:active, .btn-clear-search:focus {
     color: var(--danger);
     outline: none;
+}
+
+/* ============================================================
+   X. AVATAR STYLES
+   ============================================================ */
+.avatar {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--primary), #8b5cf6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.avatar-lg {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary), #8b5cf6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
 }

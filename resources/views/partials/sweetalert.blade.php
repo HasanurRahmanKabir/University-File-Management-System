@@ -1,42 +1,36 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+            background: 'var(--bg-card)',
+            color: 'var(--text-heading)',
+            customClass: { popup: 'premium-toast' }
+        });
+
         @if(session('success'))
-            Swal.fire({
+            Toast.fire({
                 icon: 'success',
-                title: 'Success!',
-                text: "{{ session('success') }}",
-                showConfirmButton: false,
-                timer: 3000,
-                toast: true,
-                position: 'top-end'
+                title: "{{ session('success') }}"
             });
         @endif
 
         @if(session('error'))
-            Swal.fire({
+            Toast.fire({
                 icon: 'error',
-                title: 'Error!',
-                text: "{{ session('error') }}",
-                showConfirmButton: false,
-                timer: 3000,
-                toast: true,
-                position: 'top-end'
+                title: "{{ session('error') }}"
             });
         @endif
 
         @if($errors->any())
-            Swal.fire({
+            Toast.fire({
                 icon: 'error',
-                title: 'Validation Error!',
-                html: `
-                    <ul class="text-start mb-0">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                `,
-                showConfirmButton: true
+                title: "Validation Error",
+                text: "{{ $errors->first() }}"
             });
         @endif
 

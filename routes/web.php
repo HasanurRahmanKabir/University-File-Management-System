@@ -58,8 +58,12 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
         'course-files' => 'courseMaterial'
     ]);
     Route::resource('departments', DepartmentController::class);
-});
+    // Profile & Settings
+    Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
+    Route::get('/account-settings', [\App\Http\Controllers\Admin\ProfileController::class, 'settings'])->name('account-settings');
+    Route::post('/account-settings', [\App\Http\Controllers\Admin\ProfileController::class, 'updateSettings'])->name('account-settings.update');
 
+});
 // Teacher Routes
 Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
