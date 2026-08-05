@@ -13,6 +13,7 @@
 <body>
 
 <button class="sb-toggler" id="toggleBtn" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
+
 <div class="sb-overlay" id="overlay"></div>
 
 <!-- SIDEBAR -->
@@ -56,6 +57,7 @@
 </script>
 @include('partials.sweetalert')
 @stack('scripts')
+@stack('modals')
 
 </body>
 </html>

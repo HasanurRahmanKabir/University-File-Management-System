@@ -7,20 +7,6 @@
                 <span class="sb-brand-tag">OBE Portal</span>
             </div>
         </div>
-        <div class="sb-profile">
-            <div class="sb-avatar"><?php echo e(strtoupper(substr(Auth::user()->name ?? 'T', 0, 2))); ?></div>
-            <div style="min-width:0;flex:1;">
-                <div class="sb-pname"><?php echo e(Auth::user()->name ?? 'Teacher Name'); ?></div>
-                <div class="sb-prole">
-                    <?php echo e(Auth::user()->designation ?? 'Teacher'); ?> 
-                    <?php if(Auth::user()->department): ?>
-                        · <?php echo e(Auth::user()->department->name); ?>
-
-                    <?php endif; ?>
-                </div>
-            </div>
-            <div class="sb-dot"></div>
-        </div>
         <nav class="sb-nav">
             <span class="sb-lbl">Overview</span>
             <ul>

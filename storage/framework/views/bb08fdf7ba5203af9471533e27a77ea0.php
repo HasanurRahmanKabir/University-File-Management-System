@@ -13,6 +13,7 @@
 <body>
 
 <button class="sb-toggler" id="toggleBtn" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
+
 <div class="sb-overlay" id="overlay"></div>
 
 <!-- SIDEBAR -->
@@ -56,6 +57,7 @@
 </script>
 <?php echo $__env->make('partials.sweetalert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php echo $__env->yieldPushContent('scripts'); ?>
+<?php echo $__env->yieldPushContent('modals'); ?>
 
 </body>
 </html>
