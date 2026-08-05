@@ -15,7 +15,7 @@ class CourseMaterialController extends Controller
     {
         $courses = Course::where('teacher_id', Auth::id())->where('is_active', true)->get();
         $materials = CourseMaterial::with('course')->whereIn('course_id', $courses->pluck('id'))->latest()->paginate(15);
-        return view('teacher.upload-materials', compact('materials', 'courses'));
+        return view('teacher.uploadmaterials', compact('materials', 'courses'));
     }
 
     public function store(Request $request)

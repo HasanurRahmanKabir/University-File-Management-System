@@ -12,7 +12,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::with(['category', 'subcategory'])->where('teacher_id', Auth::id())->latest()->paginate(10);
-        return view('teacher.my-course', compact('courses'));
+        return view('teacher.mycourseinfo', compact('courses'));
     }
 
     public function show(Course $course)
