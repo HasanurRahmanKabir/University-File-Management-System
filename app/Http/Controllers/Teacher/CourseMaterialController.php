@@ -23,8 +23,8 @@ class CourseMaterialController extends Controller
         $validated = $request->validate([
             'course_id' => 'required|exists:courses,id',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file' => 'required|file|max:10240',
+            'is_active' => 'required|boolean',
+            'file' => 'required|file|max:20480',
         ]);
 
         $course = Course::findOrFail($validated['course_id']);
@@ -34,7 +34,10 @@ class CourseMaterialController extends Controller
             $path = $request->file('file')->store('course_materials', 'public');
             $validated['file_path'] = $path;
             $validated['file_type'] = $request->file('file')->getClientOriginalExtension();
+            $validated['file_size'] = $request->file('file')->getSize();
         }
+
+        $validated['uploaded_by'] = Auth::id();
 
         CourseMaterial::create($validated);
         return back()->with('success', 'Material uploaded successfully.');
@@ -49,5 +52,36 @@ class CourseMaterialController extends Controller
         }
         $course_material->delete();
         return back()->with('success', 'Material deleted successfully.');
+    }
+
+    public function update(Request $request, CourseMaterial $course_material)
+    {
+        if ($course_material->course->teacher_id !== Auth::id()) abort(403);
+        
+        $validated = $request->validate([
+            'course_id' => 'required|exists:courses,id',
+            'title' => 'required|string|max:255',
+            'is_active' => 'required|boolean',
+            'file' => 'nullable|file|max:20480',
+        ]);
+
+        $course = Course::findOrFail($validated['course_id']);
+        if ($course->teacher_id !== Auth::id()) abort(403);
+
+        if ($request->hasFile('file')) {
+            // Delete old file
+            if ($course_material->file_path && Storage::disk('public')->exists($course_material->file_path)) {
+                Storage::disk('public')->delete($course_material->file_path);
+            }
+            
+            // Store new file
+            $path = $request->file('file')->store('course_materials', 'public');
+            $validated['file_path'] = $path;
+            $validated['file_type'] = $request->file('file')->getClientOriginalExtension();
+            $validated['file_size'] = $request->file('file')->getSize();
+        }
+
+        $course_material->update($validated);
+        return back()->with('success', 'Material updated successfully.');
     }
 }

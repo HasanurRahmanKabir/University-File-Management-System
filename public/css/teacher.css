@@ -645,6 +645,7 @@ button{font-family:inherit;cursor:pointer;}
     .hero-greeting{font-size:1rem;}
     .stat-val{font-size:1.4rem;}
     .page-content{padding:8px 6px 0;}
+    .upload-z-txt { font-size: 0.70rem; }
 }
 
 /* Chrome autofill */
