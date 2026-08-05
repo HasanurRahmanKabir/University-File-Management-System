@@ -298,22 +298,22 @@
         <p>Enter your credentials below to continue</p>
     </div>
 
-    @if ($errors->any())
+    <?php if($errors->any()): ?>
     <div class="alert">
         <i class="fas fa-circle-exclamation"></i>
-        <div>@foreach ($errors->all() as $error){{ $error }}@endforeach</div>
+        <div><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php echo e($error); ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></div>
     </div>
-    @endif
+    <?php endif; ?>
 
-    <form action="{{ route('login.post') }}" method="POST" id="loginForm">
-        @csrf
+    <form action="<?php echo e(route('login.post')); ?>" method="POST" id="loginForm">
+        <?php echo csrf_field(); ?>
         <div class="field">
             <label for="email">Email address</label>
             <div class="input-wrap">
                 <input type="email" id="email" name="email"
-                    value="{{ old('email') }}"
+                    value="<?php echo e(old('email')); ?>"
                     placeholder="you@university.edu"
-                    class="{{ $errors->any() ? 'err' : '' }}"
+                    class="<?php echo e($errors->any() ? 'err' : ''); ?>"
                     required autofocus autocomplete="email">
             </div>
         </div>
@@ -322,7 +322,7 @@
             <div class="input-wrap">
                 <input type="password" id="password" name="password"
                     placeholder="••••••••"
-                    class="{{ $errors->any() ? 'err' : '' }}"
+                    class="<?php echo e($errors->any() ? 'err' : ''); ?>"
                     required autocomplete="current-password">
                 <button type="button" class="eye-btn" onclick="togglePwd()" title="Show/hide password">
                     <i class="fas fa-eye" id="eyeIcon"></i>
@@ -332,11 +332,11 @@
         <button type="submit" class="btn" id="submitBtn">Sign in</button>
     </form>
 
-    <div class="footer">© {{ date('Y') }} University OBE System. All rights reserved.</div>
+    <div class="footer">© <?php echo e(date('Y')); ?> University OBE System. All rights reserved.</div>
 
 </div>
 
-@include('partials.sweetalert')
+<?php echo $__env->make('partials.sweetalert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <script>
     function togglePwd() {
@@ -353,3 +353,4 @@
 </script>
 </body>
 </html>
+<?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/auth/login.blade.php ENDPATH**/ ?>
