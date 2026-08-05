@@ -66,6 +66,7 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
 });
 use App\Http\Controllers\Teacher\CategoryController as TeacherCategoryController;
 use App\Http\Controllers\Teacher\SubcategoryController as TeacherSubcategoryController;
+use App\Http\Controllers\Teacher\ProfileController as TeacherProfileController;
 
 // Teacher Routes
 Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teacher.')->group(function () {
@@ -74,6 +75,10 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::resource('course-materials', TeacherCourseMaterialController::class);
     Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
     Route::get('subcategories', [TeacherSubcategoryController::class, 'index'])->name('subcategories.index');
+    
+    Route::get('profile', [TeacherProfileController::class, 'index'])->name('profile');
+    Route::get('settings', [TeacherProfileController::class, 'settings'])->name('settings');
+    Route::post('settings', [TeacherProfileController::class, 'updateSettings'])->name('settings.update');
 });
 
 // Student Routes
