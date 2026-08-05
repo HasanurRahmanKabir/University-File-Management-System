@@ -25,11 +25,11 @@
     <div class="login-card">
         <h4 class="login-title">System Login</h4>
 
-        <form action="{{ route('login.post') }}" method="POST">
-            @csrf
+        <form action="<?php echo e(route('login.post')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
                 <label class="form-label fw-semibold small text-muted">Email Address</label>
-                <input type="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus>
+                <input type="email" name="email" class="form-control" value="<?php echo e(old('email')); ?>" required autofocus>
             </div>
             <div class="mb-4">
                 <label class="form-label fw-semibold small text-muted">Password</label>
@@ -39,6 +39,7 @@
         </form>
     </div>
 
-    @include('partials.sweetalert')
+    <?php echo $__env->make('partials.sweetalert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </body>
 </html>
+<?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/auth/login.blade.php ENDPATH**/ ?>

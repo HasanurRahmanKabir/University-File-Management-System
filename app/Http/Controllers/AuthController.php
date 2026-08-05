@@ -22,13 +22,20 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password'], 'is_active' => true])) {
+        if (Auth::validate(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+            $user = \App\Models\User::where('email', $credentials['email'])->first();
+            
+            if (!$user->is_active) {
+                return back()->with('error', 'Your account is inactive. Please contact the administrator.')->onlyInput('email');
+            }
+
+            Auth::login($user);
             $request->session()->regenerate();
-            return $this->redirectBasedOnRole(Auth::user()->role);
+            return $this->redirectBasedOnRole($user->role);
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records or account is inactive.',
+            'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
 
