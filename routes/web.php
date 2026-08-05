@@ -65,6 +65,7 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
 
 });
 use App\Http\Controllers\Teacher\CategoryController as TeacherCategoryController;
+use App\Http\Controllers\Teacher\SubcategoryController as TeacherSubcategoryController;
 
 // Teacher Routes
 Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teacher.')->group(function () {
@@ -72,6 +73,7 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::resource('courses', TeacherCourseController::class)->only(['index', 'show']);
     Route::resource('course-materials', TeacherCourseMaterialController::class);
     Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
+    Route::get('subcategories', [TeacherSubcategoryController::class, 'index'])->name('subcategories.index');
 });
 
 // Student Routes
