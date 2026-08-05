@@ -634,7 +634,10 @@ button{font-family:inherit;cursor:pointer;}
     .stat-val{font-size:1.6rem;}
     .d-card-body{padding:14px;}
     .modal-header,.modal-body,.modal-footer{padding-left:14px;padding-right:14px;}
-    .topbar{height:52px;}
+    .topbar{height:auto;min-height:52px;padding-top:8px;padding-bottom:8px;flex-wrap:nowrap;gap:8px;align-items:center;}
+    .topbar > div:first-child{flex:1;min-width:0;}
+    .tb-right{flex-shrink:0;}
+    .tb-breadcrumb{flex-wrap:wrap;gap:2px 5px;}
     .sb-toggler{top: 7px; left: 8px;}
 }
 
