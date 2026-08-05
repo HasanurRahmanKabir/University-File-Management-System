@@ -16,7 +16,7 @@
             <ul>
                 <li><a href="{{ route('teacher.courses.index') }}" class="sb-link {{ request()->routeIs('teacher.courses.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-book-open"></i></div>My Course Info</a></li>
                 <li><a href="{{ route('teacher.course-materials.index') }}" class="sb-link {{ request()->routeIs('teacher.course-materials.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-cloud-arrow-up"></i></div>Upload Materials</a></li>
-                <li><a href="#" class="sb-link"><div class="sb-ico"><i class="fas fa-tags"></i></div>Category List</a></li>
+                <li><a href="{{ route('teacher.categories.index') }}" class="sb-link {{ request()->routeIs('teacher.categories.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-tags"></i></div>Category List</a></li>
                 <li><a href="#" class="sb-link"><div class="sb-ico"><i class="fas fa-layer-group"></i></div>Subcategory List</a></li>
             </ul>
         </nav>

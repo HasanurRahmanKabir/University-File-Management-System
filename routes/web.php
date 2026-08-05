@@ -64,11 +64,14 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     Route::post('/account-settings', [\App\Http\Controllers\Admin\ProfileController::class, 'updateSettings'])->name('account-settings.update');
 
 });
+use App\Http\Controllers\Teacher\CategoryController as TeacherCategoryController;
+
 // Teacher Routes
 Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
     Route::resource('courses', TeacherCourseController::class)->only(['index', 'show']);
     Route::resource('course-materials', TeacherCourseMaterialController::class);
+    Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
 });
 
 // Student Routes
