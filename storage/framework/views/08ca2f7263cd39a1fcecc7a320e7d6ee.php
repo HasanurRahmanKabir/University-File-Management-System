@@ -26,18 +26,13 @@
                 </thead>
                 <tbody>
                     <?php $__empty_1 = true; $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <?php
-                        $month = optional($course->created_at)->format('n');
-                        $courseSemester = ($month >= 1 && $month <= 6) ? 'Spring' : 'Fall';
-                        $courseYear = optional($course->created_at)->format('Y') ?? 'N/A';
-                    ?>
                     <tr>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="t-code"><?php echo e($course->course_code); ?></span></td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="t-name"><?php echo e($course->title ?? $course->course_name ?? 'Course'); ?></span></td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);"><?php echo e(optional($course->teacher)->name ?? 'TBA'); ?></td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-gray"><?php echo e($course->course_credit ?? '3.0 cr'); ?></span></td>
-                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);"><?php echo e($courseYear); ?></td>
-                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-blue"><?php echo e($courseSemester); ?></span></td>
+                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);"><?php echo e(optional($course->created_at)->format('Y') ?? 'N/A'); ?></td>
+                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-blue"><?php echo e(Auth::user()->semester ?? 'Current Semester'); ?></span></td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>

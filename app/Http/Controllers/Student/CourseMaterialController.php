@@ -10,21 +10,42 @@ class CourseMaterialController extends Controller
 {
     public function index(Request $request)
     {
-        $query = CourseMaterial::with(['course.teacher']);
+        $user = \Illuminate\Support\Facades\Auth::user();
         
-        if ($request->has('course_id')) {
-            $query->where('course_id', $request->course_id);
+        $enrolledIds = $user->enrolled_courses ? json_decode($user->enrolled_courses, true) : [];
+        if (!is_array($enrolledIds)) {
+            $enrolledIds = [];
         }
+
+        $courses = \App\Models\Course::with(['materials' => function($q) {
+            $q->where('is_active', true)->latest();
+        }])
+        ->whereIn('id', $enrolledIds)
+        ->where('is_active', true)
+        ->latest()
+        ->paginate(10);
         
-        $materials = $query->latest()->paginate(15);
-        return view('student.course-file', compact('materials'));
+        return view('student.course-materials.index', compact('courses'));
     }
     
     public function download(CourseMaterial $material)
     {
-        if (!$material->file_path) {
-            abort(404);
+        $user = \Illuminate\Support\Facades\Auth::user();
+        
+        $enrolledIds = $user->enrolled_courses ? json_decode($user->enrolled_courses, true) : [];
+        if (!is_array($enrolledIds)) {
+            $enrolledIds = [];
         }
+
+        // Security Check: Prevent IDOR (Insecure Direct Object Reference)
+        if (!in_array($material->course_id, $enrolledIds)) {
+            abort(403, 'Unauthorized access. You are not enrolled in this course.');
+        }
+
+        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('public')->exists($material->file_path)) {
+            abort(404, 'File not found on the server.');
+        }
+        
         return response()->download(storage_path('app/public/' . $material->file_path));
     }
 }

@@ -28,18 +28,13 @@
                 </thead>
                 <tbody>
                     @forelse($courses as $course)
-                    @php
-                        $month = optional($course->created_at)->format('n');
-                        $courseSemester = ($month >= 1 && $month <= 6) ? 'Spring' : 'Fall';
-                        $courseYear = optional($course->created_at)->format('Y') ?? 'N/A';
-                    @endphp
                     <tr>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="t-code">{{ $course->course_code }}</span></td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="t-name">{{ $course->title ?? $course->course_name ?? 'Course' }}</span></td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);">{{ optional($course->teacher)->name ?? 'TBA' }}</td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-gray">{{ $course->course_credit ?? '3.0 cr' }}</span></td>
-                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);">{{ $courseYear }}</td>
-                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-blue">{{ $courseSemester }}</span></td>
+                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);">{{ optional($course->created_at)->format('Y') ?? 'N/A' }}</td>
+                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-blue">{{ Auth::user()->semester ?? 'Current Semester' }}</span></td>
                     </tr>
                     @empty
                     <tr>
