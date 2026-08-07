@@ -7,8 +7,8 @@
             showConfirmButton: false,
             timer: 4000,
             timerProgressBar: true,
-            background: 'var(--bg-card)',
-            color: 'var(--text-heading)',
+            background: 'var(--bg-card, #ffffff)',
+            color: 'var(--text-heading, #1f2937)',
             customClass: { popup: 'premium-toast' }
         });
 
@@ -26,7 +26,7 @@
             });
         @endif
 
-        @if($errors->any())
+        @if($errors->any() && !isset($hideValidationToast))
             Toast.fire({
                 icon: 'error',
                 title: "Validation Error",

@@ -17,6 +17,12 @@ class IsTeacher
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check() && Auth::user()->role === 'teacher') {
+            if (!Auth::user()->is_active) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login')->with('error', 'Your account is inactive. Please contact the administrator.');
+            }
             return $next($request);
         }
 

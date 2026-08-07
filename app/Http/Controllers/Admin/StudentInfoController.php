@@ -75,7 +75,7 @@ class StudentInfoController extends Controller
 
         $validated['role'] = 'student';
         $validated['password'] = Hash::make($validated['password']);
-        $validated['is_active'] = $request->has('is_active') ? 1 : 0;
+        $validated['is_active'] = $request->boolean('is_active') ? 1 : 0;
 
         if (isset($validated['courses'])) {
             $validated['enrolled_courses'] = json_encode($validated['courses']);
@@ -127,7 +127,7 @@ class StudentInfoController extends Controller
             $validated['profile_image'] = $path;
         }
 
-        $validated['is_active'] = $request->has('is_active') ? 1 : 0;
+        $validated['is_active'] = $request->boolean('is_active') ? 1 : 0;
 
         $user->update($validated);
         return back()->with('success', 'Student Updated Successfully.');

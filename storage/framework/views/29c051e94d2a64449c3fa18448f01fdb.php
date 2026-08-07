@@ -308,13 +308,13 @@
     <form action="<?php echo e(route('login.post')); ?>" method="POST" id="loginForm">
         <?php echo csrf_field(); ?>
         <div class="field">
-            <label for="email">Email address</label>
+            <label for="email">Email or Student ID</label>
             <div class="input-wrap">
-                <input type="email" id="email" name="email"
+                <input type="text" id="email" name="email"
                     value="<?php echo e(old('email')); ?>"
-                    placeholder="you@university.edu"
+                    placeholder="you@university.edu or ID"
                     class="<?php echo e($errors->any() ? 'err' : ''); ?>"
-                    required autofocus autocomplete="email">
+                    required autofocus autocomplete="username">
             </div>
         </div>
         <div class="field">
@@ -336,6 +336,7 @@
 
 </div>
 
+<?php $hideValidationToast = true; ?>
 <?php echo $__env->make('partials.sweetalert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <script>

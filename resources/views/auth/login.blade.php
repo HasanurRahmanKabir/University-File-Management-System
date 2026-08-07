@@ -308,13 +308,13 @@
     <form action="{{ route('login.post') }}" method="POST" id="loginForm">
         @csrf
         <div class="field">
-            <label for="email">Email address</label>
+            <label for="email">Email or Student ID</label>
             <div class="input-wrap">
-                <input type="email" id="email" name="email"
+                <input type="text" id="email" name="email"
                     value="{{ old('email') }}"
-                    placeholder="you@university.edu"
+                    placeholder="you@university.edu or ID"
                     class="{{ $errors->any() ? 'err' : '' }}"
-                    required autofocus autocomplete="email">
+                    required autofocus autocomplete="username">
             </div>
         </div>
         <div class="field">
@@ -336,6 +336,7 @@
 
 </div>
 
+@php $hideValidationToast = true; @endphp
 @include('partials.sweetalert')
 
 <script>

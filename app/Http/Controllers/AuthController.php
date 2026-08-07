@@ -17,13 +17,15 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $request->validate([
+            'email' => 'required',
             'password' => 'required',
         ]);
 
-        if (Auth::validate(['email' => $credentials['email'], 'password' => $credentials['password']])) {
-            $user = \App\Models\User::where('email', $credentials['email'])->first();
+        $loginType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'student_id';
+
+        if (Auth::validate([$loginType => $request->email, 'password' => $request->password])) {
+            $user = \App\Models\User::where($loginType, $request->email)->first();
             
             if (!$user->is_active) {
                 return back()->with('error', 'Your account is inactive. Please contact the administrator.')->onlyInput('email');
