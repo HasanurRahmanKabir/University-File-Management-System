@@ -13,7 +13,7 @@ class StudentInfoController extends Controller
 {
     public function index(Request $request)
     {
-        $query = StudentInfo::where('role', 'student');
+        $query = StudentInfo::with('department')->where('role', 'student');
         
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -47,12 +47,13 @@ class StudentInfoController extends Controller
         
         $courses = \App\Models\Course::where('is_active', true)->orderBy('course_code')->get();
         $semesters = \App\Models\Semester::where('is_active', true)->latest()->get();
+        $departments = \App\Models\Department::orderBy('name')->get();
         
         $totalStudents = StudentInfo::where('role', 'student')->count();
         $activeStudents = StudentInfo::where('role', 'student')->where('is_active', 1)->count();
         $inactiveStudents = StudentInfo::where('role', 'student')->where('is_active', 0)->count();
 
-        return view('admin.students', compact('users', 'courses', 'semesters', 'totalStudents', 'activeStudents', 'inactiveStudents'));
+        return view('admin.students', compact('users', 'courses', 'semesters', 'departments', 'totalStudents', 'activeStudents', 'inactiveStudents'));
     }
 
     public function store(Request $request)
@@ -62,6 +63,7 @@ class StudentInfoController extends Controller
             'student_id' => 'required|string|max:255|unique:users',
             'semester' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+            'department_id' => 'nullable|exists:departments,id',
             'password' => ['required', Password::defaults()],
             'courses' => 'nullable|array',
             'is_active' => 'nullable|boolean',
@@ -94,6 +96,7 @@ class StudentInfoController extends Controller
             'student_id' => 'required|string|max:255|unique:users,student_id,' . $user->id,
             'semester' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'department_id' => 'nullable|exists:departments,id',
             'password' => 'nullable|string|min:8',
             'courses' => 'nullable|array',
             'is_active' => 'nullable|boolean',

@@ -181,6 +181,7 @@
                     <tr>
                         <th>Student Name</th>
                         <th class="text-center">Student ID</th>
+                        <th class="text-center">Department</th>
                         <th class="text-center">Semester</th>
                         <th class="text-center">Enrolled Courses</th>
                         <th class="text-center">Status</th>
@@ -207,6 +208,13 @@
                             </div>
                         </td>
                         <td class="text-center"><span class="badge dark"><?php echo e($student->student_id); ?></span></td>
+                        <td class="text-center">
+                            <?php if($student->department): ?>
+                                <span class="badge neutral"><?php echo e($student->department->name); ?></span>
+                            <?php else: ?>
+                                <span class="text-muted small">-</span>
+                            <?php endif; ?>
+                        </td>
                         <td class="text-center">
                             <?php if($student->semester): ?>
                                 <span class="badge neutral"><?php echo e($student->semester); ?></span>
@@ -249,6 +257,7 @@
                                     data-email="<?php echo e($student->email); ?>"
                                     data-studentid="<?php echo e($student->student_id); ?>"
                                     data-semester="<?php echo e($student->semester); ?>"
+                                    data-department="<?php echo e($student->department_id); ?>"
                                     data-isactive="<?php echo e($student->is_active ? 1 : 0); ?>"
                                     data-courses="<?php echo e($student->enrolled_courses); ?>"
                                     data-image="<?php echo e($student->profile_image ? asset('storage/' . $student->profile_image) : ''); ?>">
@@ -325,6 +334,16 @@
                         </div>
                         <div class="form-grid">
                             <div class="form-group"><label class="form-label">Email Address <span class="text-danger">*</span></label><input type="email" name="email" class="form-input" placeholder="student@example.com" required></div>
+                            <div class="form-group"><label class="form-label">Department</label>
+                                <select class="form-select" name="department_id" id="add_department_id" placeholder="Select Department">
+                                    <option value="">Select Department</option>
+                                    <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid">
                             <div class="form-group"><label class="form-label">Semester / Term <span class="text-danger">*</span></label>
                                 <select class="form-select" name="semester" id="add_semester" required placeholder="Select Semester">
                                     <option value="">Select Semester</option>
@@ -333,13 +352,13 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-grid">
                             <div class="form-group" style="position: relative;">
                                 <label class="form-label">Set Password <span class="text-danger">*</span></label>
                                 <input type="password" id="add_password" name="password" class="form-input" placeholder="Create a secure password" required minlength="8" style="padding-right: 40px;">
                                 <i class="fas fa-eye toggle-password" onclick="togglePassword('add_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
                             </div>
+                        </div>
+                        <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Account Status</label>
                                 <div class="custom-switch-container">
@@ -413,6 +432,17 @@
                                 <input type="email" name="email" id="edit_email" class="form-input" required>
                             </div>
                             <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <select class="form-select" name="department_id" id="edit_department_id" placeholder="Select Department">
+                                    <option value="">Select Department</option>
+                                    <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
                                 <label class="form-label">Semester</label>
                                 <select name="semester" id="edit_semester" class="form-select" required placeholder="Select Semester">
                                     <option value="">Select Semester</option>
@@ -421,14 +451,14 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-group mt-3" style="position: relative;">
+                            <div class="form-group" style="position: relative;">
                                 <label class="form-label">Update Password</label>
                                 <input type="password" id="edit_password" name="password" class="form-input" placeholder="Leave blank to keep current" style="padding-right: 40px;">
                                 <i class="fas fa-eye toggle-password" onclick="togglePassword('edit_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
                             </div>
-                            <div class="form-group mt-3">
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
                                 <label class="form-label">Account Status</label>
                                 <div class="custom-switch-container">
                                     <label class="custom-switch">
@@ -584,6 +614,13 @@
                     document.getElementById('edit_semester').value = semester;
                 }
                 
+                const department = this.getAttribute('data-department');
+                if (window.editDepartmentSelect) {
+                    window.editDepartmentSelect.setValue(department);
+                } else {
+                    document.getElementById('edit_department_id').value = department;
+                }
+                
                 document.getElementById('edit_is_active').checked = this.getAttribute('data-isactive') === '1';
                 
                 // Image Handling
@@ -624,6 +661,35 @@
                 new bootstrap.Modal(document.getElementById('editStudentModal')).show();
             });
         });
+
+        // Initialize TomSelect for Departments
+        if(document.getElementById('add_department_id')) {
+            let addDept = new TomSelect("#add_department_id", {
+                create: false,
+                controlInput: null,
+                maxOptions: null,
+                allowEmptyOption: true,
+                wrapperClass: 'ts-wrapper form-select ts-semester',
+                plugins: ['dropdown_input'],
+                sortField: { field: "text", direction: "asc" }
+            });
+            let searchInput = addDept.dropdown.querySelector('input');
+            if(searchInput) searchInput.setAttribute('placeholder', 'Search department...');
+        }
+        
+        if(document.getElementById('edit_department_id')) {
+            window.editDepartmentSelect = new TomSelect("#edit_department_id", {
+                create: false,
+                controlInput: null,
+                maxOptions: null,
+                allowEmptyOption: true,
+                wrapperClass: 'ts-wrapper form-select ts-semester',
+                plugins: ['dropdown_input'],
+                sortField: { field: "text", direction: "asc" }
+            });
+            let searchInput = window.editDepartmentSelect.dropdown.querySelector('input');
+            if(searchInput) searchInput.setAttribute('placeholder', 'Search department...');
+        }
 
         // Initialize TomSelect for Semesters
         if(document.getElementById('add_semester')) {
