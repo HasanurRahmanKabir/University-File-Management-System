@@ -33,22 +33,9 @@
         background: white !important;
         outline: none !important;
     }
-    /* Bulletproof placeholders */
-    .ts-wrapper.ts-semester:not(.has-items) .ts-control::before {
-        content: "Select Semester";
-        display: block !important;
-        color: var(--text-secondary) !important;
-        font-weight: 500 !important;
-    }
+    /* Fix Placeholder */
     .ts-control .item[data-value=""] {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        color: var(--text-secondary) !important;
-        font-weight: 500 !important;
-    }
-    .ts-wrapper:not(.has-items) .ts-control .item[data-value=""] {
-        display: none !important;
+        color: var(--text-muted) !important;
     }
     .ts-dropdown {
         border: 1px solid var(--border) !important;
@@ -255,6 +242,7 @@
                                     data-id="<?php echo e($student->id); ?>"
                                     data-name="<?php echo e($student->name); ?>"
                                     data-email="<?php echo e($student->email); ?>"
+                                    data-contactnumber="<?php echo e($student->contact_number); ?>"
                                     data-studentid="<?php echo e($student->student_id); ?>"
                                     data-semester="<?php echo e($student->semester); ?>"
                                     data-department="<?php echo e($student->department_id); ?>"
@@ -334,6 +322,9 @@
                         </div>
                         <div class="form-grid">
                             <div class="form-group"><label class="form-label">Email Address <span class="text-danger">*</span></label><input type="email" name="email" class="form-input" placeholder="student@example.com" required></div>
+                            <div class="form-group"><label class="form-label">Contact Number</label><input type="text" name="contact_number" class="form-input" placeholder="e.g. +880 1XXX-XXXXXX"></div>
+                        </div>
+                        <div class="form-grid">
                             <div class="form-group"><label class="form-label">Department</label>
                                 <select class="form-select" name="department_id" id="add_department_id" placeholder="Select Department">
                                     <option value="">Select Department</option>
@@ -342,8 +333,6 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-grid">
                             <div class="form-group"><label class="form-label">Semester / Term <span class="text-danger">*</span></label>
                                 <select class="form-select" name="semester" id="add_semester" required placeholder="Select Semester">
                                     <option value="">Select Semester</option>
@@ -352,13 +341,13 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
+                        </div>
+                        <div class="form-grid">
                             <div class="form-group" style="position: relative;">
                                 <label class="form-label">Set Password <span class="text-danger">*</span></label>
                                 <input type="password" id="add_password" name="password" class="form-input" placeholder="Create a secure password" required minlength="8" style="padding-right: 40px;">
                                 <i class="fas fa-eye toggle-password" onclick="togglePassword('add_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
                             </div>
-                        </div>
-                        <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Account Status</label>
                                 <div class="custom-switch-container">
@@ -432,6 +421,12 @@
                                 <input type="email" name="email" id="edit_email" class="form-input" required>
                             </div>
                             <div class="form-group">
+                                <label class="form-label">Contact Number</label>
+                                <input type="text" name="contact_number" id="edit_contact_number" class="form-input" placeholder="e.g. +880 1XXX-XXXXXX">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
                                 <label class="form-label">Department</label>
                                 <select class="form-select" name="department_id" id="edit_department_id" placeholder="Select Department">
                                     <option value="">Select Department</option>
@@ -440,8 +435,6 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Semester</label>
                                 <select name="semester" id="edit_semester" class="form-select" required placeholder="Select Semester">
@@ -451,13 +444,13 @@
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
+                        </div>
+                        <div class="form-grid">
                             <div class="form-group" style="position: relative;">
                                 <label class="form-label">Update Password</label>
                                 <input type="password" id="edit_password" name="password" class="form-input" placeholder="Leave blank to keep current" style="padding-right: 40px;">
                                 <i class="fas fa-eye toggle-password" onclick="togglePassword('edit_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
                             </div>
-                        </div>
-                        <div class="form-grid">
                             <div class="form-group">
                                 <label class="form-label">Account Status</label>
                                 <div class="custom-switch-container">
@@ -604,6 +597,7 @@
                 
                 document.getElementById('edit_name').value = this.getAttribute('data-name');
                 document.getElementById('edit_email').value = this.getAttribute('data-email');
+                document.getElementById('edit_contact_number').value = this.getAttribute('data-contactnumber');
                 document.getElementById('edit_student_id').value = this.getAttribute('data-studentid');
                 
                 // Update TomSelect value
@@ -669,9 +663,10 @@
                 controlInput: null,
                 maxOptions: null,
                 allowEmptyOption: true,
-                wrapperClass: 'ts-wrapper form-select ts-semester',
+                wrapperClass: 'ts-wrapper form-select ts-department',
                 plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" }
+                sortField: { field: "text", direction: "asc" },
+                onDelete: function(values, e) { return false; }
             });
             let searchInput = addDept.dropdown.querySelector('input');
             if(searchInput) searchInput.setAttribute('placeholder', 'Search department...');
@@ -683,9 +678,10 @@
                 controlInput: null,
                 maxOptions: null,
                 allowEmptyOption: true,
-                wrapperClass: 'ts-wrapper form-select ts-semester',
+                wrapperClass: 'ts-wrapper form-select ts-department',
                 plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" }
+                sortField: { field: "text", direction: "asc" },
+                onDelete: function(values, e) { return false; }
             });
             let searchInput = window.editDepartmentSelect.dropdown.querySelector('input');
             if(searchInput) searchInput.setAttribute('placeholder', 'Search department...');
@@ -700,7 +696,8 @@
                 allowEmptyOption: true,
                 wrapperClass: 'ts-wrapper form-select ts-semester',
                 plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" }
+                sortField: { field: "text", direction: "asc" },
+                onDelete: function(values, e) { return false; }
             });
             let searchInput = addSem.dropdown.querySelector('input');
             if(searchInput) searchInput.setAttribute('placeholder', 'Search semester...');
@@ -714,7 +711,8 @@
                 allowEmptyOption: true,
                 wrapperClass: 'ts-wrapper form-select ts-semester',
                 plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" }
+                sortField: { field: "text", direction: "asc" },
+                onDelete: function(values, e) { return false; }
             });
             let searchInput = window.editSemesterSelect.dropdown.querySelector('input');
             if(searchInput) searchInput.setAttribute('placeholder', 'Search semester...');

@@ -67,6 +67,7 @@ class StudentInfoController extends Controller
             'password' => ['required', Password::defaults()],
             'courses' => 'nullable|array',
             'is_active' => 'nullable|boolean',
+            'contact_number' => 'nullable|string|max:20',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
         
@@ -100,6 +101,7 @@ class StudentInfoController extends Controller
             'password' => 'nullable|string|min:8',
             'courses' => 'nullable|array',
             'is_active' => 'nullable|boolean',
+            'contact_number' => 'nullable|string|max:20',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'remove_image' => 'nullable|boolean'
         ]);
