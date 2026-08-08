@@ -20,7 +20,7 @@
                 $initials .= strtoupper(substr(array_shift($words), 0, 1));
             }
         @endphp
-        <div class="dropdown">
+        <div class="dropdown" style="display: flex; align-items: center;">
             <div class="tb-avatar" data-bs-toggle="dropdown" aria-expanded="false">{{ $initials }}</div>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border:1px solid var(--bd-lt); border-radius: var(--r-md); padding: 8px 0; min-width: 200px;">
                 <li><a class="dropdown-item" href="{{ route('teacher.profile') }}" style="font-size: 0.85rem; padding: 8px 16px; color: var(--tx-h);"><i class="fas fa-user-circle" style="width:20px; color:var(--tx-m);"></i> My Profile</a></li>

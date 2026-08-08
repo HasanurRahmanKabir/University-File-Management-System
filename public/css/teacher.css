@@ -288,6 +288,7 @@ button{font-family:inherit;cursor:pointer;}
 .tb-avatar:hover{transform:scale(1.08);}
 .tb-uname{font-size:.85rem;font-weight:600;color:var(--tx-h);line-height:1.1; margin-bottom: 2px;}
 .tb-urole{font-size:.70rem;color:var(--tx-m); line-height:1;}
+.tb-user-info { display: flex; flex-direction: column; justify-content: center; }
 
 /* Page Content */
 .page-content{

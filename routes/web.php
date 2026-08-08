@@ -83,6 +83,7 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
 
 use App\Http\Controllers\Student\CategoryController as StudentCategoryController;
 use App\Http\Controllers\Student\SubcategoryController as StudentSubcategoryController;
+use App\Http\Controllers\Student\ProfileController as StudentProfileController;
 
 // Student Routes
 Route::middleware(['web', 'auth', 'is_student'])->prefix('student')->name('student.')->group(function () {
@@ -92,4 +93,9 @@ Route::middleware(['web', 'auth', 'is_student'])->prefix('student')->name('stude
     Route::get('/course-materials/{material}/download', [StudentCourseMaterialController::class, 'download'])->name('course-materials.download');
     Route::resource('categories', StudentCategoryController::class)->only(['index']);
     Route::resource('subcategories', StudentSubcategoryController::class)->only(['index']);
+    
+    // Profile & Settings
+    Route::get('/profile', [StudentProfileController::class, 'index'])->name('profile');
+    Route::get('/settings', [StudentProfileController::class, 'settings'])->name('settings');
+    Route::post('/settings', [StudentProfileController::class, 'updateSettings'])->name('settings.update');
 });

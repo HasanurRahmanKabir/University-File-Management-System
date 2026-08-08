@@ -306,9 +306,9 @@ button { font-family: inherit; cursor: pointer; }
 .tb-breadcrumb a:hover { text-decoration: underline; }
 .tb-breadcrumb span { display: flex; align-items: center; gap: 6px; }
 .tb-right { display: flex; align-items: center; gap: 14px; }
-.tb-user-info { text-align: right; }
-.tb-uname { font-size: .85rem; font-weight: 700; color: var(--tx-h); line-height: 1.2; }
-.tb-urole { font-size: .65rem; color: var(--tx-s); font-weight: 500; }
+.tb-user-info { text-align: right; display: flex; flex-direction: column; justify-content: center; }
+.tb-uname { font-size: .85rem; font-weight: 700; color: var(--tx-h); line-height: 1.2; margin-bottom: 2px; }
+.tb-urole { font-size: .65rem; color: var(--tx-s); font-weight: 500; line-height: 1; }
 .tb-avatar {
     width: 38px; height: 38px; border-radius: 50%;
     background: linear-gradient(135deg, var(--primary), #00c950);
@@ -531,6 +531,13 @@ button { font-family: inherit; cursor: pointer; }
 .d-card-body.p0 { padding: 0; }
 
 /* ============================================================
+   PAGE HERO
+   ============================================================ */
+.p-hero { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+.p-hero-h { font-size: 1.1rem; font-weight: 800; color: var(--tx-h); letter-spacing: -.2px; }
+.p-hero-sub { font-size: .77rem; color: var(--tx-m); margin-top: 2px; }
+
+/* ============================================================
    TABLE — Corporate Refined
    ============================================================ */
 .t-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -732,4 +739,5 @@ button { font-family: inherit; cursor: pointer; }
     .tb-title { font-size: 0.85rem; line-height: 1.3; }
     .tb-breadcrumb { display: none; }
     .sb-toggler { top: 12px; }
+    .p-hero { flex-direction: column; }
 }
