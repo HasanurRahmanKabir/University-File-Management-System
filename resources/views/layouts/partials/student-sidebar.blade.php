@@ -26,7 +26,7 @@
                 <li><a href="{{ route('student.categories.index') }}" class="sb-link {{ request()->routeIs('student.categories.*') ? 'active' : '' }}">
                     <div class="sb-ico"><i class="fas fa-tags"></i></div>Category List
                 </a></li>
-                <li><a href="#" class="sb-link">
+                <li><a href="{{ route('student.subcategories.index') }}" class="sb-link {{ request()->routeIs('student.subcategories.*') ? 'active' : '' }}">
                     <div class="sb-ico"><i class="fas fa-layer-group"></i></div>Subcategory List
                 </a></li>
             </ul>

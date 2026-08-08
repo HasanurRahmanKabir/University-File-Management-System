@@ -26,7 +26,7 @@
                 <li><a href="<?php echo e(route('student.categories.index')); ?>" class="sb-link <?php echo e(request()->routeIs('student.categories.*') ? 'active' : ''); ?>">
                     <div class="sb-ico"><i class="fas fa-tags"></i></div>Category List
                 </a></li>
-                <li><a href="#" class="sb-link">
+                <li><a href="<?php echo e(route('student.subcategories.index')); ?>" class="sb-link <?php echo e(request()->routeIs('student.subcategories.*') ? 'active' : ''); ?>">
                     <div class="sb-ico"><i class="fas fa-layer-group"></i></div>Subcategory List
                 </a></li>
             </ul>
