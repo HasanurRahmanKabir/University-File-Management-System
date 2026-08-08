@@ -81,10 +81,13 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::post('settings', [TeacherProfileController::class, 'updateSettings'])->name('settings.update');
 });
 
+use App\Http\Controllers\Student\CategoryController as StudentCategoryController;
+
 // Student Routes
 Route::middleware(['web', 'auth', 'is_student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
     Route::resource('courses', StudentCourseController::class)->only(['index', 'show']);
     Route::resource('course-materials', StudentCourseMaterialController::class)->only(['index']);
     Route::get('/course-materials/{material}/download', [StudentCourseMaterialController::class, 'download'])->name('course-materials.download');
+    Route::resource('categories', StudentCategoryController::class)->only(['index']);
 });

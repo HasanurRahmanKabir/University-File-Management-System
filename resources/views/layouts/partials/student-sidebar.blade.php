@@ -23,7 +23,7 @@
                 <li><a href="{{ route('student.course-materials.index') }}" class="sb-link {{ request()->routeIs('student.course-materials.*') ? 'active' : '' }}">
                     <div class="sb-ico"><i class="fas fa-file-lines"></i></div>Course File Info
                 </a></li>
-                <li><a href="#" class="sb-link">
+                <li><a href="{{ route('student.categories.index') }}" class="sb-link {{ request()->routeIs('student.categories.*') ? 'active' : '' }}">
                     <div class="sb-ico"><i class="fas fa-tags"></i></div>Category List
                 </a></li>
                 <li><a href="#" class="sb-link">
