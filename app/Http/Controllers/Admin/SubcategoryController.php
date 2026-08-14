@@ -12,7 +12,7 @@ class SubcategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Subcategory::with('category');
+        $query = Subcategory::with('category')->withCount('courses');
 
         if ($request->has('search') && $request->search != '') {
             $search = strtolower($request->search);
