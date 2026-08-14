@@ -279,13 +279,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-3 px-3 pb-3">
-            <div class="text-muted small">
-                Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} students
-            </div>
-            <div>
-                {{ $users->links('pagination::bootstrap-5') }}
-            </div>
+        <div class="mt-3 px-3 pb-3 border-top pt-3">
+            {{ $users->links('pagination::bootstrap-5') }}
         </div>
     </div>
 </div>

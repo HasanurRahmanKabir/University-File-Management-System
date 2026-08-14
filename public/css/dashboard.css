@@ -2014,3 +2014,40 @@ input:-webkit-autofill:active {
     font-size: 24px;
     box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
 }
+
+}
+
+/* ============================================================
+   Pagination Customization (Theme Matching)
+   ============================================================ */
+.pagination {
+    margin-bottom: 0;
+    gap: 4px;
+}
+.page-item .page-link {
+    border: none;
+    background: var(--bg-muted);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all var(--duration-fast) var(--ease);
+}
+.page-item .page-link:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+.page-item.active .page-link {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px var(--primary-glow);
+}
+.page-item.disabled .page-link {
+    background: transparent;
+    color: #cbd5e1;
+}
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+    border-radius: 8px;
+}

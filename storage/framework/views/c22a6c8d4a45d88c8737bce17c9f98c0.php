@@ -279,14 +279,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-3 px-3 pb-3">
-            <div class="text-muted small">
-                Showing <?php echo e($users->firstItem() ?? 0); ?> to <?php echo e($users->lastItem() ?? 0); ?> of <?php echo e($users->total()); ?> students
-            </div>
-            <div>
-                <?php echo e($users->links('pagination::bootstrap-5')); ?>
+        <div class="mt-3 px-3 pb-3 border-top pt-3">
+            <?php echo e($users->links('pagination::bootstrap-5')); ?>
 
-            </div>
         </div>
     </div>
 </div>

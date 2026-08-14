@@ -1,9 +1,8 @@
-@extends('layouts.admin')
-@section('title', 'Semesters - Admin Dashboard')
-@section('page-title', 'Academic Semesters')
-@section('breadcrumb', 'Semesters')
+<?php $__env->startSection('title', 'Semesters - Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Academic Semesters'); ?>
+<?php $__env->startSection('breadcrumb', 'Semesters'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header">
     <div class="heading-group">
         <h2>Semester Management</h2>
@@ -20,15 +19,15 @@
             <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Academic Semesters</h5>
             <p class="card-subtitle">List of all registered academic semesters</p>
         </div>
-        <form action="{{ route('admin.semesters.index') }}" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
+        <form action="<?php echo e(route('admin.semesters.index')); ?>" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search by name or year..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.semesters.index') }}'" title="Clear Search">
+                <input type="text" name="search" id="searchInput" placeholder="Search by name or year..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.semesters.index')); ?>'" title="Clear Search">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-weight: 500;">Search</button>
         </form>
@@ -46,88 +45,90 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($semesters as $semester)
+                    <?php $__empty_1 = true; $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $semester): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td>
                             <div class="user-cell">
-                                @php $colors = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'slate']; @endphp
-                                <div class="avatar-sm {{ $colors[strlen($semester->name) % 8] }} d-flex align-items-center justify-content-center text-white fw-bold">
-                                    {{ strtoupper(substr($semester->name, 0, 1)) }}
+                                <?php $colors = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'slate']; ?>
+                                <div class="avatar-sm <?php echo e($colors[strlen($semester->name) % 8]); ?> d-flex align-items-center justify-content-center text-white fw-bold">
+                                    <?php echo e(strtoupper(substr($semester->name, 0, 1))); ?>
+
                                 </div>
                                 <div>
-                                    <div class="user-name">{{ $semester->name }}</div>
+                                    <div class="user-name"><?php echo e($semester->name); ?></div>
                                     <div class="user-sub">Academic Term</div>
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center"><span style="color:var(--text-secondary);font-weight:600;">{{ $semester->year ?? 'N/A' }}</span></td>
+                        <td class="text-center"><span style="color:var(--text-secondary);font-weight:600;"><?php echo e($semester->year ?? 'N/A'); ?></span></td>
                         <td class="text-center">
-                            @if($semester->start_date && $semester->end_date)
-                                <span class="badge neutral"><i class="fas fa-calendar"></i> {{ \Carbon\Carbon::parse($semester->start_date)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($semester->end_date)->format('M d, Y') }}</span>
-                            @elseif($semester->start_date)
-                                <span class="badge neutral"><i class="fas fa-calendar"></i> Starts: {{ \Carbon\Carbon::parse($semester->start_date)->format('M d, Y') }}</span>
-                            @elseif($semester->end_date)
-                                <span class="badge neutral"><i class="fas fa-calendar"></i> Ends: {{ \Carbon\Carbon::parse($semester->end_date)->format('M d, Y') }}</span>
-                            @else
+                            <?php if($semester->start_date && $semester->end_date): ?>
+                                <span class="badge neutral"><i class="fas fa-calendar"></i> <?php echo e(\Carbon\Carbon::parse($semester->start_date)->format('M d, Y')); ?> - <?php echo e(\Carbon\Carbon::parse($semester->end_date)->format('M d, Y')); ?></span>
+                            <?php elseif($semester->start_date): ?>
+                                <span class="badge neutral"><i class="fas fa-calendar"></i> Starts: <?php echo e(\Carbon\Carbon::parse($semester->start_date)->format('M d, Y')); ?></span>
+                            <?php elseif($semester->end_date): ?>
+                                <span class="badge neutral"><i class="fas fa-calendar"></i> Ends: <?php echo e(\Carbon\Carbon::parse($semester->end_date)->format('M d, Y')); ?></span>
+                            <?php else: ?>
                                 <span class="text-muted small">Not specified</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="text-center">
-                            @if($semester->is_active)
+                            <?php if($semester->is_active): ?>
                                 <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                            @else
+                            <?php else: ?>
                                 <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td>
                             <div class="action-group">
                                 <button class="action-btn edit edit-semester-btn" data-bs-toggle="modal" data-bs-target="#editSemesterModal"
-                                    data-id="{{ $semester->id }}"
-                                    data-name="{{ $semester->name }}"
-                                    data-year="{{ $semester->year }}"
-                                    data-start="{{ $semester->start_date }}"
-                                    data-end="{{ $semester->end_date }}"
-                                    data-active="{{ $semester->is_active ? 1 : 0 }}">
+                                    data-id="<?php echo e($semester->id); ?>"
+                                    data-name="<?php echo e($semester->name); ?>"
+                                    data-year="<?php echo e($semester->year); ?>"
+                                    data-start="<?php echo e($semester->start_date); ?>"
+                                    data-end="<?php echo e($semester->end_date); ?>"
+                                    data-active="<?php echo e($semester->is_active ? 1 : 0); ?>">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <form action="{{ route('admin.semesters.destroy', $semester->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('admin.semesters.destroy', $semester->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="5" class="text-center py-5">
                             <div class="empty-state">
                                 <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                                @if(request('search'))
-                                    <h6 class="text-heading fw-bold">No results found for "{{ request('search') }}"</h6>
+                                <?php if(request('search')): ?>
+                                    <h6 class="text-heading fw-bold">No results found for "<?php echo e(request('search')); ?>"</h6>
                                     <p class="text-muted small">We couldn't find any semester matching your criteria.</p>
-                                    <a href="{{ route('admin.semesters.index') }}" class="btn btn-sm btn-primary mt-3">Clear Search</a>
-                                @else
+                                    <a href="<?php echo e(route('admin.semesters.index')); ?>" class="btn btn-sm btn-primary mt-3">Clear Search</a>
+                                <?php else: ?>
                                     <h6 class="text-heading fw-bold">No semesters found</h6>
                                     <p class="text-muted small">Add your first academic semester to get started.</p>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
-        @if($semesters->hasPages())
-            <div class="mt-3 px-3 pb-3 border-top pt-3">
-                {{ $semesters->links('pagination::bootstrap-5') }}
+        <?php if($semesters->hasPages()): ?>
+            <div class="px-4 py-3 border-top">
+                <?php echo e($semesters->links()); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
 <!-- ADD SEMESTER MODAL -->
 <div class="modal fade" id="addSemesterModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -137,8 +138,8 @@
                 <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="modal-body-content">
-                <form action="{{ route('admin.semesters.store') }}" method="POST">
-                    @csrf
+                <form action="<?php echo e(route('admin.semesters.store')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label class="form-label">Semester Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-input" placeholder="Enter Semester Name" required>
@@ -192,8 +193,8 @@
             </div>
             <div class="modal-body-content">
                 <form id="editSemesterForm" action="" method="POST">
-                    @csrf 
-                    @method('PUT')
+                    <?php echo csrf_field(); ?> 
+                    <?php echo method_field('PUT'); ?>
                     <div class="form-group">
                         <label class="form-label">Semester Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="edit_name" class="form-input" placeholder="Enter Semester Name" required>
@@ -236,9 +237,9 @@
         </div>
     </div>
 </div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <style>
     /* Switch styles */
     .custom-switch-container { display: flex; align-items: center; gap: 10px; }
@@ -264,7 +265,7 @@
                 document.getElementById('edit_end').value = this.getAttribute('data-end');
                 document.getElementById('edit_is_active').checked = this.getAttribute('data-active') === '1';
                 
-                let actionUrl = "{{ route('admin.semesters.update', ':id') }}";
+                let actionUrl = "<?php echo e(route('admin.semesters.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
             });
         });
@@ -304,15 +305,17 @@
             customClass: { popup: 'premium-toast' }
         });
 
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: "{{ session('success') }}" });
-        @endif
-        @if(session('error'))
-            Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
-        @endif
-        @if($errors->any())
-            Toast.fire({ icon: 'error', title: "Validation Error", text: "{{ $errors->first() }}" });
-        @endif
+        <?php if(session('success')): ?>
+            Toast.fire({ icon: 'success', title: "<?php echo e(session('success')); ?>" });
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            Toast.fire({ icon: 'error', title: "<?php echo e(session('error')); ?>" });
+        <?php endif; ?>
+        <?php if($errors->any()): ?>
+            Toast.fire({ icon: 'error', title: "Validation Error", text: "<?php echo e($errors->first()); ?>" });
+        <?php endif; ?>
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/admin/semesters.blade.php ENDPATH**/ ?>

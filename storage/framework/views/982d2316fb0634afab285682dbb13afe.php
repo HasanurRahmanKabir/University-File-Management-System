@@ -1,9 +1,8 @@
-@extends('layouts.admin')
-@section('title', 'Course Files - Admin Dashboard')
-@section('page-title', 'Course Materials')
-@section('breadcrumb', 'Course Files')
+<?php $__env->startSection('title', 'Course Files - Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Course Materials'); ?>
+<?php $__env->startSection('breadcrumb', 'Course Files'); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
     /* Ensure TomSelect perfectly matches the standard form-select design */
@@ -122,9 +121,9 @@
         overflow-y: auto;
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div class="heading-group">
         <h2>Uploaded Course Materials</h2>
@@ -143,23 +142,23 @@
         <div class="stat-icon-wrap blue"><i class="fas fa-file-lines"></i></div>
         <div class="stat-info">
             <div class="stat-label">Total Files</div>
-            <div class="stat-number">{{ $totalFiles }}</div>
-            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> {{ $weeklyFiles }} this week</div>
+            <div class="stat-number"><?php echo e($totalFiles); ?></div>
+            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> <?php echo e($weeklyFiles); ?> this week</div>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon-wrap rose"><i class="fas fa-file-pdf"></i></div>
         <div class="stat-info">
             <div class="stat-label">PDF Documents</div>
-            <div class="stat-number">{{ $pdfCount }}</div>
-            <div class="stat-trend neutral"><i class="fas fa-check"></i> {{ $pdfPercentage }}% of files</div>
+            <div class="stat-number"><?php echo e($pdfCount); ?></div>
+            <div class="stat-trend neutral"><i class="fas fa-check"></i> <?php echo e($pdfPercentage); ?>% of files</div>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon-wrap emerald"><i class="fas fa-hard-drive"></i></div>
         <div class="stat-info">
             <div class="stat-label">Storage Used</div>
-            <div class="stat-number">{{ $storageUsed }}</div>
+            <div class="stat-number"><?php echo e($storageUsed); ?></div>
             <div class="stat-trend neutral"><i class="fas fa-database"></i> of 10 GB</div>
         </div>
     </div>
@@ -171,15 +170,15 @@
             <h5 class="card-title"><i class="fas fa-folder-open"></i> Teacher's Uploaded Files</h5>
             <p class="card-subtitle">All course materials with file types</p>
         </div>
-        <form action="{{ route('admin.course-files.index') }}" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
+        <form action="<?php echo e(route('admin.course-files.index')); ?>" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.course-files.index') }}'" title="Clear Search">
+                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.course-files.index')); ?>'" title="Clear Search">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
         </form>
@@ -197,30 +196,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($materials as $material)
+                    <?php $__empty_1 = true; $__currentLoopData = $materials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $material): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td>
                             <div class="user-cell">
-                                @php
+                                <?php
                                     $uploaderName = $material->uploader->name ?? 'Unknown';
                                     $initials = strtoupper(substr($uploaderName, 0, 2));
                                     $colors = ['emerald', 'cyan', 'rose', 'blue', 'amber', 'purple', 'indigo'];
                                     $colorClass = $colors[strlen($uploaderName) % count($colors)];
-                                @endphp
-                                <div class="avatar-sm {{ $colorClass }}">{{ $initials }}</div>
+                                ?>
+                                <div class="avatar-sm <?php echo e($colorClass); ?>"><?php echo e($initials); ?></div>
                                 <div>
-                                    <div class="user-name">{{ $uploaderName }}</div>
-                                    <div class="user-sub">{{ $material->uploader->role ?? 'User' }}</div>
+                                    <div class="user-name"><?php echo e($uploaderName); ?></div>
+                                    <div class="user-sub"><?php echo e($material->uploader->role ?? 'User'); ?></div>
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center"><span class="badge dark">{{ $material->course->course_code ?? 'N/A' }}</span></td>
+                        <td class="text-center"><span class="badge dark"><?php echo e($material->course->course_code ?? 'N/A'); ?></span></td>
                         <td>
-                            <div class="user-name">{{ $material->title }}</div>
-                            <div class="user-sub">Uploaded {{ $material->created_at->diffForHumans() }}</div>
+                            <div class="user-name"><?php echo e($material->title); ?></div>
+                            <div class="user-sub">Uploaded <?php echo e($material->created_at->diffForHumans()); ?></div>
                         </td>
                         <td class="text-center">
-                            @php
+                            <?php
                                 $ext = strtolower($material->file_type ?? 'pdf');
                                 $icon = 'fa-file-alt';
                                 $badgeClass = 'primary';
@@ -244,31 +243,32 @@
                                     $icon = 'fa-file-image';
                                     $badgeClass = 'cyan';
                                 }
-                            @endphp
-                            <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 0.75rem; border-radius: var(--radius-sm); transition: all 0.2s;">
-                                <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
+                            ?>
+                            <a href="<?php echo e(Storage::url($material->file_path)); ?>" target="_blank" class="badge <?php echo e($badgeClass); ?>" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 0.75rem; border-radius: var(--radius-sm); transition: all 0.2s;">
+                                <i class="fas <?php echo e($icon); ?>"></i> <?php echo e(strtoupper($ext)); ?>
+
                             </a>
                         </td>
                         <td>
                             <div class="action-group">
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editFileModal"
-                                    data-id="{{ $material->id }}"
-                                    data-course="{{ $material->course_id }}"
-                                    data-title="{{ $material->title }}"
-                                    data-filepath="{{ $material->file_path }}"
-                                    data-fileext="{{ strtoupper($ext) }}"
-                                    data-teacherid="{{ $material->uploaded_by }}">
+                                    data-id="<?php echo e($material->id); ?>"
+                                    data-course="<?php echo e($material->course_id); ?>"
+                                    data-title="<?php echo e($material->title); ?>"
+                                    data-filepath="<?php echo e($material->file_path); ?>"
+                                    data-fileext="<?php echo e(strtoupper($ext)); ?>"
+                                    data-teacherid="<?php echo e($material->uploaded_by); ?>">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <form action="{{ route('admin.course-files.destroy', $material->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('admin.course-files.destroy', $material->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="5" class="text-center py-5">
                             <div class="empty-state">
@@ -278,20 +278,21 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
-        @if($materials->hasPages())
+        <?php if($materials->hasPages()): ?>
             <div class="mt-3 px-3 pb-3 border-top pt-3">
-                {{ $materials->links('pagination::bootstrap-5') }}
+                <?php echo e($materials->links('pagination::bootstrap-5')); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
 <!-- UPLOAD -->
 <div class="modal fade" id="uploadModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -301,25 +302,25 @@
                 <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="modal-body-content">
-                <form action="{{ route('admin.course-files.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+                <form action="<?php echo e(route('admin.course-files.store')); ?>" method="POST" enctype="multipart/form-data">
+                    <?php echo csrf_field(); ?>
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Teacher</label>
                             <select name="uploaded_by" id="add_teacher" class="form-select" required placeholder="Select Faculty">
                                 <option value="">Select Faculty</option>
-                                @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $teachers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $teacher): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($teacher->id); ?>"><?php echo e($teacher->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Course</label>
                             <select name="course_id" id="add_course" class="form-select" required placeholder="Select Course">
                                 <option value="">Select Course</option>
-                                @foreach($courses as $course)
-                                    <option value="{{ $course->id }}">{{ $course->course_code }} - {{ $course->title }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($course->id); ?>"><?php echo e($course->course_code); ?> - <?php echo e($course->title); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                     </div>
@@ -367,25 +368,25 @@
             </div>
             <div class="modal-body-content">
                 <form id="editFileForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('PUT'); ?>
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Teacher</label>
                             <select name="uploaded_by" id="edit_teacher_id" class="form-select" required placeholder="Select Faculty">
                                 <option value="">Select Faculty</option>
-                                @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $teachers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $teacher): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($teacher->id); ?>"><?php echo e($teacher->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Course</label>
                             <select name="course_id" id="edit_course_id" class="form-select" required placeholder="Select Course">
                                 <option value="">Select Course</option>
-                                @foreach($courses as $course)
-                                    <option value="{{ $course->id }}">{{ $course->course_code }} - {{ $course->title }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($course->id); ?>"><?php echo e($course->course_code); ?> - <?php echo e($course->title); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                     </div>
@@ -410,9 +411,9 @@
         </div>
     </div>
 </div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -501,7 +502,7 @@
                 
                 document.getElementById('edit_file_icon').className = 'fas ' + iconClass;
                 
-                let actionUrl = "{{ route('admin.course-files.update', ':id') }}";
+                let actionUrl = "<?php echo e(route('admin.course-files.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
             });
         });
@@ -541,15 +542,15 @@
             customClass: { popup: 'premium-toast' }
         });
 
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: "{{ session('success') }}" });
-        @endif
-        @if(session('error'))
-            Toast.fire({ icon: 'error', title: "{{ session('error') }}" });
-        @endif
-        @if($errors->any())
-            Toast.fire({ icon: 'error', title: "Validation Error", text: "{{ $errors->first() }}" });
-        @endif
+        <?php if(session('success')): ?>
+            Toast.fire({ icon: 'success', title: "<?php echo e(session('success')); ?>" });
+        <?php endif; ?>
+        <?php if(session('error')): ?>
+            Toast.fire({ icon: 'error', title: "<?php echo e(session('error')); ?>" });
+        <?php endif; ?>
+        <?php if($errors->any()): ?>
+            Toast.fire({ icon: 'error', title: "Validation Error", text: "<?php echo e($errors->first()); ?>" });
+        <?php endif; ?>
 
         // File Upload Preview & Remove Logic
         const fileInput = document.getElementById('upload_file_input');
@@ -604,4 +605,6 @@
         }
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/admin/course-files.blade.php ENDPATH**/ ?>

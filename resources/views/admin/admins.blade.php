@@ -98,11 +98,11 @@
             </tbody>
         </table>
     </div>
-    @if($users->hasPages())
-        <div class="px-4 py-3 border-top">
-            {{ $users->links() }}
-        </div>
-    @endif
+        @if($users->hasPages())
+            <div class="mt-3 px-3 pb-3 border-top pt-3">
+                {{ $users->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection
