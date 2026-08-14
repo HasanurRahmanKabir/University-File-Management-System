@@ -119,8 +119,8 @@
             </table>
         </div>
         <?php if($semesters->hasPages()): ?>
-            <div class="px-4 py-3 border-top">
-                <?php echo e($semesters->links()); ?>
+            <div class="mt-3 px-3 pb-3 border-top pt-3">
+                <?php echo e($semesters->links('pagination::bootstrap-5')); ?>
 
             </div>
         <?php endif; ?>

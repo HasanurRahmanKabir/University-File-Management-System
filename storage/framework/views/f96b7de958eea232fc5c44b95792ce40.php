@@ -97,12 +97,12 @@
             </tbody>
         </table>
     </div>
-    <?php if($users->hasPages()): ?>
-        <div class="px-4 py-3 border-top">
-            <?php echo e($users->links()); ?>
+        <?php if($users->hasPages()): ?>
+            <div class="mt-3 px-3 pb-3 border-top pt-3">
+                <?php echo e($users->links('pagination::bootstrap-5')); ?>
 
-        </div>
-    <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 <?php $__env->stopSection(); ?>
