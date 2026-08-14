@@ -32,7 +32,14 @@
                 <tr>
                     <td>
                         <div class="user-cell">
-                            <div class="avatar-sm purple"><?php echo e(strtoupper(substr($teacher->name, 0, 2))); ?></div>
+                            <?php if($teacher->profile_image): ?>
+                                <img src="<?php echo e(asset('storage/' . $teacher->profile_image)); ?>" alt="<?php echo e($teacher->name); ?>" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
+                            <?php else: ?>
+                                <div class="avatar-sm purple d-flex align-items-center justify-content-center text-white fw-bold">
+                                    <?php echo e(strtoupper(substr($teacher->name, 0, 2))); ?>
+
+                                </div>
+                            <?php endif; ?>
                             <div>
                                 <div class="user-name"><?php echo e($teacher->name); ?></div>
                                 <div class="user-sub"><?php echo e($teacher->designation ?? 'Faculty Member'); ?></div>
@@ -70,6 +77,7 @@
                                 data-department="<?php echo e($teacher->department_id); ?>"
                                 data-designation="<?php echo e($teacher->designation); ?>"
                                 data-active="<?php echo e($teacher->is_active ? 1 : 0); ?>"
+                                data-profile-image="<?php echo e($teacher->profile_image); ?>"
                                 data-courses="<?php echo e(json_encode($teacher->courses->pluck('id')->toArray())); ?>">
                                 <i class="fas fa-pen"></i>
                             </button>
@@ -113,7 +121,23 @@
 
 <?php $__env->startPush('modals'); ?>
     <!-- ADD TEACHER -->
-    <div class="modal fade" id="addTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="<?php echo e(route('admin.teacher-info.store')); ?>" method="POST"><?php echo csrf_field(); ?>
+    <div class="modal fade" id="addTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="<?php echo e(route('admin.teacher-info.store')); ?>" method="POST" enctype="multipart/form-data"><?php echo csrf_field(); ?>
+        <div class="form-group mb-4">
+            <label class="form-label d-block text-muted small mb-2">Profile Image (Optional)</label>
+            <div class="avatar-upload-container">
+                <div class="avatar-preview-box" id="add_upload_zone">
+                    <input type="file" name="profile_image" id="add_profile_image" class="d-none" accept="image/png, image/jpeg, image/gif" onchange="previewAvatar(this, 'add_preview_img', 'add_placeholder', 'add_remove_btn')">
+                    <div id="add_placeholder" onclick="document.getElementById('add_profile_image').click()">
+                        <i class="fas fa-camera"></i>
+                        <span>Upload</span>
+                    </div>
+                    <img id="add_preview_img" src="" alt="Preview" style="display: none;" onclick="document.getElementById('add_profile_image').click()">
+                    <button type="button" id="add_remove_btn" class="avatar-remove-btn" style="display: none;" onclick="removeAvatar('add_profile_image', 'add_preview_img', 'add_placeholder', 'add_remove_btn')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="form-grid"><div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" class="form-input" placeholder="Enter full name" required></div><div class="form-group"><label class="form-label">Email Address</label><input type="email" name="email" class="form-input" placeholder="example@univ.edu" required></div></div>
         <div class="form-grid">
             <div class="form-group"><label class="form-label">Department</label><select name="department_id" id="add_department_id" class="form-select" placeholder="Select Department"><option value="">Select Department</option><?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></select></div>
@@ -155,7 +179,27 @@
     </form></div></div></div></div>
 
     <!-- EDIT TEACHER MODAL -->
-    <div class="modal fade" id="editTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Edit Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editTeacherForm" action="" method="POST"><?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
+    <div class="modal fade" id="editTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Edit Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editTeacherForm" action="" method="POST" enctype="multipart/form-data"><?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
+        <input type="hidden" name="remove_image" id="remove_image_hidden" value="0">
+        <div class="form-group mb-4">
+            <label class="form-label d-block text-muted small mb-2">Update Profile Image</label>
+            <div class="avatar-upload-container">
+                <div class="avatar-preview-box" id="edit_upload_zone">
+                    <input type="file" name="profile_image" id="edit_profile_image" class="d-none" accept="image/png, image/jpeg, image/gif" onchange="previewAvatar(this, 'edit_preview_img', 'edit_placeholder', 'edit_remove_btn')">
+                    
+                    <div id="edit_placeholder" onclick="document.getElementById('edit_profile_image').click()">
+                        <i class="fas fa-camera"></i>
+                        <span>Change</span>
+                    </div>
+                    
+                    <img id="edit_preview_img" src="" alt="Preview" style="display: none;" onclick="document.getElementById('edit_profile_image').click()">
+                    
+                    <button type="button" id="edit_remove_btn" class="avatar-remove-btn" style="display: none;" onclick="removeEditAvatar()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="form-grid"><div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" id="edit_name" class="form-input" required></div><div class="form-group"><label class="form-label">Email</label><input type="email" name="email" id="edit_email" class="form-input" required></div></div>
         <div class="form-grid">
             <div class="form-group"><label class="form-label">Department</label><select name="department_id" id="edit_department_id" class="form-select" placeholder="Select Department"><option value="">Select Department</option><?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></select></div>
@@ -190,7 +234,10 @@
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
-        <div class="form-actions"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Update</button></div>
+        <div class="form-actions">
+            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Save Changes</button>
+        </div>
     </form></div></div></div></div>
 <?php $__env->stopPush(); ?>
 
@@ -198,6 +245,72 @@
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <style>
+    .avatar-upload-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+    .avatar-preview-box {
+        position: relative;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        border: 3px dashed var(--border-light);
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    .avatar-preview-box:hover {
+        border-color: var(--primary);
+        background: rgba(59, 130, 246, 0.05);
+    }
+    .avatar-preview-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        z-index: 2;
+    }
+    .avatar-preview-box div {
+        text-align: center;
+        color: var(--text-muted);
+        z-index: 1;
+        position: absolute;
+    }
+    .avatar-preview-box div i {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .avatar-preview-box div span {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .avatar-remove-btn {
+        position: absolute;
+        top: 0;
+        right: -5px;
+        background: #ef4444;
+        color: white;
+        border: 2px solid var(--bg-card);
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+    }
+    .avatar-remove-btn:hover {
+        background: #dc2626;
+        transform: scale(1.1);
+    }
     /* Clean TomSelect styling for Department */
     .ts-wrapper.ts-department {
         padding: 0 !important;
@@ -422,6 +535,21 @@
                 // Set form action
                 let actionUrl = "<?php echo e(route('admin.teacher-info.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
+
+                // Set Profile Picture
+                const profileImg = this.getAttribute('data-profile-image');
+                document.getElementById('remove_image_hidden').value = "0";
+                if (profileImg) {
+                    document.getElementById('edit_preview_img').src = '/storage/' + profileImg;
+                    document.getElementById('edit_preview_img').style.display = 'block';
+                    document.getElementById('edit_placeholder').style.display = 'none';
+                    document.getElementById('edit_remove_btn').style.display = 'flex';
+                } else {
+                    document.getElementById('edit_preview_img').src = '';
+                    document.getElementById('edit_preview_img').style.display = 'none';
+                    document.getElementById('edit_placeholder').style.display = 'block';
+                    document.getElementById('edit_remove_btn').style.display = 'none';
+                }
             });
         });
 
@@ -475,6 +603,40 @@
             });
         <?php endif; ?>
     });
+
+    // Avatar Preview Helper
+    function previewAvatar(input, imgId, placeholderId, removeBtnId) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById(imgId).src = e.target.result;
+                document.getElementById(imgId).style.display = 'block';
+                document.getElementById(placeholderId).style.display = 'none';
+                document.getElementById(removeBtnId).style.display = 'flex';
+                if(imgId === 'edit_preview_img') {
+                    document.getElementById('remove_image_hidden').value = "0";
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function removeAvatar(inputId, previewId, placeholderId, removeBtnId) {
+        document.getElementById(inputId).value = '';
+        document.getElementById(previewId).src = '';
+        document.getElementById(previewId).style.display = 'none';
+        document.getElementById(placeholderId).style.display = 'block';
+        document.getElementById(removeBtnId).style.display = 'none';
+    }
+
+    function removeEditAvatar() {
+        document.getElementById('edit_profile_image').value = '';
+        document.getElementById('edit_preview_img').src = '';
+        document.getElementById('edit_preview_img').style.display = 'none';
+        document.getElementById('edit_placeholder').style.display = 'block';
+        document.getElementById('edit_remove_btn').style.display = 'none';
+        document.getElementById('remove_image_hidden').value = "1";
+    }
 </script>
 <?php $__env->stopPush(); ?>
 

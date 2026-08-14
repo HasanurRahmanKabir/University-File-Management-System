@@ -21,7 +21,13 @@
             }
         @endphp
         <div class="dropdown" style="display: flex; align-items: center;">
-            <div class="tb-avatar" data-bs-toggle="dropdown" aria-expanded="false">{{ $initials }}</div>
+            <div class="tb-avatar" data-bs-toggle="dropdown" aria-expanded="false" style="overflow: hidden; padding: 0;">
+                @if(Auth::user() && Auth::user()->profile_image)
+                    <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                @else
+                    {{ $initials }}
+                @endif
+            </div>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border:1px solid var(--bd-lt); border-radius: var(--r-md); padding: 8px 0; min-width: 200px;">
                 <li><a class="dropdown-item" href="{{ route('teacher.profile') }}" style="font-size: 0.85rem; padding: 8px 16px; color: var(--tx-h);"><i class="fas fa-user-circle" style="width:20px; color:var(--tx-m);"></i> My Profile</a></li>
                 <li><a class="dropdown-item" href="{{ route('teacher.settings') }}" style="font-size: 0.85rem; padding: 8px 16px; color: var(--tx-h);"><i class="fas fa-cog" style="width:20px; color:var(--tx-m);"></i> Account Settings</a></li>

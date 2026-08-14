@@ -26,8 +26,12 @@
             }
         @endphp
         <div class="profile-hdr-flex">
-            <div class="profile-avatar-circle">
-                {{ $initials }}
+            <div class="profile-avatar-circle" style="overflow: hidden;">
+                @if($user->profile_image)
+                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                @else
+                    {{ $initials }}
+                @endif
             </div>
             <div class="profile-name-block">
                 <h3 style="margin: 0 0 6px; color: var(--tx-h); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px;">{{ $user->name }}</h3>

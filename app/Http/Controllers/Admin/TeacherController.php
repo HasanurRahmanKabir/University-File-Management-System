@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
 use App\Models\Department;
@@ -48,8 +49,14 @@ class TeacherController extends Controller
             'designation' => 'nullable|string|max:100',
             'is_active' => 'required|boolean',
             'courses' => 'nullable|array',
-            'courses.*' => 'exists:courses,id'
+            'courses.*' => 'exists:courses,id',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
+        
+        if ($request->hasFile('profile_image')) {
+            $path = $request->file('profile_image')->store('teachers', 'public');
+            $validated['profile_image'] = $path;
+        }
         
         $validated['role'] = 'teacher';
         $validated['password'] = Hash::make($validated['password']);
@@ -73,8 +80,24 @@ class TeacherController extends Controller
             'designation' => 'nullable|string|max:100',
             'is_active' => 'required|boolean',
             'courses' => 'nullable|array',
-            'courses.*' => 'exists:courses,id'
+            'courses.*' => 'exists:courses,id',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
+
+        if ($request->has('remove_image') && $request->remove_image == '1') {
+            if ($teacher->profile_image && Storage::disk('public')->exists($teacher->profile_image)) {
+                Storage::disk('public')->delete($teacher->profile_image);
+            }
+            $validated['profile_image'] = null;
+        }
+
+        if ($request->hasFile('profile_image')) {
+            if ($teacher->profile_image && Storage::disk('public')->exists($teacher->profile_image)) {
+                Storage::disk('public')->delete($teacher->profile_image);
+            }
+            $path = $request->file('profile_image')->store('teachers', 'public');
+            $validated['profile_image'] = $path;
+        }
 
         if ($request->filled('password')) {
             $request->validate(['password' => ['required', Password::defaults()]]);
@@ -97,6 +120,9 @@ class TeacherController extends Controller
     public function destroy($id)
     {
         $teacher = User::findOrFail($id);
+        if ($teacher->profile_image && Storage::disk('public')->exists($teacher->profile_image)) {
+            Storage::disk('public')->delete($teacher->profile_image);
+        }
         // Remove assigned courses before deleting
         Course::where('teacher_id', $teacher->id)->update(['teacher_id' => null]);
         $teacher->delete();
