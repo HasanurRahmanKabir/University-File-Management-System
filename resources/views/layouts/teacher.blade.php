@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <meta name="description" content="Teacher Dashboard — University OBE File Management System">
-    <title>@yield('title', 'Dashboard — TeacherHub OBE')</title>
+    <meta name="description" content="{{ $globalSettings['seo_meta_description'] ?? 'Teacher Dashboard — University OBE File Management System' }}">
+    <title>@yield('page-title', 'Teacher') — {{ $globalSettings['teacher_tab_title'] ?? 'Teacher Dashboard - OBE System' }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/teacher.css') }}">

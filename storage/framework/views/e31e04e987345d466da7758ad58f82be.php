@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Admin Dashboard — University OBE File Management System">
-    <title><?php echo $__env->yieldContent('title', 'Admin Dashboard - OBE System'); ?></title>
+    <meta name="description" content="<?php echo e($globalSettings['seo_meta_description'] ?? 'Admin Dashboard — University OBE File Management System'); ?>">
+    <title><?php echo $__env->yieldContent('page-title', 'Admin'); ?> — <?php echo e($globalSettings['admin_tab_title'] ?? 'Admin Dashboard - OBE System'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="<?php echo e(asset('css/dashboard.css')); ?>">
@@ -18,10 +18,16 @@
     <!-- ====== SIDEBAR ====== -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="brand-logo"><i class="fas fa-graduation-cap"></i></div>
+            <div class="brand-logo" style="<?php echo e(isset($globalSettings['admin_logo']) && $globalSettings['admin_logo'] ? 'background: transparent; box-shadow: none;' : ''); ?>">
+                <?php if(isset($globalSettings['admin_logo']) && $globalSettings['admin_logo']): ?>
+                    <img src="<?php echo e(asset('storage/' . $globalSettings['admin_logo'])); ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <?php else: ?>
+                    <i class="fas fa-graduation-cap"></i>
+                <?php endif; ?>
+            </div>
             <div class="brand-text">
-                <span class="brand-name">UniAdmin</span>
-                <span class="brand-tagline">File Management</span>
+                <span class="brand-name"><?php echo e($globalSettings['admin_dashboard_name'] ?? 'UniAdmin'); ?></span>
+                <span class="brand-tagline"><?php echo e($globalSettings['brand_tagline'] ?? 'File Management'); ?></span>
             </div>
         </div>
 
@@ -91,7 +97,7 @@
             <span class="nav-group-label">System</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="<?php echo e(Route::has('admin.settings.index') ? route('admin.settings.index') : '#'); ?>" class="nav-link <?php echo e(request()->routeIs('admin.settings.*') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('admin.system-settings')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.system-settings') ? 'active' : ''); ?>">
                         <i class="fas fa-gear"></i> Settings
                     </a>
                 </li>
@@ -214,7 +220,7 @@
 
         <!-- Footer -->
         <div class="dashboard-footer" style="margin-top: auto; justify-content: center; text-align: center; width: 100%;">
-            <span style="font-weight: 600; color: #64748b;">© 2026 University File Management System</span>
+            <span style="font-weight: 600; color: #64748b;"><?php echo e($globalSettings['footer_copyright'] ?? '© 2026 University File Management System'); ?></span>
         </div>
     </div>
 

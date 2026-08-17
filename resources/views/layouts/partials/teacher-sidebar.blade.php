@@ -1,10 +1,16 @@
 <aside class="sidebar" id="sidebar">
     <div class="sb-scroll">
         <div class="sb-brand">
-            <div class="sb-logo"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="sb-logo" style="{{ isset($globalSettings['teacher_logo']) && $globalSettings['teacher_logo'] ? 'background: transparent; box-shadow: none;' : '' }}">
+                @if(isset($globalSettings['teacher_logo']) && $globalSettings['teacher_logo'])
+                    <img src="{{ asset('storage/' . $globalSettings['teacher_logo']) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                @else
+                    <i class="fas fa-chalkboard-teacher"></i>
+                @endif
+            </div>
             <div>
-                <span class="sb-brand-name">TeacherHub</span>
-                <span class="sb-brand-tag">OBE Portal</span>
+                <span class="sb-brand-name">{{ $globalSettings['teacher_dashboard_name'] ?? 'TeacherHub' }}</span>
+                <span class="sb-brand-tag">{{ $globalSettings['brand_tagline'] ?? 'OBE Portal' }}</span>
             </div>
         </div>
         <nav class="sb-nav">

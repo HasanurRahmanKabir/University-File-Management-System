@@ -62,6 +62,10 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
     Route::get('/account-settings', [\App\Http\Controllers\Admin\ProfileController::class, 'settings'])->name('account-settings');
     Route::post('/account-settings', [\App\Http\Controllers\Admin\ProfileController::class, 'updateSettings'])->name('account-settings.update');
+    
+    // System Settings
+    Route::get('/system-settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('system-settings');
+    Route::post('/system-settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('system-settings.update');
 
 });
 use App\Http\Controllers\Teacher\CategoryController as TeacherCategoryController;

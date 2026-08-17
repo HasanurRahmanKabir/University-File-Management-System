@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
+use App\Models\Setting;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +23,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        try {
+            if (Schema::hasTable('settings')) {
+                $globalSettings = Setting::pluck('value', 'key')->toArray();
+                View::share('globalSettings', $globalSettings);
+            }
+        } catch (\Exception $e) {
+            // Ignore during migrations or initial setup
+        }
     }
 }

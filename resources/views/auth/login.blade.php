@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In — University OBE Portal</title>
+    <meta name="description" content="{{ $globalSettings['login_subtitle'] ?? 'Welcome to the Official File Management Portal of our University. Sign in to access your dashboard.' }}">
+    <title>{{ $globalSettings['login_tab_title'] ?? 'Sign In — University OBE Portal' }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -286,16 +287,22 @@
 <div class="card">
 
     <div class="logo">
-        <div class="logo-icon">
-            <i class="fas fa-graduation-cap"></i>
-        </div>
-        <div class="logo-name">UniOBE Portal</div>
-        <div class="logo-tagline">University File Management System</div>
+        @if(isset($globalSettings['login_logo']) && $globalSettings['login_logo'])
+            <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                <img src="{{ asset('storage/' . $globalSettings['login_logo']) }}" alt="Logo" style="max-width: 100%; height: 60px; object-fit: contain;">
+            </div>
+        @else
+            <div class="logo-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="logo-name">UniOBE Portal</div>
+            <div class="logo-tagline">{{ $globalSettings['login_logo_tagline'] ?? 'University File Management System' }}</div>
+        @endif
     </div>
 
     <div class="heading">
-        <h1>Sign in to your account</h1>
-        <p>Enter your credentials below to continue</p>
+        <h1>{{ $globalSettings['login_title'] ?? 'Sign in to your account' }}</h1>
+        <p>{{ $globalSettings['login_subtitle'] ?? 'Enter your credentials below to continue' }}</p>
     </div>
 
     @if ($errors->any())
@@ -332,7 +339,7 @@
         <button type="submit" class="btn" id="submitBtn">Sign in</button>
     </form>
 
-    <div class="footer">© {{ date('Y') }} University OBE System. All rights reserved.</div>
+    <div class="footer">{{ $globalSettings['footer_copyright'] ?? '© ' . date('Y') . ' University OBE System. All rights reserved.' }}</div>
 
 </div>
 
