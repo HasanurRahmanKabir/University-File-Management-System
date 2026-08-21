@@ -15,22 +15,37 @@
         @if(session('success'))
             Toast.fire({
                 icon: 'success',
-                title: "{{ session('success') }}"
+                title: {!! json_encode(session('success')) !!}
             });
         @endif
 
         @if(session('error'))
             Toast.fire({
                 icon: 'error',
-                title: "{{ session('error') }}"
+                title: {!! json_encode(session('error')) !!}
             });
+        @endif
+
+        @if(request('error') === 'file_too_large')
+            Toast.fire({
+                icon: 'error',
+                title: "File Too Large",
+                text: "File exceeds max allowed size."
+            });
+            
+            // Clean up the URL so it doesn't show again on refresh
+            if (window.history.replaceState) {
+                const url = new URL(window.location);
+                url.searchParams.delete('error');
+                window.history.replaceState({path: url.href}, '', url.href);
+            }
         @endif
 
         @if($errors->any() && !isset($hideValidationToast))
             Toast.fire({
                 icon: 'error',
                 title: "Validation Error",
-                text: "{{ $errors->first() }}"
+                text: {!! json_encode($errors->first()) !!}
             });
         @endif
 

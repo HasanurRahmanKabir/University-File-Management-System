@@ -15,22 +15,40 @@
         <?php if(session('success')): ?>
             Toast.fire({
                 icon: 'success',
-                title: "<?php echo e(session('success')); ?>"
+                title: <?php echo json_encode(session('success')); ?>
+
             });
         <?php endif; ?>
 
         <?php if(session('error')): ?>
             Toast.fire({
                 icon: 'error',
-                title: "<?php echo e(session('error')); ?>"
+                title: <?php echo json_encode(session('error')); ?>
+
             });
+        <?php endif; ?>
+
+        <?php if(request('error') === 'file_too_large'): ?>
+            Toast.fire({
+                icon: 'error',
+                title: "File Too Large",
+                text: "File exceeds max allowed size."
+            });
+            
+            // Clean up the URL so it doesn't show again on refresh
+            if (window.history.replaceState) {
+                const url = new URL(window.location);
+                url.searchParams.delete('error');
+                window.history.replaceState({path: url.href}, '', url.href);
+            }
         <?php endif; ?>
 
         <?php if($errors->any() && !isset($hideValidationToast)): ?>
             Toast.fire({
                 icon: 'error',
                 title: "Validation Error",
-                text: "<?php echo e($errors->first()); ?>"
+                text: <?php echo json_encode($errors->first()); ?>
+
             });
         <?php endif; ?>
 

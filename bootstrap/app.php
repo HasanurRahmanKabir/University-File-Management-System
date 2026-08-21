@@ -22,4 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, Request $request) {
+            $url = $request->header('referer') ?: url('/admin/dashboard');
+            $separator = parse_url($url, PHP_URL_QUERY) ? '&' : '?';
+            return redirect($url . $separator . 'error=file_too_large');
+        });
     })->create();
