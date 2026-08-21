@@ -2,6 +2,27 @@
 <?php $__env->startSection('page-title', 'Categories'); ?>
 <?php $__env->startSection('breadcrumb', 'Categories'); ?>
 
+<?php $__env->startPush('styles'); ?>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    /* Ensure TomSelect perfectly matches the standard form-select design */
+    .ts-wrapper.form-select { padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; }
+    .ts-control { border: 1.5px solid var(--border) !important; border-radius: var(--radius-md) !important; background: var(--bg-input) !important; color: var(--text-body) !important; font-size: 0.85rem !important; padding: 9px 13px !important; min-height: 42px !important; box-shadow: var(--shadow-sm) !important; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; transition: all var(--duration-base) var(--ease); }
+    .ts-wrapper.focus .ts-control { border-color: var(--primary) !important; box-shadow: 0 0 0 3px var(--primary-glow) !important; background: white !important; outline: none !important; }
+    /* TomSelect Placeholders */
+    .ts-dropdown { border: 1px solid var(--border) !important; border-radius: var(--radius-md) !important; background-color: white !important; box-shadow: var(--shadow-md) !important; z-index: 9999 !important; }
+    .ts-dropdown .ts-dropdown-content { max-height: 250px !important; overflow-y: auto !important; padding-bottom: 5px; }
+    .ts-dropdown .option[data-value=""] { display: none !important; }
+    .ts-dropdown .option { padding: 8px 14px !important; color: var(--text-body) !important; font-size: 0.85rem !important; }
+    .ts-dropdown .option:hover, .ts-dropdown .active { background-color: var(--bg-muted) !important; color: var(--primary) !important; }
+    .ts-dropdown .dropdown-input-wrap { padding: 8px !important; border-bottom: 1px solid var(--border-light) !important; }
+    .ts-dropdown .dropdown-input { border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; padding: 6px 12px !important; background: var(--bg-muted) !important; color: var(--text-body) !important; font-size: 0.85rem !important; }
+    .ts-control::after { content: ""; display: block; width: 10px; height: 10px; border-right: 2px solid #888; border-bottom: 2px solid #888; transform: rotate(45deg); position: absolute; right: 15px; top: 40%; transition: transform 0.2s ease; }
+    .ts-wrapper.dropdown-active .ts-control::after { transform: rotate(-135deg); top: 45%; }
+    .ts-wrapper.dropdown-active .ts-control .item, .ts-wrapper.has-items .ts-control .item { display: block !important; opacity: 1 !important; }
+</style>
+<?php $__env->stopPush(); ?>
+
 <?php $__env->startSection('content'); ?>
 <div class="page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div class="heading-group">
@@ -39,11 +60,12 @@
             <table class="premium-table w-100">
                 <thead>
                     <tr>
-                        <th>Category Name</th>
-                        <th>Core Topic</th>
-                        <th class="text-center">Courses</th>
-                        <th>Status</th>
-                        <th class="text-center">Action</th>
+                        <th style="width: 16.66%;">Category Name</th>
+                        <th style="width: 16.66%; text-align: center;">Core Topic</th>
+                        <th style="width: 16.66%; text-align: center;">Department</th>
+                        <th style="width: 16.66%; text-align: center;">Courses</th>
+                        <th style="width: 16.66%; text-align: center;">Status</th>
+                        <th style="width: 16.66%; text-align: center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,8 +91,11 @@
                                 <div class="user-name"><?php echo e($category->name); ?></div>
                             </div>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <span style="color:var(--text-secondary);font-size:0.82rem;"><?php echo e($category->description ?? 'No topic description'); ?></span>
+                        </td>
+                        <td class="text-center">
+                            <span style="font-size:0.85rem; font-weight: 500; color: var(--text-body);"><?php echo e($category->department->name ?? 'N/A'); ?></span>
                         </td>
                         <td class="text-center">
                             <span class="badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);">
@@ -78,7 +103,7 @@
 
                             </span>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <?php if($category->is_active): ?>
                                 <span class="badge success"><span class="status-indicator active"></span> Active</span>
                             <?php else: ?>
@@ -90,6 +115,7 @@
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
                                     data-id="<?php echo e($category->id); ?>"
                                     data-name="<?php echo e($category->name); ?>"
+                                    data-department="<?php echo e($category->department_id); ?>"
                                     data-description="<?php echo e($category->description); ?>"
                                     data-status="<?php echo e($category->is_active ? '1' : '0'); ?>">
                                     <i class="fas fa-pen"></i>
@@ -139,6 +165,15 @@
                 <form action="<?php echo e(route('admin.categories.store')); ?>" method="POST">
                     <?php echo csrf_field(); ?>
                     <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <select name="department_id" id="add_department" class="form-select">
+                            <option value="">Choose Department</option>
+                            <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Category Name</label>
                         <input type="text" name="name" class="form-input" placeholder="e.g. Networking" required>
                     </div>
@@ -176,6 +211,15 @@
                     <?php echo csrf_field(); ?>
                     <?php echo method_field('PUT'); ?>
                     <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <select name="department_id" id="edit_department" class="form-select">
+                            <option value="">Choose Department</option>
+                            <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Category Name</label>
                         <input type="text" name="name" id="edit_name" class="form-input" required>
                     </div>
@@ -202,8 +246,29 @@
 <?php $__env->stopPush(); ?>
 
 <?php $__env->startPush('scripts'); ?>
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize TomSelect with dropdown_input plugin
+        let tsConfig = {
+            create: false,
+            controlInput: null,
+            maxOptions: null,
+            allowEmptyOption: true,
+            wrapperClass: 'ts-wrapper form-select',
+            plugins: ['dropdown_input'],
+            sortField: { field: "text", direction: "asc" },
+            onDelete: function(values, e) { return e ? false : true; }
+        };
+
+        let addDeptSelect = new TomSelect('#add_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper form-select ts-department'}));
+        let searchInputAdd = addDeptSelect.dropdown.querySelector('input');
+        if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search department...');
+        
+        let editDeptSelect = new TomSelect('#edit_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper form-select ts-department'}));
+        let searchInputEdit = editDeptSelect.dropdown.querySelector('input');
+        if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search department...');
+
         // Edit Modal Population
         const editButtons = document.querySelectorAll('.edit-btn');
         const editForm = document.getElementById('editCategoryForm');
@@ -214,6 +279,8 @@
                 
                 document.getElementById('edit_name').value = this.getAttribute('data-name');
                 document.getElementById('edit_description').value = this.getAttribute('data-description') || '';
+                
+                editDeptSelect.setValue(this.getAttribute('data-department'));
                 
                 const status = this.getAttribute('data-status');
                 document.getElementById('edit_status').checked = (status === '1');

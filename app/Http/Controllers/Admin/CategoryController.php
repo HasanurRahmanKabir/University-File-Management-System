@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -11,7 +12,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::withCount('courses');
+        $query = Category::with('department')->withCount('courses');
 
         if ($request->has('search') && $request->search != '') {
             $search = strtolower($request->search);
@@ -28,13 +29,15 @@ class CategoryController extends Controller
         }
 
         $categories = $query->latest()->paginate(10)->appends($request->all());
-        return view('admin.categories', compact('categories'));
+        $departments = Department::all();
+        return view('admin.categories', compact('categories', 'departments'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories',
+            'department_id' => 'nullable|exists:departments,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
@@ -61,6 +64,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'department_id' => 'nullable|exists:departments,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
