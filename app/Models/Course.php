@@ -8,7 +8,7 @@ use App\Traits\LogsGlobalActivity;
 class Course extends Model {
     use HasFactory, SoftDeletes, LogsGlobalActivity;
     protected $fillable = [
-        'department_id', 'category_id', 'subcategory_id', 'teacher_id', 'title', 'subtitle', 'course_code', 'slug', 'description', 'thumbnail', 'is_active'
+        'department_id', 'category_id', 'subcategory_id', 'teacher_id', 'title', 'subtitle', 'course_code', 'credit', 'slug', 'description', 'thumbnail', 'is_active'
     ];
     protected $casts = [
         'is_active' => 'boolean',

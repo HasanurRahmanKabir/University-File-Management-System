@@ -52,6 +52,7 @@ class CourseController extends Controller
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'course_code' => ['required', 'string', 'max:50', Rule::unique('courses')->whereNull('deleted_at')],
+            'credit' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'is_active' => 'nullable|boolean'
         ]);
@@ -92,6 +93,7 @@ class CourseController extends Controller
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'course_code' => ['required', 'string', 'max:50', Rule::unique('courses')->ignore($course->id)->whereNull('deleted_at')],
+            'credit' => 'nullable|string|max:50',
             'description' => 'nullable|string',
             'is_active' => 'nullable|boolean'
         ]);

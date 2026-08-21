@@ -57,11 +57,14 @@
     <div class="card-body">
         <div class="table-wrap">
             <table class="premium-table">
-                <thead><tr><th>Course Code</th><th>Course Title</th><th>Course Subtitle</th><th class="text-center">Department</th><th class="text-center">Classification</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
+                <thead><tr><th>Course Code</th><th class="text-center">Credit</th><th>Course Title</th><th>Course Subtitle</th><th class="text-center">Department</th><th class="text-center">Classification</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
                 <tbody>
                     <?php $__empty_1 = true; $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td><span class="badge dark"><i class="fas fa-hashtag"></i> <?php echo e($course->course_code); ?></span></td>
+                        <td class="text-center">
+                            <span class="badge info"><i class="fas fa-star"></i> <?php echo e($course->credit ?? 'N/A'); ?></span>
+                        </td>
                         <td>
                             <div class="user-name"><?php echo e($course->title); ?></div>
                         </td>
@@ -102,6 +105,7 @@
                                 <button class="action-btn edit edit-course-btn" data-bs-toggle="modal" data-bs-target="#editCourseModal"
                                     data-id="<?php echo e($course->id); ?>"
                                     data-code="<?php echo e($course->course_code); ?>"
+                                    data-credit="<?php echo e($course->credit); ?>"
                                     data-title="<?php echo e($course->title); ?>"
                                     data-subtitle="<?php echo e($course->subtitle); ?>"
                                     data-status="<?php echo e($course->is_active ? '1' : '0'); ?>"
@@ -153,6 +157,7 @@
     <form action="<?php echo e(route('admin.courses.store')); ?>" method="POST">
         <?php echo csrf_field(); ?>
         <div class="form-group"><label class="form-label">Course Code <span class="text-danger">*</span></label><input type="text" name="course_code" class="form-input" placeholder="e.g. CSE-201" required></div>
+        <div class="form-group"><label class="form-label">Course Credit</label><input type="text" name="credit" class="form-input" placeholder="e.g. 3.0 or 3 Credits"></div>
         <div class="form-group"><label class="form-label">Course Title <span class="text-danger">*</span></label><input type="text" name="title" class="form-input" placeholder="e.g. Object Oriented Programming" required></div>
         <div class="form-group"><label class="form-label">Course Subtitle</label><input type="text" name="subtitle" class="form-input" placeholder="e.g. Theory + Lab"></div>
         <div class="form-group"><label class="form-label">Status</label>
@@ -216,6 +221,7 @@
         <?php echo csrf_field(); ?>
         <?php echo method_field('PUT'); ?>
         <div class="form-group"><label class="form-label">Course Code <span class="text-danger">*</span></label><input type="text" name="course_code" id="edit_code" class="form-input" required></div>
+        <div class="form-group"><label class="form-label">Course Credit</label><input type="text" name="credit" id="edit_credit" class="form-input"></div>
         <div class="form-group"><label class="form-label">Course Title <span class="text-danger">*</span></label><input type="text" name="title" id="edit_title" class="form-input" required></div>
         <div class="form-group"><label class="form-label">Course Subtitle</label><input type="text" name="subtitle" id="edit_subtitle" class="form-input"></div>
         <div class="form-group"><label class="form-label">Status</label>
@@ -344,6 +350,7 @@
             btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 document.getElementById('edit_code').value = this.getAttribute('data-code');
+                document.getElementById('edit_credit').value = this.getAttribute('data-credit');
                 document.getElementById('edit_title').value = this.getAttribute('data-title');
                 document.getElementById('edit_subtitle').value = this.getAttribute('data-subtitle');
                 document.getElementById('edit_status').checked = this.getAttribute('data-status') === '1';
