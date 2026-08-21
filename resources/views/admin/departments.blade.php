@@ -237,15 +237,7 @@
             customClass: { popup: 'premium-toast' }
         });
 
-        @if(session('success'))
-            Toast.fire({ icon: 'success', title: {!! json_encode(session('success')) !!} });
-        @endif
-        @if(session('error'))
-            Toast.fire({ icon: 'error', title: {!! json_encode(session('error')) !!} });
-        @endif
-        @if($errors->any())
-            Toast.fire({ icon: 'error', title: "Validation Error", text: {!! json_encode($errors->first()) !!} });
-        @endif
+
     });
 </script>
 @endpush

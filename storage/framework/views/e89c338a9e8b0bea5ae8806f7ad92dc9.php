@@ -421,15 +421,7 @@
             customClass: { popup: 'premium-toast' }
         });
 
-        <?php if(session('success')): ?>
-            Toast.fire({ icon: 'success', title: "<?php echo e(session('success')); ?>" });
-        <?php endif; ?>
-        <?php if(session('error')): ?>
-            Toast.fire({ icon: 'error', title: "<?php echo e(session('error')); ?>" });
-        <?php endif; ?>
-        <?php if($errors->any()): ?>
-            Toast.fire({ icon: 'error', title: "Validation Error", text: "<?php echo e($errors->first()); ?>" });
-        <?php endif; ?>
+
     });
 </script>
 <?php $__env->stopPush(); ?>
