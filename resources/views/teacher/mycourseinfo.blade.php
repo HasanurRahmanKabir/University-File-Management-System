@@ -50,7 +50,7 @@
                     <tr>
                         <td><span class="t-code">{{ $course->course_code }}</span></td>
                         <td><span class="t-name">{{ $course->title }}</span></td>
-                        <td><span class="badge b-gray">3.0 cr</span></td>
+                        <td><span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span></td>
                         <td><span style="font-weight:600;color:var(--tx-h);">{{ $course->enrolled_students }}</span> <span style="color:var(--tx-m);font-size:.75rem;">students</span></td>
                     </tr>
                     @empty
