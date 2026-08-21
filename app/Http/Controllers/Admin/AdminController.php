@@ -7,12 +7,13 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Gate;
 
 class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::where('role', 'admin');
+        $query = User::whereIn('role', ['admin', 'super_admin']);
         
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
@@ -35,15 +36,17 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('manage-admins');
+
         $validated = $request->validate([
+            'role' => 'required|in:admin,super_admin',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'contact_number' => 'required|string|max:20',
+            'contact_number' => 'nullable|string|max:20',
             'password' => ['required', Password::defaults()],
             'is_active' => 'required|boolean',
         ]);
         
-        $validated['role'] = 'admin';
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
@@ -52,11 +55,14 @@ class AdminController extends Controller
 
     public function update(Request $request, $id)
     {
+        Gate::authorize('manage-admins');
+
         $user = User::findOrFail($id);
         $validated = $request->validate([
+            'role' => 'required|in:admin,super_admin',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'contact_number' => 'required|string|max:20',
+            'contact_number' => 'nullable|string|max:20',
             'is_active' => 'required|boolean',
         ]);
 
@@ -71,6 +77,8 @@ class AdminController extends Controller
 
     public function destroy($id)
     {
+        Gate::authorize('manage-admins');
+
         $user = User::findOrFail($id);
         $user->delete();
         return back()->with('success', 'Admin deleted successfully.');

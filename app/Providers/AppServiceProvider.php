@@ -6,7 +6,9 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Setting;
+use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,9 @@ class AppServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
             // Ignore during migrations or initial setup
         }
+
+        Gate::define('manage-admins', function (User $user) {
+            return $user->role === 'super_admin';
+        });
     }
 }

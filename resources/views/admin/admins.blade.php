@@ -6,7 +6,9 @@
 @section('content')
 <div class="page-header">
     <div class="heading-group"><h2>Authorized Administrators</h2><p>Manage admin accounts, credentials, and access privileges.</p></div>
+    @can('manage-admins')
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAdminModal"><i class="fas fa-user-plus"></i> Add Admin</button>
+    @endcan
 </div>
 
 <div class="data-card">
@@ -27,7 +29,7 @@
     </div>
     <div class="card-body"><div class="table-wrap">
         <table class="premium-table">
-            <thead><tr><th>Admin Name</th><th class="text-center">Email Address</th><th class="text-center">Contact</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
+            <thead><tr><th>Admin Name</th><th class="text-center">Role</th><th class="text-center">Email Address</th><th class="text-center">Contact</th><th class="text-center">Status</th>@can('manage-admins')<th class="text-center">Action</th>@endcan</tr></thead>
             <tbody>
                 @forelse($users as $admin)
                 <tr>
@@ -41,10 +43,11 @@
                             @endif
                             <div>
                                 <div class="user-name">{{ $admin->name }}</div>
-                                <div class="user-sub">Administrator</div>
+                                <div class="user-sub">{{ $admin->role === 'super_admin' ? 'Super Admin' : 'Admin' }}</div>
                             </div>
                         </div>
                     </td>
+                    <td class="text-center"><span class="badge {{ $admin->role === 'super_admin' ? 'primary' : 'neutral' }}">{{ $admin->role === 'super_admin' ? 'Super Admin' : 'Admin' }}</span></td>
                     <td class="text-center"><span style="color:var(--text-secondary);font-size:0.82rem;">{{ $admin->email }}</span></td>
                     <td class="text-center">
                         @if($admin->contact_number)
@@ -60,6 +63,7 @@
                             <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
                         @endif
                     </td>
+                    @can('manage-admins')
                     <td>
                         <div class="action-group">
                             <button class="action-btn edit edit-admin-btn" data-bs-toggle="modal" data-bs-target="#editAdminModal"
@@ -67,6 +71,7 @@
                                 data-name="{{ $admin->name }}"
                                 data-email="{{ $admin->email }}"
                                 data-contact="{{ $admin->contact_number }}"
+                                data-role="{{ $admin->role }}"
                                 data-active="{{ $admin->is_active ? 1 : 0 }}">
                                 <i class="fas fa-pen"></i>
                             </button>
@@ -77,10 +82,11 @@
                             </form>
                         </div>
                     </td>
+                    @endcan
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center py-5">
+                    <td colspan="6" class="text-center py-5">
                         <div class="empty-state">
                             <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                             @if(request('search'))
@@ -109,9 +115,10 @@
 
 @push('modals')
 <div class="modal fade" id="addAdminModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Admin</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="{{ route('admin.admins.store') }}" method="POST">@csrf
+        <div class="form-group"><label class="form-label">Role</label><select name="role" class="form-select" required><option value="admin">Admin</option><option value="super_admin">Super Admin</option></select></div>
         <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" class="form-input" placeholder="Enter admin name" required></div>
         <div class="form-group"><label class="form-label">Email Address</label><input type="email" name="email" class="form-input" placeholder="admin@system.com" required></div>
-        <div class="form-group"><label class="form-label">Contact Number</label><input type="text" name="contact_number" class="form-input" placeholder="+880 1XXX-XXXXXX" required></div>
+        <div class="form-group"><label class="form-label">Contact Number</label><input type="text" name="contact_number" class="form-input" placeholder="+880 1XXX-XXXXXX"></div>
         <div class="form-group">
             <label class="form-label">Create Password <span class="text-danger">*</span></label>
             <div style="position: relative;">
@@ -138,9 +145,10 @@
 
     <!-- EDIT ADMIN -->
     <div class="modal fade" id="editAdminModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Update Admin</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editAdminForm" action="" method="POST">@csrf @method('PUT')
+        <div class="form-group"><label class="form-label">Role</label><select name="role" id="edit_role" class="form-select" required><option value="admin">Admin</option><option value="super_admin">Super Admin</option></select></div>
         <div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" id="edit_name" class="form-input" required></div>
         <div class="form-group"><label class="form-label">Email</label><input type="email" name="email" id="edit_email" class="form-input" required></div>
-        <div class="form-group"><label class="form-label">Contact</label><input type="text" name="contact_number" id="edit_contact" class="form-input" required></div>
+        <div class="form-group"><label class="form-label">Contact</label><input type="text" name="contact_number" id="edit_contact" class="form-input"></div>
         <div class="form-group">
             <label class="form-label">New Password</label>
             <div style="position: relative;">
@@ -203,6 +211,7 @@
                 document.getElementById('edit_name').value = this.getAttribute('data-name');
                 document.getElementById('edit_email').value = this.getAttribute('data-email');
                 document.getElementById('edit_contact').value = this.getAttribute('data-contact');
+                document.getElementById('edit_role').value = this.getAttribute('data-role');
                 document.getElementById('edit_is_active').checked = this.getAttribute('data-active') === '1';
                 
                 let actionUrl = "{{ route('admin.admins.update', ':id') }}";

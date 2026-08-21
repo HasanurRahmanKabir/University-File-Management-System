@@ -16,11 +16,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@gmail.com'],
+            ['email' => 'superadmin@gmail.com'],
             [
-                'name' => 'Admin User',
+                'name' => 'Super Admin',
                 'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-                'role' => 'admin',
+                'role' => 'super_admin',
                 'is_active' => true,
             ]
         );
