@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsGlobalActivity;
 
-#[Fillable(['category_id', 'name', 'slug', 'description', 'is_active'])]
+#[Fillable(['department_id', 'name', 'slug', 'description', 'is_active'])]
 class Subcategory extends Model
 {
     use HasFactory, SoftDeletes, LogsGlobalActivity;
@@ -17,9 +17,9 @@ class Subcategory extends Model
         'is_active' => 'boolean',
     ];
 
-    public function category()
+    public function department()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Department::class);
     }
 
     public function courses()

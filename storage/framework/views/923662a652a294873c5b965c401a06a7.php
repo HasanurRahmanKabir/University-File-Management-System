@@ -134,11 +134,11 @@
             <table class="premium-table w-100">
                 <thead>
                     <tr>
-                        <th>Subcategory Name</th>
-                        <th>Main Category (Dept)</th>
-                        <th class="text-center">Courses</th>
-                        <th>Status</th>
-                        <th class="text-center">Action</th>
+                        <th style="width: 20%;">Subcategory Name</th>
+                        <th style="width: 20%; text-align: center;">Department</th>
+                        <th style="width: 20%; text-align: center;">Courses</th>
+                        <th style="width: 20%; text-align: center;">Status</th>
+                        <th style="width: 20%; text-align: center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -169,8 +169,8 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <span class="badge primary"><i class="fas fa-tags"></i> <?php echo e($subcat->category->name ?? 'N/A'); ?></span>
+                        <td class="text-center">
+                            <span style="font-size:0.85rem; font-weight: 500; color: var(--text-body);"><?php echo e($subcat->department->name ?? 'N/A'); ?></span>
                         </td>
                         <td class="text-center">
                             <span class="badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);">
@@ -178,7 +178,7 @@
 
                             </span>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <?php if($subcat->is_active): ?>
                                 <span class="badge success"><span class="status-indicator active"></span> Active</span>
                             <?php else: ?>
@@ -189,7 +189,7 @@
                             <div class="action-group justify-content-center">
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editSubCategoryModal"
                                     data-id="<?php echo e($subcat->id); ?>"
-                                    data-category-id="<?php echo e($subcat->category_id); ?>"
+                                    data-department="<?php echo e($subcat->department_id); ?>"
                                     data-name="<?php echo e($subcat->name); ?>"
                                     data-description="<?php echo e($subcat->description); ?>"
                                     data-status="<?php echo e($subcat->is_active ? '1' : '0'); ?>">
@@ -240,11 +240,11 @@
                 <form action="<?php echo e(route('admin.subcategories.store')); ?>" method="POST">
                     <?php echo csrf_field(); ?>
                     <div class="form-group">
-                        <label class="form-label">Main Category</label>
-                        <select name="category_id" id="add_category_id" class="form-select">
-                            <option value="">Select Category...</option>
-                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?></option>
+                        <label class="form-label">Department</label>
+                        <select name="department_id" id="add_department" class="form-select">
+                            <option value="">Choose Department</option>
+                            <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
@@ -265,7 +265,7 @@
                     </div>
                     <div class="form-actions mt-3">
                         <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Register Subcategory</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Add Subcategory</button>
                     </div>
                 </form>
             </div>
@@ -286,10 +286,11 @@
                     <?php echo csrf_field(); ?>
                     <?php echo method_field('PUT'); ?>
                     <div class="form-group">
-                        <label class="form-label">Main Category</label>
-                        <select name="category_id" id="edit_category_id" class="form-select" required>
-                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?></option>
+                        <label class="form-label">Department</label>
+                        <select name="department_id" id="edit_department" class="form-select">
+                            <option value="">Choose Department</option>
+                            <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
@@ -323,35 +324,28 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize TomSelect for Categories
-        if(document.getElementById('add_category_id')) {
-            let addCat = new TomSelect("#add_category_id", {
-                create: false,
-                controlInput: null,
-                maxOptions: null,
-                allowEmptyOption: true,
-                wrapperClass: 'ts-wrapper form-select ts-category',
-                plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" },
-                onDelete: function(values, e) { return e ? false : true; }
-            });
-            let searchInput = addCat.dropdown.querySelector('input');
-            if(searchInput) searchInput.setAttribute('placeholder', 'Search category...');
+        // Initialize TomSelect for Departments
+        let tsConfig = {
+            create: false,
+            controlInput: null,
+            maxOptions: null,
+            allowEmptyOption: true,
+            wrapperClass: 'ts-wrapper form-select',
+            plugins: ['dropdown_input'],
+            sortField: { field: "text", direction: "asc" },
+            onDelete: function(values, e) { return e ? false : true; }
+        };
+
+        if(document.getElementById('add_department')) {
+            let addDeptSelect = new TomSelect('#add_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper form-select ts-department'}));
+            let searchInputAdd = addDeptSelect.dropdown.querySelector('input');
+            if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search department...');
         }
         
-        if(document.getElementById('edit_category_id')) {
-            window.editCatSelect = new TomSelect("#edit_category_id", {
-                create: false,
-                controlInput: null,
-                maxOptions: null,
-                allowEmptyOption: true,
-                wrapperClass: 'ts-wrapper form-select ts-category',
-                plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" },
-                onDelete: function(values, e) { return e ? false : true; }
-            });
-            let searchInput = window.editCatSelect.dropdown.querySelector('input');
-            if(searchInput) searchInput.setAttribute('placeholder', 'Search category...');
+        if(document.getElementById('edit_department')) {
+            window.editDeptSelect = new TomSelect('#edit_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper form-select ts-department'}));
+            let searchInputEdit = window.editDeptSelect.dropdown.querySelector('input');
+            if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search department...');
         }
 
         // Edit Modal Population
@@ -365,10 +359,10 @@
                 document.getElementById('edit_name').value = this.getAttribute('data-name');
                 document.getElementById('edit_description').value = this.getAttribute('data-description') || '';
                 
-                if(window.editCatSelect) {
-                    window.editCatSelect.setValue(this.getAttribute('data-category-id'));
+                if(window.editDeptSelect) {
+                    window.editDeptSelect.setValue(this.getAttribute('data-department'));
                 } else {
-                    document.getElementById('edit_category_id').value = this.getAttribute('data-category-id');
+                    document.getElementById('edit_department').value = this.getAttribute('data-department');
                 }
                 
                 const status = this.getAttribute('data-status');

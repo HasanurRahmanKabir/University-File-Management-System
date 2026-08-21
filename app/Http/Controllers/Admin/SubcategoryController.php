@@ -12,15 +12,15 @@ class SubcategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Subcategory::with('category')->withCount('courses');
+        $query = Subcategory::with('department')->withCount('courses');
 
         if ($request->has('search') && $request->search != '') {
             $search = strtolower($request->search);
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhereHas('category', function($cq) use ($search) {
-                      $cq->where('name', 'like', "%{$search}%");
+                  ->orWhereHas('department', function($dq) use ($search) {
+                      $dq->where('name', 'like', "%{$search}%");
                   });
                   
                 if (str_contains('active', $search)) {
@@ -32,14 +32,14 @@ class SubcategoryController extends Controller
         }
 
         $subcategories = $query->latest()->paginate(10)->appends($request->all());
-        $categories = Category::where('is_active', true)->get();
-        return view('admin.subcategories', compact('subcategories', 'categories'));
+        $departments = \App\Models\Department::all();
+        return view('admin.subcategories', compact('subcategories', 'departments'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'department_id' => 'required|exists:departments,id',
             'name' => 'required|string|max:255|unique:subcategories',
             'description' => 'nullable|string',
             'is_active' => 'boolean'
@@ -66,7 +66,7 @@ class SubcategoryController extends Controller
     public function update(Request $request, Subcategory $subcategory)
     {
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'department_id' => 'required|exists:departments,id',
             'name' => 'required|string|max:255|unique:subcategories,name,' . $subcategory->id,
             'description' => 'nullable|string',
             'is_active' => 'boolean'
