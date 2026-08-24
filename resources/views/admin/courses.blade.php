@@ -124,9 +124,9 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5">
+                        <td colspan="8" class="text-center py-5">
                             <div class="empty-state">
-                                <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                                <i class="fas fa-book-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                                 @if(request('search'))
                                     <h6 class="text-heading fw-bold">No results found for "{{ request('search') }}"</h6>
                                     <p class="text-muted small">We couldn't find any course matching your criteria.</p>

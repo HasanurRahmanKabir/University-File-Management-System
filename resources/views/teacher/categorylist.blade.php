@@ -17,7 +17,7 @@
         <div class="t-wrap">
             <table class="t-tbl">
                 <thead>
-                    <tr><th style="text-align:center; width: 60px;">#</th><th style="text-align:center;">Category Name</th><th style="text-align:center;">Subcategories</th><th style="text-align:center;">Description</th></tr>
+                    <tr><th style="text-align:center; width: 60px;">#</th><th style="text-align:center;">Category Name</th><th style="text-align:center;">Courses</th><th style="text-align:center;">Description</th></tr>
                 </thead>
                 <tbody>
                     @php
@@ -40,7 +40,7 @@
                                     <span class="t-name">{{ $category->name }}</span>
                                 </div>
                             </td>
-                            <td style="text-align:center;"><span class="badge b-blue">{{ str_pad($category->subcategories_count, 2, '0', STR_PAD_LEFT) }} Subcategories</span></td>
+                            <td style="text-align:center;"><span class="badge b-blue">{{ str_pad($category->courses_count, 2, '0', STR_PAD_LEFT) }} Courses</span></td>
                             <td style="text-align:center; color:var(--tx-s); font-size:.80rem;">{{ $category->description ?? 'No description available.' }}</td>
                         </tr>
                     @empty

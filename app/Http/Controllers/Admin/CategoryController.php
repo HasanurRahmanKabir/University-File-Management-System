@@ -93,10 +93,6 @@ class CategoryController extends Controller
     {
         $name = $category->name;
 
-        if ($category->subcategories()->count() > 0) {
-            return back()->with('error', 'Cannot delete category with assigned subcategories.');
-        }
-
         if ($category->courses()->count() > 0) {
             return back()->with('error', 'Cannot delete category with assigned courses.');
         }

@@ -130,7 +130,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="text-center py-5">
+                        <td colspan="6" class="text-center py-5">
                             <div class="empty-state">
                                 <i class="fas fa-tags fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                                 <h6 class="text-heading fw-bold">No Categories found</h6>
