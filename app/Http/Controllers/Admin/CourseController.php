@@ -68,6 +68,7 @@ class CourseController extends Controller
         $validated['slug'] = $slug;
         
         $validated['is_active'] = $request->has('is_active') ? $request->is_active : true;
+        $validated['created_by'] = \Illuminate\Support\Facades\Auth::id();
 
         if (isset($validated['course_type'])) {
             if ($validated['course_type'] === 'category') {

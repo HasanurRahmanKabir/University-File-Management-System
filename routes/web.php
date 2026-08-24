@@ -75,7 +75,7 @@ use App\Http\Controllers\Teacher\ProfileController as TeacherProfileController;
 // Teacher Routes
 Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
-    Route::resource('courses', TeacherCourseController::class)->only(['index', 'show']);
+    Route::resource('courses', TeacherCourseController::class)->except(['create', 'edit']);
     Route::resource('course-materials', TeacherCourseMaterialController::class);
     Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
     Route::get('subcategories', [TeacherSubcategoryController::class, 'index'])->name('subcategories.index');

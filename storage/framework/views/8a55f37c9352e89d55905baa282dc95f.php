@@ -1,9 +1,7 @@
-@extends('layouts.teacher')
+<?php $__env->startSection('title', 'My Course Info — TeacherHub OBE'); ?>
+<?php $__env->startSection('page_title', 'My Course Info'); ?>
 
-@section('title', 'My Course Info — TeacherHub OBE')
-@section('page_title', 'My Course Info')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
     /* Premium Switch styles */
@@ -31,9 +29,9 @@
     .ts-wrapper.dropdown-active .ts-control::after { transform: rotate(-135deg); top: 45%; }
     .ts-wrapper.dropdown-active .ts-control .item, .ts-wrapper.has-items .ts-control .item { display: block !important; opacity: 1 !important; }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header d-flex justify-content-between align-items-center mb-4">
     <div class="heading-group">
         <h2 class="mb-1" style="font-size: 1.5rem; font-weight: 700; color: var(--text-heading); letter-spacing: -0.5px;">Course Management</h2>
@@ -49,7 +47,7 @@
         <div class="stat-ico ico-green"><i class="fas fa-circle-play"></i></div>
         <div class="stat-body">
             <div class="stat-lbl">Running Semester</div>
-            <div class="stat-val" style="font-size: 1.4rem;">Spring {{ date('Y') }}</div>
+            <div class="stat-val" style="font-size: 1.4rem;">Spring <?php echo e(date('Y')); ?></div>
             <div class="stat-sub">Current Academic Session</div>
         </div>
     </div>
@@ -57,7 +55,7 @@
         <div class="stat-ico ico-blue"><i class="fas fa-book-open"></i></div>
         <div class="stat-body">
             <div class="stat-lbl">Active Courses</div>
-            <div class="stat-val" data-count="{{ $activeCoursesCount }}">{{ str_pad($activeCoursesCount, 2, '0', STR_PAD_LEFT) }}</div>
+            <div class="stat-val" data-count="<?php echo e($activeCoursesCount); ?>"><?php echo e(str_pad($activeCoursesCount, 2, '0', STR_PAD_LEFT)); ?></div>
             <div class="stat-sub">Currently assigned</div>
         </div>
     </div>
@@ -65,7 +63,7 @@
         <div class="stat-ico ico-purple"><i class="fas fa-users"></i></div>
         <div class="stat-body">
             <div class="stat-lbl">Total Students</div>
-            <div class="stat-val" data-count="{{ $totalStudents }}">{{ $totalStudents }}</div>
+            <div class="stat-val" data-count="<?php echo e($totalStudents); ?>"><?php echo e($totalStudents); ?></div>
             <div class="stat-sub">Across all courses</div>
         </div>
     </div>
@@ -78,55 +76,55 @@
             <div class="d-card-ico" style="background:var(--success-lt);color:var(--success);"><i class="fas fa-circle-play"></i></div>
             Running Semester
         </div>
-        <span class="badge b-green" style="padding:5px 12px;">Spring {{ date('Y') }}</span>
+        <span class="badge b-green" style="padding:5px 12px;">Spring <?php echo e(date('Y')); ?></span>
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
             <table class="t-tbl">
                 <thead><tr><th>Code</th><th>Course Title</th><th>Credit</th><th>Students</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
                 <tbody>
-                    @forelse($runningCourses as $course)
+                    <?php $__empty_1 = true; $__currentLoopData = $runningCourses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td><span class="t-code">{{ $course->course_code }}</span></td>
-                        <td><span class="t-name">{{ $course->title }}</span></td>
-                        <td><span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span></td>
-                        <td><span style="font-weight:600;color:var(--tx-h);">{{ $course->enrolled_students }}</span> <span style="color:var(--tx-m);font-size:.75rem;">students</span></td>
+                        <td><span class="t-code"><?php echo e($course->course_code); ?></span></td>
+                        <td><span class="t-name"><?php echo e($course->title); ?></span></td>
+                        <td><span class="badge b-gray"><?php echo e($course->credit ?? 'N/A'); ?></span></td>
+                        <td><span style="font-weight:600;color:var(--tx-h);"><?php echo e($course->enrolled_students); ?></span> <span style="color:var(--tx-m);font-size:.75rem;">students</span></td>
                         <td class="text-center">
-                            @if($course->is_active)
+                            <?php if($course->is_active): ?>
                                 <span class="badge b-green"><i class="fas fa-check-circle" style="margin-right:4px;"></i>Active</span>
-                            @else
+                            <?php else: ?>
                                 <span class="badge b-gray"><i class="fas fa-times-circle" style="margin-right:4px;"></i>Inactive</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="text-center">
-                            @if($course->created_by == auth()->id())
+                            <?php if($course->created_by == auth()->id()): ?>
                                 <div class="action-group d-flex justify-content-center gap-2">
                                     <button class="action-btn edit edit-course-btn" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #64748b; transition: all 0.2s;" data-bs-toggle="modal" data-bs-target="#editCourseModal"
-                                        data-id="{{ $course->id }}"
-                                        data-code="{{ $course->course_code }}"
-                                        data-credit="{{ $course->credit }}"
-                                        data-title="{{ $course->title }}"
-                                        data-subtitle="{{ $course->subtitle }}"
-                                        data-status="{{ $course->is_active ? '1' : '0' }}"
-                                        data-department="{{ $course->department_id }}"
-                                        data-category="{{ $course->category_id }}"
-                                        data-subcategory="{{ $course->subcategory_id }}"
-                                        data-semester="{{ $course->semester_id }}"
+                                        data-id="<?php echo e($course->id); ?>"
+                                        data-code="<?php echo e($course->course_code); ?>"
+                                        data-credit="<?php echo e($course->credit); ?>"
+                                        data-title="<?php echo e($course->title); ?>"
+                                        data-subtitle="<?php echo e($course->subtitle); ?>"
+                                        data-status="<?php echo e($course->is_active ? '1' : '0'); ?>"
+                                        data-department="<?php echo e($course->department_id); ?>"
+                                        data-category="<?php echo e($course->category_id); ?>"
+                                        data-subcategory="<?php echo e($course->subcategory_id); ?>"
+                                        data-semester="<?php echo e($course->semester_id); ?>"
                                         onmouseover="this.style.background='#f1f5f9'; this.style.color='#3b82f6';" onmouseout="this.style.background='#f8fafc'; this.style.color='#64748b';">
                                         <i class="fas fa-pen" style="font-size: 0.85rem;"></i>
                                     </button>
-                                    <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                        @csrf
-                                        @method('DELETE')
+                                    <form action="<?php echo e(route('teacher.courses.destroy', $course->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
                                         <button type="button" class="action-btn delete delete-btn" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #ef4444; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'; this.style.borderColor='#fca5a5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1';"><i class="fas fa-trash" style="font-size: 0.85rem;"></i></button>
                                     </form>
                                 </div>
-                            @else
+                            <?php else: ?>
                                 <span class="badge b-gray" style="opacity: 0.7;">N/A</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="6">
                             <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
@@ -136,7 +134,7 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -157,42 +155,42 @@
             <table class="t-tbl">
                 <thead><tr><th>Semester</th><th>Course Code</th><th>Course Title</th><th>Year</th><th>Status</th><th class="text-center">Action</th></tr></thead>
                 <tbody>
-                    @forelse($previousCourses as $course)
+                    <?php $__empty_1 = true; $__currentLoopData = $previousCourses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td><span class="badge b-purple">Fall</span></td>
-                        <td><span class="t-code">{{ $course->course_code }}</span></td>
-                        <td><span class="t-name">{{ $course->title }}</span></td>
-                        <td style="color:var(--tx-s);">{{ $course->created_at->format('Y') }}</td>
+                        <td><span class="t-code"><?php echo e($course->course_code); ?></span></td>
+                        <td><span class="t-name"><?php echo e($course->title); ?></span></td>
+                        <td style="color:var(--tx-s);"><?php echo e($course->created_at->format('Y')); ?></td>
                         <td><span class="badge b-green"><i class="fas fa-check" style="margin-right:4px;"></i>Completed</span></td>
                         <td class="text-center">
-                            @if($course->created_by == auth()->id())
+                            <?php if($course->created_by == auth()->id()): ?>
                                 <div class="action-group d-flex justify-content-center gap-2">
                                     <button class="action-btn edit edit-course-btn" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #64748b; transition: all 0.2s;" data-bs-toggle="modal" data-bs-target="#editCourseModal"
-                                        data-id="{{ $course->id }}"
-                                        data-code="{{ $course->course_code }}"
-                                        data-credit="{{ $course->credit }}"
-                                        data-title="{{ $course->title }}"
-                                        data-subtitle="{{ $course->subtitle }}"
-                                        data-status="{{ $course->is_active ? '1' : '0' }}"
-                                        data-department="{{ $course->department_id }}"
-                                        data-category="{{ $course->category_id }}"
-                                        data-subcategory="{{ $course->subcategory_id }}"
-                                        data-semester="{{ $course->semester_id }}"
+                                        data-id="<?php echo e($course->id); ?>"
+                                        data-code="<?php echo e($course->course_code); ?>"
+                                        data-credit="<?php echo e($course->credit); ?>"
+                                        data-title="<?php echo e($course->title); ?>"
+                                        data-subtitle="<?php echo e($course->subtitle); ?>"
+                                        data-status="<?php echo e($course->is_active ? '1' : '0'); ?>"
+                                        data-department="<?php echo e($course->department_id); ?>"
+                                        data-category="<?php echo e($course->category_id); ?>"
+                                        data-subcategory="<?php echo e($course->subcategory_id); ?>"
+                                        data-semester="<?php echo e($course->semester_id); ?>"
                                         onmouseover="this.style.background='#f1f5f9'; this.style.color='#3b82f6';" onmouseout="this.style.background='#f8fafc'; this.style.color='#64748b';">
                                         <i class="fas fa-pen" style="font-size: 0.85rem;"></i>
                                     </button>
-                                    <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                        @csrf
-                                        @method('DELETE')
+                                    <form action="<?php echo e(route('teacher.courses.destroy', $course->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
                                         <button type="button" class="action-btn delete delete-btn" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #ef4444; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'; this.style.borderColor='#fca5a5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1';"><i class="fas fa-trash" style="font-size: 0.85rem;"></i></button>
                                     </form>
                                 </div>
-                            @else
+                            <?php else: ?>
                                 <span class="badge b-gray" style="opacity: 0.7;">N/A</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="6">
                             <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
@@ -202,7 +200,7 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -212,9 +210,9 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
 <!-- ADD COURSE MODAL -->
 <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -226,8 +224,8 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.9;"></button>
             </div>
             <div class="modal-body" style="padding: 1.5rem;">
-    <form action="{{ route('teacher.courses.store') }}" method="POST">
-        @csrf
+    <form action="<?php echo e(route('teacher.courses.store')); ?>" method="POST">
+        <?php echo csrf_field(); ?>
         <div class="row g-3">
             <div class="col-12">
                 <label class="form-label fw-bold text-dark small mb-1">Course Code <span class="text-danger">*</span></label>
@@ -249,9 +247,9 @@
                 <label class="form-label fw-bold text-dark small mb-1">Semester <span class="text-danger">*</span></label>
                 <select name="semester_id" class="form-select form-select-lg fs-6" required>
                     <option value="">Select Semester</option>
-                    @foreach($semesters as $semester)
-                        <option value="{{ $semester->id }}">{{ $semester->name }} {{ $semester->year }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $semester): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($semester->id); ?>"><?php echo e($semester->name); ?> <?php echo e($semester->year); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
             <div class="col-12">
@@ -269,9 +267,9 @@
                 <label class="form-label fw-bold text-dark small mb-1">Department</label>
                 <select name="department_id" id="add_department" class="form-select form-select-lg fs-6">
                     <option value="">Choose Department</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
             <div class="col-12">
@@ -291,18 +289,18 @@
                 <label class="form-label fw-bold text-dark small mb-1">Category</label>
                 <select name="category_id" id="add_category" class="form-select form-select-lg fs-6">
                     <option value="">Choose Category</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
             <div class="col-12" id="add_subcategory_group" style="display: none;">
                 <label class="form-label fw-bold text-dark small mb-1">Subcategory</label>
                 <select name="subcategory_id" id="add_subcategory" class="form-select form-select-lg fs-6">
                     <option value="">Choose Subcategory</option>
-                    @foreach($subcategories as $subcat)
-                        <option value="{{ $subcat->id }}">{{ $subcat->name }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($subcat->id); ?>"><?php echo e($subcat->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
         </div>
@@ -328,8 +326,8 @@
             </div>
             <div class="modal-body" style="padding: 1.5rem;">
     <form id="editCourseForm" action="" method="POST">
-        @csrf
-        @method('PUT')
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('PUT'); ?>
         <div class="row g-3">
             <div class="col-12">
                 <label class="form-label fw-bold text-dark small mb-1">Course Code <span class="text-danger">*</span></label>
@@ -351,9 +349,9 @@
                 <label class="form-label fw-bold text-dark small mb-1">Semester <span class="text-danger">*</span></label>
                 <select name="semester_id" id="edit_semester" class="form-select form-select-lg fs-6" required>
                     <option value="">Select Semester</option>
-                    @foreach($semesters as $semester)
-                        <option value="{{ $semester->id }}">{{ $semester->name }} {{ $semester->year }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $semester): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($semester->id); ?>"><?php echo e($semester->name); ?> <?php echo e($semester->year); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
             <div class="col-12">
@@ -371,9 +369,9 @@
                 <label class="form-label fw-bold text-dark small mb-1">Department</label>
                 <select name="department_id" id="edit_department" class="form-select form-select-lg fs-6">
                     <option value="">Choose Department</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
             <div class="col-12">
@@ -393,18 +391,18 @@
                 <label class="form-label fw-bold text-dark small mb-1">Category</label>
                 <select name="category_id" id="edit_category" class="form-select form-select-lg fs-6">
                     <option value="">Choose Category</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
             <div class="col-12" id="edit_subcategory_group" style="display: none;">
                 <label class="form-label fw-bold text-dark small mb-1">Subcategory</label>
                 <select name="subcategory_id" id="edit_subcategory" class="form-select form-select-lg fs-6">
                     <option value="">Choose Subcategory</option>
-                    @foreach($subcategories as $subcat)
-                        <option value="{{ $subcat->id }}">{{ $subcat->name }}</option>
-                    @endforeach
+                    <?php $__currentLoopData = $subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($subcat->id); ?>"><?php echo e($subcat->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
         </div>
@@ -417,9 +415,9 @@
         </div>
     </div>
 </div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -522,7 +520,7 @@
                 }
                 window.toggleEditCourseType();
                 
-                let actionUrl = "{{ route('teacher.courses.update', ':id') }}";
+                let actionUrl = "<?php echo e(route('teacher.courses.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
             });
         });
@@ -551,4 +549,6 @@
         });
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.teacher', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/teacher/mycourseinfo.blade.php ENDPATH**/ ?>
