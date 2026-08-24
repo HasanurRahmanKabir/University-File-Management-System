@@ -41,6 +41,7 @@ class ProfileController extends Controller
             'contact_number' => ['nullable', 'string', 'max:20'],
             'current_password' => ['nullable', 'required_with:password', 'string'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'profile_image' => ['nullable', 'image', 'max:2048'],
         ]);
 
         // If they provided a new password, check current password
@@ -49,6 +50,20 @@ class ProfileController extends Controller
                 return back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
             }
             $user->password = Hash::make($request->password);
+        }
+
+        if ($request->has('remove_image') && $request->remove_image == '1') {
+            if ($user->profile_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->profile_image)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_image);
+            }
+            $user->profile_image = null;
+        }
+
+        if ($request->hasFile('profile_image')) {
+            if ($user->profile_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->profile_image)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_image);
+            }
+            $user->profile_image = $request->file('profile_image')->store('profiles', 'public');
         }
 
         $user->name = $validated['name'];

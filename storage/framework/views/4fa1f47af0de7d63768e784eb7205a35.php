@@ -24,9 +24,13 @@
             }
         ?>
         <div class="profile-hdr-flex">
-            <div class="profile-avatar-circle">
-                <?php echo e($initials); ?>
+            <div class="profile-avatar-circle" style="overflow: hidden;">
+                <?php if($user->profile_image): ?>
+                    <img src="<?php echo e(asset('storage/' . $user->profile_image)); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                <?php else: ?>
+                    <?php echo e($initials); ?>
 
+                <?php endif; ?>
             </div>
             <div class="profile-name-block">
                 <h3 style="margin: 0 0 6px; color: var(--tx-h); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px;">Update Account</h3>
@@ -35,10 +39,35 @@
         </div>
     </div>
 
-    <form action="<?php echo e(route('teacher.settings.update')); ?>" method="POST">
+    <form action="<?php echo e(route('teacher.settings.update')); ?>" method="POST" enctype="multipart/form-data">
         <?php echo csrf_field(); ?>
         
         <div class="d-card-body" style="padding: 30px;">
+            <!-- Profile Picture Section -->
+            <div style="background: var(--bg-card); border: 1px solid var(--bd-lt); border-radius: var(--r-md); padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--bd-lt); padding-bottom: 15px; margin-bottom: 24px;">
+                    <h6 style="color: var(--tx-h); font-weight: 700; margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-camera" style="color: var(--primary);"></i> Profile Picture
+                    </h6>
+                    <?php if($user->profile_image): ?>
+                        <button type="button" onclick="document.getElementById('remove_image_input').value='1'; this.innerHTML='<i class=\'fas fa-times-circle\'></i> Marked for removal'; this.style.opacity='0.6'; this.disabled=true; this.style.pointerEvents='none';" class="btn" style="color: var(--danger); font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(220,38,38,0.2); background: rgba(220,38,38,0.05); padding: 6px 12px; border-radius: var(--r-sm); transition: all 0.2s;">
+                            <i class="fas fa-trash-alt"></i> Remove Picture
+                        </button>
+                    <?php endif; ?>
+                </div>
+                
+                <input type="hidden" name="remove_image" id="remove_image_input" value="0">
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <label style="display: block; font-size: 0.8rem; color: var(--tx-m); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Upload New Picture</label>
+                        <input type="file" name="profile_image" class="form-control" accept="image/*"
+                               style="border-radius: var(--r-sm); border: 1px dashed var(--bd); padding: 10px; font-size: 0.95rem; background: #f8fafc; transition: all 0.2s;">
+                        <small style="color: var(--tx-s); display: block; margin-top: 8px; font-size: 0.75rem;"><i class="fas fa-info-circle"></i> Recommended size: 400x400px. Max file size: 2MB. Format: JPG, PNG.</small>
+                    </div>
+                </div>
+            </div>
+
             <!-- Personal Information Section -->
             <div style="background: var(--bg-card); border: 1px solid var(--bd-lt); border-radius: var(--r-md); padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);">
                 <h6 style="color: var(--tx-h); font-weight: 700; margin-bottom: 24px; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--bd-lt); padding-bottom: 15px;">
