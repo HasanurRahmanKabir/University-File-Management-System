@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="tb-right">
-        <div class="tb-user-info d-none d-sm-block" style="text-align:right;">
+        <div class="tb-user-info d-none d-sm-block" style="text-align:right; display: flex; flex-direction: column; justify-content: center;">
             <div class="tb-uname">{{ Auth::user()->name ?? 'Student' }}</div>
             <div class="tb-urole">Student</div>
         </div>
@@ -21,9 +21,9 @@
             }
         @endphp
         <div class="dropdown" style="display: flex; align-items: center;">
-            <div class="tb-avatar" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 1rem; overflow: hidden; width: 40px; height: 40px; border-radius: 50%;">
+            <div class="tb-avatar" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; {{ Auth::user()->profile_image ? 'background: #fff;' : 'background: linear-gradient(135deg, var(--primary), var(--primary-dark));' }} box-shadow: 0 3px 10px rgba(59,130,246,0.3); border: 2px solid #fff; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 1rem; overflow: hidden; width: 40px; height: 40px; border-radius: 50%;">
                 @if(Auth::user()->profile_image)
-                    <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block;">
                 @else
                     {{ $initials }}
                 @endif
