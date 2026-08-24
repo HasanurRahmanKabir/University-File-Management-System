@@ -1,13 +1,15 @@
 <aside class="sidebar" id="sidebar">
     <div class="sb-scroll">
         <div class="sb-brand">
-            <div class="sb-logo" style="{{ isset($globalSettings['student_logo']) && $globalSettings['student_logo'] ? 'background: transparent; box-shadow: none;' : '' }}">
-                @if(isset($globalSettings['student_logo']) && $globalSettings['student_logo'])
+            @if(isset($globalSettings['student_logo']) && $globalSettings['student_logo'])
+                <div style="width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <img src="{{ asset('storage/' . $globalSettings['student_logo']) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                @else
+                </div>
+            @else
+                <div class="sb-logo">
                     <i class="fas fa-user-graduate"></i>
-                @endif
-            </div>
+                </div>
+            @endif
             <div>
                 <span class="sb-brand-name">{{ $globalSettings['student_dashboard_name'] ?? 'StudentHub' }}</span>
                 <span class="sb-brand-tag">{{ $globalSettings['brand_tagline'] ?? 'OBE Portal' }}</span>

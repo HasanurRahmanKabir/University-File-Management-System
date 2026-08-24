@@ -1,13 +1,15 @@
 <aside class="sidebar" id="sidebar">
     <div class="sb-scroll">
         <div class="sb-brand">
-            <div class="sb-logo" style="<?php echo e(isset($globalSettings['teacher_logo']) && $globalSettings['teacher_logo'] ? 'background: transparent; box-shadow: none;' : ''); ?>">
-                <?php if(isset($globalSettings['teacher_logo']) && $globalSettings['teacher_logo']): ?>
+            <?php if(isset($globalSettings['teacher_logo']) && $globalSettings['teacher_logo']): ?>
+                <div style="width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <img src="<?php echo e(asset('storage/' . $globalSettings['teacher_logo'])); ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                <?php else: ?>
+                </div>
+            <?php else: ?>
+                <div class="sb-logo">
                     <i class="fas fa-chalkboard-teacher"></i>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php endif; ?>
             <div>
                 <span class="sb-brand-name"><?php echo e($globalSettings['teacher_dashboard_name'] ?? 'TeacherHub'); ?></span>
                 <span class="sb-brand-tag"><?php echo e($globalSettings['brand_tagline'] ?? 'OBE Portal'); ?></span>
