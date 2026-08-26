@@ -48,7 +48,7 @@
 
                         </td>
                         <td style="text-align: center; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <span class="badge b-gray"><?php echo e($course->course_credit ?? '3.0 cr'); ?></span>
+                            <span class="badge b-gray"><?php echo e($course->credit ?? 'N/A'); ?></span>
                         </td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_2): ?>

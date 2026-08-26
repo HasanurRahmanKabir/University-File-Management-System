@@ -18,16 +18,16 @@ class SubcategoryController extends Controller
             $enrolledIds = [];
         }
 
-        // Fetch categories that have at least one course the student is enrolled in
-        $categories = Category::whereHas('courses', function($q) use ($enrolledIds) {
+        // Fetch subcategories that have at least one course the student is enrolled in
+        $subcategories = \App\Models\Subcategory::whereHas('courses', function($q) use ($enrolledIds) {
             $q->whereIn('id', $enrolledIds)->where('is_active', true);
         })->with(['courses' => function($q) use ($enrolledIds) {
-            $q->whereIn('id', $enrolledIds)->where('is_active', true)->with('subcategory');
+            $q->whereIn('id', $enrolledIds)->where('is_active', true);
         }])
         ->where('is_active', true)
         ->latest()
         ->paginate(10);
         
-        return view('student.subcategories.index', compact('categories'));
+        return view('student.subcategories.index', compact('subcategories'));
     }
 }
