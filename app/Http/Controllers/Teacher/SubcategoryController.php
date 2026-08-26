@@ -10,7 +10,7 @@ class SubcategoryController extends Controller
 {
     public function index()
     {
-        $subcategories = Subcategory::with(['category', 'courses'])->latest()->paginate(15);
+        $subcategories = Subcategory::with(['department', 'courses'])->latest()->paginate(15);
         return view('teacher.subcategorylist', compact('subcategories'));
     }
 }
