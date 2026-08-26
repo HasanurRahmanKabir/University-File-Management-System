@@ -31,11 +31,11 @@
                         <tr>
                             <td style="text-align:center;"><span class="t-num"><?php echo e(str_pad($categories->firstItem() + $index, 2, '0', STR_PAD_LEFT)); ?></span></td>
                             <td style="text-align:center;">
-                                <div style="display:flex;align-items:center;text-align:left;width:200px;margin:0 auto;gap:10px;">
+                                <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
                                     <div class="cat-ico" style="width:34px;height:34px;background:<?php echo e($style['bg']); ?>;color:<?php echo e($style['text']); ?>;flex-shrink:0;">
                                         <i class="fas <?php echo e($style['icon']); ?>" style="font-size:.76rem;"></i>
                                     </div>
-                                    <span class="t-name" style="word-break:break-word;line-height:1.3;"><?php echo e($category->name); ?></span>
+                                    <span class="t-name" style="width:160px;text-align:left;word-break:break-word;line-height:1.3;"><?php echo e($category->name); ?></span>
                                 </div>
                             </td>
                             <td style="text-align:center;"><span class="badge b-blue"><?php echo e(str_pad($category->courses_count, 2, '0', STR_PAD_LEFT)); ?> Courses</span></td>
