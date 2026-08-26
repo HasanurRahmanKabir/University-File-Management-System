@@ -3,6 +3,27 @@
 @section('title', 'Upload Materials — TeacherHub OBE')
 @section('page_title', 'Upload Materials')
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    /* Ensure TomSelect matches the standard professional design */
+    .ts-wrapper.custom-ts { display: block !important; width: 100% !important; padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; margin: 0; }
+    .ts-wrapper.custom-ts .ts-control { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; background-color: #f8fafc !important; background-image: none !important; color: #334155 !important; font-size: 0.9rem !important; font-weight: 500 !important; padding: 10px 15px !important; min-height: 44px !important; box-shadow: none !important; display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px; transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
+    .ts-wrapper.custom-ts.focus .ts-control { border-color: var(--primary) !important; background-color: #ffffff !important; box-shadow: 0 0 0 3px var(--primary-light) !important; outline: 0 !important; }
+    .ts-dropdown { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; background-color: #ffffff !important; box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important; z-index: 9999 !important; overflow: hidden; }
+    .ts-dropdown .ts-dropdown-content { max-height: 250px !important; overflow-y: auto !important; padding: 5px 0; }
+    .ts-dropdown .option[data-value=""] { display: none !important; }
+    .ts-dropdown .option { padding: 8px 15px !important; color: #475569 !important; font-size: 0.9rem !important; cursor: pointer; }
+    .ts-dropdown .option:hover, .ts-dropdown .active { background-color: #f1f5f9 !important; color: var(--primary) !important; }
+    .ts-dropdown .dropdown-input-wrap { padding: 10px !important; border-bottom: 1px solid #e2e8f0 !important; background: #f8fafc; }
+    .ts-dropdown .dropdown-input { border: 1px solid #cbd5e1 !important; border-radius: 6px !important; padding: 8px 12px !important; background: #ffffff !important; color: #334155 !important; font-size: 0.9rem !important; }
+    .ts-dropdown .dropdown-input:focus { border-color: var(--primary) !important; outline: none; }
+    .ts-control::after { content: ""; display: block; width: 8px; height: 8px; border-right: 2px solid #64748b; border-bottom: 2px solid #64748b; transform: rotate(45deg); position: absolute; right: 15px; top: 42%; transition: transform 0.2s ease; }
+    .ts-wrapper.dropdown-active .ts-control::after { transform: rotate(-135deg); top: 48%; }
+    .ts-wrapper.dropdown-active .ts-control .item, .ts-wrapper.has-items .ts-control .item { display: block !important; opacity: 1 !important; }
+</style>
+@endpush
+
 @section('content')
 <div class="row g-4">
 
@@ -17,8 +38,8 @@
                     @csrf
                     <div class="fg">
                         <label class="flabel">Select Course</label>
-                        <select class="finput" style="cursor:pointer;" name="course_id" required>
-                            <option selected disabled value="">— Choose Course Code —</option>
+                        <select class="finput" style="cursor:pointer;" name="course_id" id="add_course_id" required>
+                            <option selected disabled value="">— Select Course —</option>
                             @foreach($courses as $course)
                             <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
                             @endforeach
@@ -97,7 +118,7 @@
                                     @endif
                                 </td>
                                 <td style="text-align:center;"><div style="display:flex;gap:5px;justify-content:center;">
-                                    <button type="button" class="btn-ico bi-ed" data-bs-toggle="modal" data-bs-target="#editModal" onclick="populateEditModal({{ $material->id }}, '{{ addslashes($material->title) }}', {{ $material->course_id }}, {{ $material->is_active }})"><i class="fas fa-pen"></i></button>
+                                    <button type="button" class="btn-ico bi-ed" data-bs-toggle="modal" data-bs-target="#editModal" onclick="populateEditModal({{ $material->id }}, '{{ addslashes($material->title) }}', {{ $material->course_id }}, {{ $material->is_active ? 1 : 0 }})"><i class="fas fa-pen"></i></button>
                                     <form action="{{ route('teacher.course-materials.destroy', $material->id) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button class="btn-ico bi-del delete-btn" type="submit"><i class="fas fa-trash-alt"></i></button>
@@ -140,10 +161,10 @@
                         <input type="text" class="finput" name="title" id="edit_title" required>
                     </div>
                     <div class="fg">
-                        <label class="flabel">Course Code</label>
+                        <label class="flabel">Select Course</label>
                         <select class="finput" style="cursor:pointer;" name="course_id" id="edit_course_id" required>
                             @foreach($courses as $course)
-                            <option value="{{ $course->id }}">{{ $course->course_code }}</option>
+                            <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -164,7 +185,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer"><button type="button" class="btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Changes</button></div>
+                <div class="modal-footer"><button type="button" class="btn-ghost" data-bs-dismiss="modal" style="padding: 9px 20px; font-size: 0.82rem; font-weight: 600; box-shadow: inset 0 0 0 1px #cbd5e1, 0 1px 3px rgba(0,0,0,0.1); background-color: #ffffff; color: #475569; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#f1f5f9'" onmouseout="this.style.backgroundColor='#ffffff'">Cancel</button><button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Changes</button></div>
             </form>
         </div>
     </div>
@@ -172,7 +193,56 @@
 @endpush
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
+    let editCourseSelect;
+    let editPrivacySelect;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let tsConfig = {
+            create: false,
+            controlInput: null,
+            maxOptions: null,
+            allowEmptyOption: true,
+            wrapperClass: 'ts-wrapper custom-ts',
+            plugins: ['dropdown_input'],
+            sortField: { field: "text", direction: "asc" },
+            onDelete: function(values, e) { return e ? false : true; }
+        };
+
+        let addCourseSelect = new TomSelect('#add_course_id', tsConfig);
+        let searchInputAdd = addCourseSelect.dropdown.querySelector('input');
+        if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search course...');
+
+        editCourseSelect = new TomSelect('#edit_course_id', tsConfig);
+        let searchInputEdit = editCourseSelect.dropdown.querySelector('input');
+        if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search course...');
+
+        let tsConfigNoSearch = {
+            create: false,
+            controlInput: null,
+            maxOptions: null,
+            wrapperClass: 'ts-wrapper custom-ts',
+            onDelete: function(values, e) { return e ? false : true; },
+            render: {
+                option: function(data, escape) {
+                    if (data.value === "1") {
+                        return '<div class="px-2 py-1"><span class="badge b-green" style="font-size:0.85rem; padding:6px 12px;"><i class="fas fa-globe"></i> ' + escape(data.text) + '</span></div>';
+                    } else {
+                        return '<div class="px-2 py-1"><span class="badge b-gray" style="font-size:0.85rem; padding:6px 12px;"><i class="fas fa-lock"></i> ' + escape(data.text) + '</span></div>';
+                    }
+                },
+                item: function(data, escape) {
+                    if (data.value === "1") {
+                        return '<div style="font-size:0.95rem; font-weight:600; color: #059669; display:flex; align-items:center; gap:6px;"><i class="fas fa-globe"></i> ' + escape(data.text) + '</div>';
+                    } else {
+                        return '<div style="font-size:0.95rem; font-weight:600; color: #475569; display:flex; align-items:center; gap:6px;"><i class="fas fa-lock"></i> ' + escape(data.text) + '</div>';
+                    }
+                }
+            }
+        };
+        editPrivacySelect = new TomSelect('#edit_privacy', tsConfigNoSearch);
+    });
     const dz=document.getElementById('dropZone');
     if(dz) {
         ['dragover','dragenter'].forEach(e=>dz.addEventListener(e,ev=>{ev.preventDefault();dz.style.borderColor='var(--primary)';dz.style.background='var(--primary-light)';}));
@@ -188,8 +258,16 @@
     function populateEditModal(id, title, courseId, isActive) {
         document.getElementById('editForm').action = `/teacher/course-materials/${id}`;
         document.getElementById('edit_title').value = title;
-        document.getElementById('edit_course_id').value = courseId;
-        document.getElementById('edit_privacy').value = isActive;
+        if(editCourseSelect) {
+            editCourseSelect.setValue(courseId);
+        } else {
+            document.getElementById('edit_course_id').value = courseId;
+        }
+        if(editPrivacySelect) {
+            editPrivacySelect.setValue(String(isActive));
+        } else {
+            document.getElementById('edit_privacy').value = isActive;
+        }
         
         document.getElementById('fileInEdit').value = '';
         document.getElementById('fileTextEdit').innerText = 'Click or drag & drop to replace file';
