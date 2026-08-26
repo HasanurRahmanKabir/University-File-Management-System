@@ -34,10 +34,10 @@
                             <td style="text-align:center;"><span class="t-num">{{ str_pad($categories->firstItem() + $index, 2, '0', STR_PAD_LEFT) }}</span></td>
                             <td style="text-align:center;">
                                 <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
-                                    <div class="cat-ico" style="width:34px;height:34px;background:{{ $style['bg'] }};color:{{ $style['text'] }};">
+                                    <div class="cat-ico" style="width:34px;height:34px;background:{{ $style['bg'] }};color:{{ $style['text'] }};flex-shrink:0;">
                                         <i class="fas {{ $style['icon'] }}" style="font-size:.76rem;"></i>
                                     </div>
-                                    <span class="t-name">{{ $category->name }}</span>
+                                    <span class="t-name" style="width:160px;text-align:left;word-break:break-word;line-height:1.3;">{{ $category->name }}</span>
                                 </div>
                             </td>
                             <td style="text-align:center;"><span class="badge b-blue">{{ str_pad($category->courses_count, 2, '0', STR_PAD_LEFT) }} Courses</span></td>

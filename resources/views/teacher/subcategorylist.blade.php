@@ -40,7 +40,7 @@
                             <td style="text-align:center;">
                                 <div style="display:flex;align-items:center;justify-content:center;gap:9px;">
                                     <div style="width:7px;height:7px;border-radius:50%;background:{{ $style['text'] }};box-shadow:0 0 0 2px {{ $style['bg'] }};flex-shrink:0;"></div>
-                                    <span class="t-name">{{ $subcategory->name }}</span>
+                                    <span class="t-name" style="width:95px;text-align:left;word-break:break-word;line-height:1.3;">{{ $subcategory->name }}</span>
                                 </div>
                             </td>
                             <td style="text-align:center;">
