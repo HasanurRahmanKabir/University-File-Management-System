@@ -31,9 +31,10 @@
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 10%; min-width: 80px;">#</th>
-                        <th style="text-align: center; width: 30%; min-width: 150px;">Course Name</th>
-                        <th style="text-align: center; width: 30%; min-width: 150px;">Instructor</th>
-                        <th style="text-align: center; width: 30%; min-width: 150px;">Course Credit</th>
+                        <th style="text-align: center; width: 15%; min-width: 120px;">Course Code</th>
+                        <th style="text-align: center; width: 25%; min-width: 150px;">Course Name</th>
+                        <th style="text-align: center; width: 25%; min-width: 150px;">Instructor</th>
+                        <th style="text-align: center; width: 25%; min-width: 150px;">Course Credit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,6 +42,9 @@
                     <tr>
                         <td style="text-align: center; max-width: 80px;">
                             <span class="row-num">{{ str_pad($cIndex + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                        </td>
+                        <td style="text-align: center; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <span class="t-code">{{ $course->course_code }}</span>
                         </td>
                         <td style="text-align: center; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <span class="t-name" title="{{ $course->title }}">{{ $course->title }}</span>
@@ -54,7 +58,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" style="text-align: center; padding: 20px; color: var(--tx-s);">
+                        <td colspan="5" style="text-align: center; padding: 20px; color: var(--tx-s);">
                             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
                                 <i class="fas fa-folder-open" style="font-size:2rem; color:var(--b-color);"></i>
                                 <span>No courses found in this category.</span>
