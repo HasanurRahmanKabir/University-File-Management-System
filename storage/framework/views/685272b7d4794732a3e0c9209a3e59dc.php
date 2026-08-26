@@ -12,7 +12,7 @@
             <div class="hero-sub">Here's an overview of your academic progress for today.</div>
         </div>
         <div class="hero-right">
-            <div class="hero-pill"><i class="fas fa-calendar-check"></i> Semester: <?php echo e(Auth::user()->semester ?? 'Spring 2025'); ?></div>
+            <div class="hero-pill"><i class="fas fa-calendar-check"></i> Semester: <?php echo e(Auth::user()->semester ?? 'Not Assigned'); ?></div>
         </div>
     </div>
 </div>
@@ -94,7 +94,7 @@
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="t-name"><?php echo e($course->title ?? $course->course_name ?? 'Course'); ?></span></td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);"><?php echo e(optional($course->teacher)->name ?? 'TBA'); ?></td>
                         <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color:var(--tx-s);"><?php echo e(optional($course->created_at)->format('Y') ?? 'N/A'); ?></td>
-                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-blue"><?php echo e(Auth::user()->semester ?? 'Current'); ?></span></td>
+                        <td style="text-align: center; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><span class="badge b-blue"><?php echo e(Auth::user()->semester ?? 'Current Semester'); ?></span></td>
                     </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>

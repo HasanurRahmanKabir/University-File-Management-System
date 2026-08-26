@@ -24,23 +24,30 @@ class DashboardController extends Controller
 
         // 3. Total Students (across all teacher's courses)
         $teacherCourseIds = Course::where('teacher_id', $teacherId)->pluck('id')->toArray();
-        $totalStudents = \App\Models\User::where('role', 'student')->get()->filter(function ($student) use ($teacherCourseIds) {
-            $enrolled = is_string($student->enrolled_courses) ? json_decode($student->enrolled_courses, true) : $student->enrolled_courses;
-            if (!is_array($enrolled)) return false;
-            return count(array_intersect($enrolled, $teacherCourseIds)) > 0;
-        })->count();
+        $totalStudents = 0;
+        if (!empty($teacherCourseIds)) {
+            $totalStudents = \App\Models\User::where('role', 'student')
+                ->where(function ($q) use ($teacherCourseIds) {
+                    foreach ($teacherCourseIds as $courseId) {
+                        $q->orWhereJsonContains('enrolled_courses', (string)$courseId)
+                          ->orWhereJsonContains('enrolled_courses', (int)$courseId);
+                    }
+                })->count();
+        }
 
         // 4. Recent Courses Table
-        $recentCourses = Course::where('teacher_id', $teacherId)
+        $recentCourses = Course::with(['semester', 'department'])
+            ->where('teacher_id', $teacherId)
             ->withCount('materials')
             ->latest()
             ->take(5)
             ->get()
             ->map(function($course) {
-                $course->enrolled_students = \App\Models\User::where('role', 'student')->get()->filter(function ($student) use ($course) {
-                    $enrolled = is_string($student->enrolled_courses) ? json_decode($student->enrolled_courses, true) : $student->enrolled_courses;
-                    return is_array($enrolled) && in_array($course->id, $enrolled);
-                })->count();
+                $course->enrolled_students = \App\Models\User::where('role', 'student')
+                    ->where(function($q) use ($course) {
+                        $q->whereJsonContains('enrolled_courses', (string)$course->id)
+                          ->orWhereJsonContains('enrolled_courses', (int)$course->id);
+                    })->count();
                 return $course;
             });
 

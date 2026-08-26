@@ -19,7 +19,7 @@ class DashboardController extends Controller
         }
         
         // Fetch the student's courses
-        $myCourses = Course::with('teacher')->whereIn('id', $enrolledIds)->get();
+        $myCourses = Course::with(['teacher', 'semester'])->whereIn('id', $enrolledIds)->get();
         
         // Count materials uploaded only for this student's enrolled courses
         $materialsCount = CourseMaterial::whereIn('course_id', $enrolledIds)->count();

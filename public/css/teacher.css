@@ -354,7 +354,7 @@ button{font-family:inherit;cursor:pointer;}
     background:var(--bg-card);
     border-radius:var(--r-lg);
     border:1px solid var(--bd-lt);
-    padding:20px 18px 16px;
+    padding:16px 18px 14px;
     display:flex;align-items:flex-start;gap:14px;
     position:relative;overflow:hidden;
     box-shadow:var(--sh-sm);
@@ -376,9 +376,9 @@ button{font-family:inherit;cursor:pointer;}
 .sc-purple::after {background:#8b5cf6;}
 
 .stat-ico{
-    width:46px;height:46px;border-radius:var(--r-md);
+    width:38px;height:38px;border-radius:var(--r-md);
     display:flex;align-items:center;justify-content:center;
-    font-size:1.05rem;flex-shrink:0;z-index:1;
+    font-size:0.95rem;flex-shrink:0;z-index:1;
 }
 .ico-green  {background:linear-gradient(135deg,#ecfdf5,#d1fae5);color:#059669;}
 .ico-blue   {background:linear-gradient(135deg,#eff6ff,#dbeafe);color:#3b82f6;}
@@ -387,7 +387,7 @@ button{font-family:inherit;cursor:pointer;}
 
 .stat-body{z-index:1;}
 .stat-lbl{font-size:.68rem;font-weight:700;color:var(--tx-m);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;}
-.stat-val{font-size:1.85rem;font-weight:900;color:var(--tx-h);line-height:1;letter-spacing:-.5px;margin-bottom:3px;font-variant-numeric:tabular-nums;}
+.stat-val{font-size:1.75rem;font-weight:900;color:var(--tx-h);line-height:1;letter-spacing:-.5px;margin-bottom:3px;font-variant-numeric:tabular-nums;}
 .stat-sub{font-size:.70rem;color:var(--tx-s);}
 
 /* ============================================================

@@ -11,8 +11,7 @@
         </div>
         <div class="hero-pill">
             <i class="fas fa-calendar-check" style="font-size:.7rem;"></i>
-            Academic Year: <?php echo e(date('Y')); ?>
-
+            Academic Session: Current
         </div>
     </div>
 </div>
@@ -24,7 +23,7 @@
         <div class="stat-body">
             <div class="stat-lbl">Active Courses</div>
             <div class="stat-val" data-count="<?php echo e($activeCoursesCount); ?>"><?php echo e(str_pad($activeCoursesCount, 2, '0', STR_PAD_LEFT)); ?></div>
-            <div class="stat-sub">Spring <?php echo e(date('Y')); ?> Semester</div>
+            <div class="stat-sub">Current Academic Semester</div>
         </div>
     </div>
     <div class="stat-card sc-blue" style="animation-delay:.12s">
@@ -130,5 +129,30 @@
 </div>
 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 <?php $__env->stopPush(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+<script>
+    // Animated counters
+    document.querySelectorAll('.stat-val[data-count]').forEach(el => {
+        const target = parseInt(el.dataset.count) || 0, dur = 900;
+        if(target === 0) return;
+        const obs = new IntersectionObserver(ents => {
+            if(!ents[0].isIntersecting) return; 
+            obs.disconnect();
+            let start = null;
+            const step = ts => {
+                if(!start) start = ts;
+                const pct = Math.min((ts - start) / dur, 1);
+                const ease = 1 - Math.pow(1 - pct, 3);
+                el.textContent = Math.round(ease * target).toString().padStart(2, '0');
+                if(pct < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        }, {threshold: .5});
+        obs.observe(el);
+    });
+</script>
+<?php $__env->stopPush(); ?>
+
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.teacher', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/teacher/dashboard.blade.php ENDPATH**/ ?>

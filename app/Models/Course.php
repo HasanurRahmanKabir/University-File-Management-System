@@ -28,4 +28,7 @@ class Course extends Model {
     public function materials() {
         return $this->hasMany(CourseMaterial::class);
     }
+    public function semester() {
+        return $this->belongsTo(Semester::class);
+    }
 }
