@@ -13,7 +13,8 @@ class CourseMaterialController extends Controller
 {
     public function index()
     {
-        $activeSemesterIds = \App\Models\Semester::running()->pluck('id')->toArray();
+        $teacherDepartmentId = Auth::user()->department_id;
+        $activeSemesterIds = \App\Models\Semester::running($teacherDepartmentId)->pluck('id')->toArray();
         $courses = Course::where('teacher_id', Auth::id())
             ->where('is_active', true)
             ->whereIn('semester_id', $activeSemesterIds)

@@ -11,9 +11,10 @@ class DashboardController extends Controller
     public function index()
     {
         $teacherId = Auth::id();
+        $teacherDepartmentId = Auth::user()->department_id;
 
         // 1. Active Courses (in running semesters)
-        $activeSemesterIds = \App\Models\Semester::running()->pluck('id')->toArray();
+        $activeSemesterIds = \App\Models\Semester::running($teacherDepartmentId)->pluck('id')->toArray();
         $activeCoursesCount = Course::where('teacher_id', $teacherId)
             ->where('is_active', true)
             ->whereIn('semester_id', $activeSemesterIds)

@@ -14,7 +14,8 @@ class CourseController extends Controller
         $teacherId = Auth::id();
         $allStudents = \App\Models\User::where('role', 'student')->get();
 
-        $activeSemesterIds = \App\Models\Semester::running()->pluck('id')->toArray();
+        $teacherDepartmentId = Auth::user()->department_id;
+        $activeSemesterIds = \App\Models\Semester::running($teacherDepartmentId)->pluck('id')->toArray();
         
         $runningCoursesQuery = Course::with(['category', 'subcategory'])->where('teacher_id', $teacherId);
         $previousCoursesQuery = Course::with(['category', 'subcategory'])->where('teacher_id', $teacherId);
@@ -59,9 +60,9 @@ class CourseController extends Controller
         $departments = \App\Models\Department::all();
         $categories = \App\Models\Category::where('is_active', true)->get();
         $subcategories = \App\Models\Subcategory::where('is_active', true)->get();
-        $semesters = \App\Models\Semester::running()->get();
-
-        $activeSemester = \App\Models\Semester::running()->first();
+        $semesters = \App\Models\Semester::running($teacherDepartmentId)->get();
+        // Fallback or specific default semester
+        $activeSemester = \App\Models\Semester::running($teacherDepartmentId)->first();
 
         $teacherDepartmentId = Auth::user()->department_id;
 

@@ -26,4 +26,9 @@ class Department extends Model
     {
         return $this->hasMany(Course::class);
     }
+
+    public function semesters()
+    {
+        return $this->belongsToMany(Semester::class, 'department_semester');
+    }
 }

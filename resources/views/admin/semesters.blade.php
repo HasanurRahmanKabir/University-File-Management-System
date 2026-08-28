@@ -3,6 +3,46 @@
 @section('page-title', 'Academic Semesters')
 @section('breadcrumb', 'Semesters')
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    /* Ensure TomSelect perfectly matches the standard form-select design */
+    .ts-wrapper.form-select { padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; }
+    .ts-control { border: 1.5px solid var(--border) !important; border-radius: var(--radius-md) !important; background: var(--bg-input) !important; color: var(--text-body) !important; font-size: 0.85rem !important; padding: 9px 13px !important; min-height: 42px !important; box-shadow: var(--shadow-sm) !important; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; transition: all var(--duration-base) var(--ease); }
+    .ts-wrapper.focus .ts-control { border-color: var(--primary) !important; box-shadow: 0 0 0 3px var(--primary-glow) !important; background: white !important; outline: none !important; }
+    /* TomSelect Placeholders */
+    .ts-dropdown { border: 1px solid var(--border) !important; border-radius: var(--radius-md) !important; background-color: white !important; box-shadow: var(--shadow-md) !important; z-index: 9999 !important; }
+    .ts-dropdown .ts-dropdown-content { max-height: 250px !important; overflow-y: auto !important; padding-bottom: 5px; }
+    .ts-dropdown .option[data-value=""] { display: none !important; }
+    .ts-dropdown .option { padding: 8px 14px !important; color: var(--text-body) !important; font-size: 0.85rem !important; }
+    .ts-dropdown .option:hover, .ts-dropdown .active { background-color: var(--bg-muted) !important; color: var(--primary) !important; }
+    .ts-dropdown .dropdown-input-wrap { padding: 8px !important; border-bottom: 1px solid var(--border-light) !important; }
+    .ts-dropdown .dropdown-input { border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; padding: 6px 12px !important; background: var(--bg-muted) !important; color: var(--text-body) !important; font-size: 0.85rem !important; }
+    .ts-control::after { content: ""; display: block; width: 10px; height: 10px; border-right: 2px solid #888; border-bottom: 2px solid #888; transform: rotate(45deg); position: absolute; right: 15px; top: 40%; transition: transform 0.2s ease; }
+    .ts-wrapper.dropdown-active .ts-control::after { transform: rotate(-135deg); top: 45%; }
+    .ts-wrapper.dropdown-active .ts-control .item, .ts-wrapper.has-items .ts-control .item { display: block !important; opacity: 1 !important; }
+    
+    /* Premium Multi-select tweaks matching Teacher Courses */
+    .ts-wrapper.multi { padding: 0 !important; border: none !important; background-color: transparent !important; box-shadow: none !important; }
+    .ts-wrapper.multi .ts-control { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 9px 30px 9px 13px !important; min-height: 42px !important; position: relative; }
+    .ts-wrapper.multi .ts-control::after { display: block !important; } /* Keep the dropdown arrow */
+    .ts-wrapper.multi .ts-control .item { background: #e0f2fe; color: #0284c7; border: none; border-radius: 4px; padding: 4px 10px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; z-index: 2; }
+    .ts-wrapper.multi .ts-control .item.active { background: #bae6fd; }
+    
+    /* Fake placeholder for multi-select with dropdown_input */
+    .ts-wrapper.multi:not(.has-items) .ts-control::before {
+        content: attr(data-placeholder);
+        color: var(--text-muted);
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 0.85rem;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="page-header">
     <div class="heading-group">
@@ -39,6 +79,7 @@
                 <thead>
                     <tr>
                         <th>Semester Name</th>
+                        <th class="text-center">Departments</th>
                         <th class="text-center">Year</th>
                         <th class="text-center">Duration</th>
                         <th class="text-center">Status</th>
@@ -58,6 +99,15 @@
                                     <div class="user-name">{{ $semester->name }}</div>
                                     <div class="user-sub">Academic Term</div>
                                 </div>
+                            </div>
+                        </td>
+                        <td class="text-center" style="max-width: 250px;">
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                @forelse($semester->departments as $dept)
+                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; margin-bottom: 2px;"><i class="fas fa-building"></i> {{ $dept->name }}</span>
+                                @empty
+                                    <span class="badge neutral"><i class="fas fa-globe"></i> Global/None</span>
+                                @endforelse
                             </div>
                         </td>
                         <td class="text-center"><span style="color:var(--text-secondary);font-weight:600;">{{ $semester->year ?? 'N/A' }}</span></td>
@@ -87,6 +137,7 @@
                                     data-year="{{ $semester->year }}"
                                     data-start="{{ $semester->start_date }}"
                                     data-end="{{ $semester->end_date }}"
+                                    data-departments="{{ json_encode($semester->departments->pluck('id')) }}"
                                     data-active="{{ $semester->is_active ? 1 : 0 }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
@@ -144,6 +195,15 @@
                         <input type="text" name="name" class="form-input" placeholder="Enter Semester Name" required>
                     </div>
                     <div class="form-group">
+                        <label class="form-label">Departments <span class="text-danger">*</span></label>
+                        <select name="department_ids[]" id="add_department" class="form-select" multiple required>
+                            <option value="">Select Departments</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Year</label>
                         <input type="number" name="year" class="form-input" placeholder="Enter Year" min="2000" max="2100">
                     </div>
@@ -199,6 +259,15 @@
                         <input type="text" name="name" id="edit_name" class="form-input" placeholder="Enter Semester Name" required>
                     </div>
                     <div class="form-group">
+                        <label class="form-label">Departments <span class="text-danger">*</span></label>
+                        <select name="department_ids[]" id="edit_department" class="form-select" multiple required>
+                            <option value="">Select Departments</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Year</label>
                         <input type="number" name="year" id="edit_year" class="form-input" placeholder="Enter Year" min="2000" max="2100">
                     </div>
@@ -239,6 +308,7 @@
 @endpush
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <style>
     /* Switch styles */
     .custom-switch-container { display: flex; align-items: center; gap: 10px; }
@@ -264,10 +334,42 @@
                 document.getElementById('edit_end').value = this.getAttribute('data-end');
                 document.getElementById('edit_is_active').checked = this.getAttribute('data-active') === '1';
                 
+                if (window.editDeptSelect) {
+                    try {
+                        const depts = JSON.parse(this.getAttribute('data-departments') || '[]');
+                        window.editDeptSelect.setValue(depts);
+                    } catch(e) {
+                        console.error("Error parsing departments JSON", e);
+                    }
+                }
+                
                 let actionUrl = "{{ route('admin.semesters.update', ':id') }}";
                 editForm.action = actionUrl.replace(':id', id);
             });
         });
+
+        // Initialize TomSelect for Departments with dropdown_input and pseudo-placeholder
+        const tsMultiConfig = {
+            plugins: ['dropdown_input', 'remove_button'],
+            create: false,
+            maxOptions: null,
+            wrapperClass: 'ts-wrapper form-select multi',
+            sortField: { field: "text", direction: "asc" }
+        };
+
+        if(document.getElementById('add_department')) {
+            window.addDeptSelect = new TomSelect('#add_department', tsMultiConfig);
+            window.addDeptSelect.control.setAttribute('data-placeholder', 'Select Departments');
+            let searchInputAdd = window.addDeptSelect.dropdown.querySelector('input');
+            if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search departments...');
+        }
+        
+        if(document.getElementById('edit_department')) {
+            window.editDeptSelect = new TomSelect('#edit_department', tsMultiConfig);
+            window.editDeptSelect.control.setAttribute('data-placeholder', 'Select Departments');
+            let searchInputEdit = window.editDeptSelect.dropdown.querySelector('input');
+            if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search departments...');
+        }
 
         // Delete Confirmation
         const deleteButtons = document.querySelectorAll('.delete-btn');
@@ -304,7 +406,30 @@
             customClass: { popup: 'premium-toast' }
         });
 
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: "{{ $errors->first() }}",
+                confirmButtonColor: 'var(--primary)',
+                background: 'var(--bg-card)',
+                color: 'var(--text-heading)'
+            });
+        @endif
 
+        @if(session('success'))
+            Toast.fire({
+                icon: 'success',
+                title: "{{ session('success') }}"
+            });
+        @endif
+        
+        @if(session('error'))
+            Toast.fire({
+                icon: 'error',
+                title: "{{ session('error') }}"
+            });
+        @endif
     });
 </script>
 @endpush
