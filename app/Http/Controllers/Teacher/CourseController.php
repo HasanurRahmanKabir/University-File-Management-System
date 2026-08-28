@@ -63,7 +63,9 @@ class CourseController extends Controller
 
         $activeSemester = \App\Models\Semester::running()->first();
 
-        return view('teacher.mycourseinfo', compact('runningCourses', 'previousCourses', 'activeCoursesCount', 'totalStudents', 'departments', 'categories', 'subcategories', 'semesters', 'activeSemester'));
+        $teacherDepartmentId = Auth::user()->department_id;
+
+        return view('teacher.mycourseinfo', compact('runningCourses', 'previousCourses', 'activeCoursesCount', 'totalStudents', 'departments', 'categories', 'subcategories', 'semesters', 'activeSemester', 'teacherDepartmentId'));
     }
 
     public function show(Course $course)

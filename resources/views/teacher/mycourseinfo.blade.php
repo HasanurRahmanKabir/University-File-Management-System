@@ -243,12 +243,18 @@
             </div>
             <div class="col-12">
                 <label class="form-label fw-bold text-dark small mb-1">Department</label>
-                <select name="department_id" id="add_department" class="form-select form-select-lg fs-6">
-                    <option value="">Choose Department</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                    @endforeach
-                </select>
+                @if($teacherDepartmentId)
+                    <input type="hidden" name="department_id" value="{{ $teacherDepartmentId }}">
+                    <input type="text" class="form-control form-control-lg fs-6" value="{{ $departments->firstWhere('id', $teacherDepartmentId)?->name ?? 'N/A' }}" disabled style="background: #f8fafc; color: #64748b; cursor: not-allowed; border: 1px solid #e2e8f0;">
+                    <small class="text-muted" style="font-size: 0.78rem;"><i class="fas fa-lock me-1"></i>Auto-assigned from your department</small>
+                @else
+                    <select name="department_id" id="add_department" class="form-select form-select-lg fs-6">
+                        <option value="">Choose Department</option>
+                        @foreach($departments as $dept)
+                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
             <div class="col-12">
                 <label class="form-label fw-bold text-dark small mb-1">Course Type</label>
@@ -345,12 +351,18 @@
             </div>
             <div class="col-12">
                 <label class="form-label fw-bold text-dark small mb-1">Department</label>
-                <select name="department_id" id="edit_department" class="form-select form-select-lg fs-6">
-                    <option value="">Choose Department</option>
-                    @foreach($departments as $dept)
-                        <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-                    @endforeach
-                </select>
+                @if($teacherDepartmentId)
+                    <input type="hidden" name="department_id" id="edit_dept_hidden" value="{{ $teacherDepartmentId }}">
+                    <input type="text" id="edit_dept_display" class="form-control form-control-lg fs-6" value="{{ $departments->firstWhere('id', $teacherDepartmentId)?->name ?? 'N/A' }}" disabled style="background: #f8fafc; color: #64748b; cursor: not-allowed; border: 1px solid #e2e8f0;">
+                    <small class="text-muted" style="font-size: 0.78rem;"><i class="fas fa-lock me-1"></i>Auto-assigned from your department</small>
+                @else
+                    <select name="department_id" id="edit_department" class="form-select form-select-lg fs-6">
+                        <option value="">Choose Department</option>
+                        @foreach($departments as $dept)
+                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
             <div class="col-12">
                 <label class="form-label fw-bold text-dark small mb-1">Course Type</label>
@@ -412,13 +424,17 @@
             onDelete: function(values, e) { return e ? false : true; }
         };
 
-        let addDeptSelect = new TomSelect('#add_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-department'}));
-        let searchInputAdd = addDeptSelect.dropdown.querySelector('input');
-        if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search department...');
+        if(document.getElementById('add_department')) {
+            let addDeptSelect = new TomSelect('#add_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-department'}));
+            let searchInputAdd = addDeptSelect.dropdown.querySelector('input');
+            if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search department...');
+        }
         
-        let editDeptSelect = new TomSelect('#edit_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-department'}));
-        let searchInputEdit = editDeptSelect.dropdown.querySelector('input');
-        if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search department...');
+        if(document.getElementById('edit_department')) {
+            window.editDeptSelect = new TomSelect('#edit_department', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-department'}));
+            let searchInputEdit = window.editDeptSelect.dropdown.querySelector('input');
+            if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search department...');
+        }
 
         let addSemesterSelect = new TomSelect('#add_semester', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-semester'}));
         let addSemInput = addSemesterSelect.dropdown.querySelector('input');
@@ -480,8 +496,23 @@
                 document.getElementById('edit_status').checked = this.getAttribute('data-status') === '1';
                 editSemesterSelect.setValue(this.getAttribute('data-semester'));
                 
-                // Update TomSelect value
-                editDeptSelect.setValue(this.getAttribute('data-department'));
+                // Update department: use course's actual dept_id (not teacher's)
+                const courseDeptId = this.getAttribute('data-department');
+                const editDeptHidden = document.getElementById('edit_dept_hidden');
+                const editDeptDisplay = document.getElementById('edit_dept_display');
+                if (editDeptHidden) {
+                    // Locked field — update hidden value to course's actual dept
+                    editDeptHidden.value = courseDeptId;
+                    // Update display text to match course's dept
+                    const deptMap = {
+                        @foreach($departments as $dept)
+                        "{{ $dept->id }}": "{{ $dept->name }}",
+                        @endforeach
+                    };
+                    if(editDeptDisplay) editDeptDisplay.value = deptMap[courseDeptId] ?? 'N/A';
+                } else if (window.editDeptSelect) {
+                    window.editDeptSelect.setValue(courseDeptId);
+                }
                 
                 const catId = this.getAttribute('data-category');
                 const subcatId = this.getAttribute('data-subcategory');
