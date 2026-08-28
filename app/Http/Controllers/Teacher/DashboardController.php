@@ -12,9 +12,11 @@ class DashboardController extends Controller
     {
         $teacherId = Auth::id();
 
-        // 1. Active Courses
+        // 1. Active Courses (in running semesters)
+        $activeSemesterIds = \App\Models\Semester::running()->pluck('id')->toArray();
         $activeCoursesCount = Course::where('teacher_id', $teacherId)
             ->where('is_active', true)
+            ->whereIn('semester_id', $activeSemesterIds)
             ->count();
 
         // 2. Total Uploads

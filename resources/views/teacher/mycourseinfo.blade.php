@@ -247,7 +247,7 @@
             </div>
             <div class="col-12">
                 <label class="form-label fw-bold text-dark small mb-1">Semester <span class="text-danger">*</span></label>
-                <select name="semester_id" class="form-select form-select-lg fs-6" required>
+                <select name="semester_id" id="add_semester" class="form-select form-select-lg fs-6" required>
                     <option value="">Select Semester</option>
                     @foreach($semesters as $semester)
                         <option value="{{ $semester->id }}">{{ $semester->name }} {{ $semester->year }}</option>
@@ -444,6 +444,14 @@
         let searchInputEdit = editDeptSelect.dropdown.querySelector('input');
         if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search department...');
 
+        let addSemesterSelect = new TomSelect('#add_semester', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-semester'}));
+        let addSemInput = addSemesterSelect.dropdown.querySelector('input');
+        if(addSemInput) addSemInput.setAttribute('placeholder', 'Search semester...');
+
+        let editSemesterSelect = new TomSelect('#edit_semester', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-semester'}));
+        let editSemInput = editSemesterSelect.dropdown.querySelector('input');
+        if(editSemInput) editSemInput.setAttribute('placeholder', 'Search semester...');
+
         let addCategorySelect = new TomSelect('#add_category', Object.assign({}, tsConfig, {wrapperClass: 'ts-wrapper custom-ts ts-category'}));
         let addCatInput = addCategorySelect.dropdown.querySelector('input');
         if(addCatInput) addCatInput.setAttribute('placeholder', 'Search category...');
@@ -494,7 +502,7 @@
                 document.getElementById('edit_title').value = this.getAttribute('data-title');
                 document.getElementById('edit_subtitle').value = this.getAttribute('data-subtitle');
                 document.getElementById('edit_status').checked = this.getAttribute('data-status') === '1';
-                document.getElementById('edit_semester').value = this.getAttribute('data-semester');
+                editSemesterSelect.setValue(this.getAttribute('data-semester'));
                 
                 // Update TomSelect value
                 editDeptSelect.setValue(this.getAttribute('data-department'));

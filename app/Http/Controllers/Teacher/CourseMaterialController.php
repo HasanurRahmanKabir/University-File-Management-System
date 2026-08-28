@@ -13,7 +13,11 @@ class CourseMaterialController extends Controller
 {
     public function index()
     {
-        $courses = Course::where('teacher_id', Auth::id())->where('is_active', true)->get();
+        $activeSemesterIds = \App\Models\Semester::running()->pluck('id')->toArray();
+        $courses = Course::where('teacher_id', Auth::id())
+            ->where('is_active', true)
+            ->whereIn('semester_id', $activeSemesterIds)
+            ->get();
         $materials = CourseMaterial::with('course')->whereIn('course_id', $courses->pluck('id'))->latest()->paginate(15);
         return view('teacher.uploadmaterials', compact('materials', 'courses'));
     }

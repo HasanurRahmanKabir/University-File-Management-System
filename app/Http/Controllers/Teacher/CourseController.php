@@ -14,7 +14,7 @@ class CourseController extends Controller
         $teacherId = Auth::id();
         $allStudents = \App\Models\User::where('role', 'student')->get();
 
-        $activeSemesterIds = \App\Models\Semester::where('is_active', true)->pluck('id')->toArray();
+        $activeSemesterIds = \App\Models\Semester::running()->pluck('id')->toArray();
         
         $runningCoursesQuery = Course::with(['category', 'subcategory'])->where('teacher_id', $teacherId);
         $previousCoursesQuery = Course::with(['category', 'subcategory'])->where('teacher_id', $teacherId);
@@ -59,9 +59,9 @@ class CourseController extends Controller
         $departments = \App\Models\Department::all();
         $categories = \App\Models\Category::where('is_active', true)->get();
         $subcategories = \App\Models\Subcategory::where('is_active', true)->get();
-        $semesters = \App\Models\Semester::where('is_active', true)->get();
+        $semesters = \App\Models\Semester::running()->get();
 
-        $activeSemester = \App\Models\Semester::where('is_active', true)->first();
+        $activeSemester = \App\Models\Semester::running()->first();
 
         return view('teacher.mycourseinfo', compact('runningCourses', 'previousCourses', 'activeCoursesCount', 'totalStudents', 'departments', 'categories', 'subcategories', 'semesters', 'activeSemester'));
     }

@@ -46,7 +46,7 @@ class StudentInfoController extends Controller
         $users->appends(['search' => $request->search]);
         
         $courses = \App\Models\Course::where('is_active', true)->orderBy('course_code')->get();
-        $semesters = \App\Models\Semester::where('is_active', true)->latest()->get();
+        $semesters = \App\Models\Semester::running()->latest()->get();
         $departments = \App\Models\Department::orderBy('name')->get();
         
         $totalStudents = StudentInfo::where('role', 'student')->count();
