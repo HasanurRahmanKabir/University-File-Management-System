@@ -12,8 +12,6 @@
 </head>
 <body>
 
-<button class="sb-toggler" id="toggleBtn" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
-
 <div class="sb-overlay" id="overlay"></div>
 
 <!-- SIDEBAR -->
@@ -38,19 +36,42 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const toggleBtn = document.getElementById('toggleBtn');
+        // Sidebar toggle logic
+        const desktopToggleBtn = document.getElementById('toggleBtn');
+        const mobileToggleBtn = document.getElementById('mobileToggleBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-
-        if(toggleBtn && sidebar && overlay) {
-            toggleBtn.onclick = () => {
-                sidebar.classList.toggle('show');
-                overlay.classList.toggle('show');
+        
+        if(sidebar) {
+            // Restore state for desktop
+            if(localStorage.getItem('sidebar-collapsed-student') === 'true' && window.innerWidth > 992) {
+                sidebar.classList.add('collapsed');
             }
 
-            overlay.onclick = () => {
-                sidebar.classList.remove('show');
-                overlay.classList.remove('show');
+            if(desktopToggleBtn) {
+                desktopToggleBtn.onclick = () => {
+                    if (window.innerWidth <= 992) {
+                        sidebar.classList.remove('show');
+                        if(overlay) overlay.classList.remove('show');
+                    } else {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebar-collapsed-student', sidebar.classList.contains('collapsed'));
+                    }
+                };
+            }
+
+            if(mobileToggleBtn) {
+                mobileToggleBtn.onclick = () => {
+                    sidebar.classList.toggle('show');
+                    if(overlay) overlay.classList.toggle('show');
+                };
+            }
+            
+            if(overlay) {
+                overlay.onclick = () => { 
+                    sidebar.classList.remove('show'); 
+                    overlay.classList.remove('show'); 
+                };
             }
         }
     });
