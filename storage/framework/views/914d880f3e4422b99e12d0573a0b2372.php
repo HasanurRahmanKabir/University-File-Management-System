@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ $globalSettings['seo_meta_description'] ?? 'Admin Dashboard — University OBE File Management System' }}">
-    <title>@yield('page-title', 'Admin') — {{ $globalSettings['admin_tab_title'] ?? 'Admin Dashboard - OBE System' }}</title>
+    <meta name="description" content="<?php echo e($globalSettings['seo_meta_description'] ?? 'Admin Dashboard — University OBE File Management System'); ?>">
+    <title><?php echo $__env->yieldContent('page-title', 'Admin'); ?> — <?php echo e($globalSettings['admin_tab_title'] ?? 'Admin Dashboard - OBE System'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v={{ uniqid() }}">
-    @stack('styles')
+    <link rel="stylesheet" href="<?php echo e(asset('css/dashboard.css')); ?>?v=<?php echo e(uniqid()); ?>">
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body>
 
@@ -19,16 +19,16 @@
     <div class="sidebar" id="sidebar" style="position: fixed;">
         
         <div class="sidebar-brand d-flex align-items-start w-100" style="padding: 20px 15px;">
-            <div class="brand-logo" style="{{ isset($globalSettings['admin_logo']) && $globalSettings['admin_logo'] ? 'background: transparent; box-shadow: none;' : '' }}">
-                @if(isset($globalSettings['admin_logo']) && $globalSettings['admin_logo'])
-                    <img src="{{ asset('storage/' . $globalSettings['admin_logo']) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                @else
+            <div class="brand-logo" style="<?php echo e(isset($globalSettings['admin_logo']) && $globalSettings['admin_logo'] ? 'background: transparent; box-shadow: none;' : ''); ?>">
+                <?php if(isset($globalSettings['admin_logo']) && $globalSettings['admin_logo']): ?>
+                    <img src="<?php echo e(asset('storage/' . $globalSettings['admin_logo'])); ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                <?php else: ?>
                     <i class="fas fa-graduation-cap"></i>
-                @endif
+                <?php endif; ?>
             </div>
             <div class="brand-text" style="flex: 1; min-width: 0; word-wrap: break-word; padding-top: 2px;">
-                <span class="brand-name nav-text" style="display: block; line-height: 1.2; margin-bottom: 2px;">{{ $globalSettings['admin_dashboard_name'] ?? 'UniAdmin' }}</span>
-                <span class="brand-tagline nav-text" style="display: block; line-height: 1.2;">{{ $globalSettings['brand_tagline'] ?? 'File Management' }}</span>
+                <span class="brand-name nav-text" style="display: block; line-height: 1.2; margin-bottom: 2px;"><?php echo e($globalSettings['admin_dashboard_name'] ?? 'UniAdmin'); ?></span>
+                <span class="brand-tagline nav-text" style="display: block; line-height: 1.2;"><?php echo e($globalSettings['brand_tagline'] ?? 'File Management'); ?></span>
             </div>
             <!-- Desktop Inline Toggler -->
             <button class="desktop-toggler" id="toggleBtn" title="Toggle Sidebar" style="display: flex; flex-shrink: 0; margin-top: 2px; align-self: flex-start; margin-left: auto; color: rgba(255, 255, 255, 0.7); background: transparent; border: none; font-size: 1.25rem; width: 32px; height: 32px; cursor: pointer; align-items: center; justify-content: center; transition: color 0.2s ease;">
@@ -40,7 +40,7 @@
             <span class="nav-group-label nav-text">Overview</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
                         <i class="fas fa-th-large" title="Dashboard
                     "></i> <span class="nav-text">Dashboard
                     </span>
@@ -51,21 +51,21 @@
             <span class="nav-group-label nav-text">User Management</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="{{ route('admin.student-info.index') }}" class="nav-link {{ request()->routeIs('admin.students.*', 'admin.student-info.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.student-info.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.students.*', 'admin.student-info.*') ? 'active' : ''); ?>">
                         <i class="fas fa-user-graduate" title="Students 
                     "></i> <span class="nav-text">Students 
                     </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.teacher-info.index') }}" class="nav-link {{ request()->routeIs('admin.teachers.*', 'admin.teacher-info.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.teacher-info.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.teachers.*', 'admin.teacher-info.*') ? 'active' : ''); ?>">
                         <i class="fas fa-chalkboard-teacher" title="Teachers
                     "></i> <span class="nav-text">Teachers
                     </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.admins.index') }}" class="nav-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.admins.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.admins.*') ? 'active' : ''); ?>">
                         <i class="fas fa-user-shield" title="Admins
                     "></i> <span class="nav-text">Admins
                     </span>
@@ -76,42 +76,42 @@
             <span class="nav-group-label nav-text">Academics</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="{{ route('admin.semesters.index') }}" class="nav-link {{ request()->routeIs('admin.semesters.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.semesters.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.semesters.*') ? 'active' : ''); ?>">
                         <i class="fas fa-calendar-alt" title="Semesters
                     "></i> <span class="nav-text">Semesters
                     </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.courses.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.courses.*') ? 'active' : ''); ?>">
                         <i class="fas fa-book-open" title="Courses
                     "></i> <span class="nav-text">Courses
                     </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.course-files.index') }}" class="nav-link {{ request()->routeIs('admin.course-files.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.course-files.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.course-files.*') ? 'active' : ''); ?>">
                         <i class="fas fa-file-alt" title="Course Files
                     "></i> <span class="nav-text">Course Files
                     </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ Route::has('admin.departments.index') ? route('admin.departments.index') : '#' }}" class="nav-link {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(Route::has('admin.departments.index') ? route('admin.departments.index') : '#'); ?>" class="nav-link <?php echo e(request()->routeIs('admin.departments.*') ? 'active' : ''); ?>">
                         <i class="fas fa-building-columns" title="Departments
                     "></i> <span class="nav-text">Departments
                     </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.categories.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.categories.*') ? 'active' : ''); ?>">
                         <i class="fas fa-tags" title="Categories
                     "></i> <span class="nav-text">Categories
                     </span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.subcategories.index') }}" class="nav-link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.subcategories.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.subcategories.*') ? 'active' : ''); ?>">
                         <i class="fas fa-layer-group" title="Subcategories
                     "></i> <span class="nav-text">Subcategories
                     </span>
@@ -122,7 +122,7 @@
             <span class="nav-group-label nav-text">System</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="{{ route('admin.system-settings') }}" class="nav-link {{ request()->routeIs('admin.system-settings') ? 'active' : '' }}">
+                    <a href="<?php echo e(route('admin.system-settings')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.system-settings') ? 'active' : ''); ?>">
                         <i class="fas fa-gear" title="Settings
                     "></i> <span class="nav-text">Settings
                     </span>
@@ -132,8 +132,8 @@
         </nav>
 
         <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST" class="d-inline w-100">
-                @csrf
+            <form action="<?php echo e(route('logout')); ?>" method="POST" class="d-inline w-100">
+                <?php echo csrf_field(); ?>
                 <button type="submit" class="logout-btn w-100 border-0 bg-transparent text-start" title="Log Out">
                     <i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-text">Log Out</span>
                 </button>
@@ -148,11 +148,11 @@
             <div class="header-left">
                 <button class="sidebar-toggler mobile-toggler d-lg-none" id="mobileToggleBtn"><i class="fas fa-bars"></i></button>
                 <div>
-                    <h1 class="page-title">@yield('page-title', 'Dashboard')</h1>
+                    <h1 class="page-title"><?php echo $__env->yieldContent('page-title', 'Dashboard'); ?></h1>
                     <div class="breadcrumb-trail">
-                        <a href="{{ route('admin.dashboard') }}">Home</a>
+                        <a href="<?php echo e(route('admin.dashboard')); ?>">Home</a>
                         <span>/</span>
-                        <span>@yield('breadcrumb', 'Dashboard')</span>
+                        <span><?php echo $__env->yieldContent('breadcrumb', 'Dashboard'); ?></span>
                     </div>
                 </div>
             </div>
@@ -208,30 +208,30 @@
                 <!-- Profile Dropdown -->
                 <div class="dropdown">
                     <div class="header-profile" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
-                        @php
+                        <?php
                             $user = Auth::user();
                             $name = $user ? $user->name : 'Admin User';
                             $initials = strtoupper(substr($name, 0, 2));
                             $role = $user ? ucfirst($user->role) : 'Administrator';
-                        @endphp
-                        <div class="avatar">{{ $initials }}</div>
+                        ?>
+                        <div class="avatar"><?php echo e($initials); ?></div>
                         <div class="profile-text">
-                            <div class="name">{{ Str::limit($name, 15) }}</div>
-                            <div class="role">{{ $role }}</div>
+                            <div class="name"><?php echo e(Str::limit($name, 15)); ?></div>
+                            <div class="role"><?php echo e($role); ?></div>
                         </div>
                     </div>
                     <div class="dropdown-menu dropdown-menu-end premium-dropdown profile-dropdown">
                         <div class="profile-header text-center p-3">
-                            <div class="avatar-lg mx-auto mb-2">{{ $initials }}</div>
-                            <h6 class="mb-0 fw-bold">{{ $name }}</h6>
-                            <span class="text-muted small">{{ $user ? $user->email : '' }}</span>
+                            <div class="avatar-lg mx-auto mb-2"><?php echo e($initials); ?></div>
+                            <h6 class="mb-0 fw-bold"><?php echo e($name); ?></h6>
+                            <span class="text-muted small"><?php echo e($user ? $user->email : ''); ?></span>
                         </div>
                         <div class="dropdown-divider m-0"></div>
-                        <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i> My Profile</a>
-                        <a class="dropdown-item" href="{{ route('admin.account-settings') }}"><i class="fas fa-cog me-2"></i> Account Settings</a>
+                        <a class="dropdown-item" href="<?php echo e(route('admin.profile')); ?>"><i class="fas fa-user-circle me-2"></i> My Profile</a>
+                        <a class="dropdown-item" href="<?php echo e(route('admin.account-settings')); ?>"><i class="fas fa-cog me-2"></i> Account Settings</a>
                         <div class="dropdown-divider"></div>
-                        <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>" class="m-0 p-0">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="dropdown-item text-danger">
                                 <i class="fas fa-sign-out-alt me-2"></i> Logout
                             </button>
@@ -243,16 +243,16 @@
 
         <!-- Content -->
         <div class="content-wrapper">
-            @yield('content')
+            <?php echo $__env->yieldContent('content'); ?>
         </div>
 
         <!-- Footer -->
         <div class="dashboard-footer" style="margin-top: auto; justify-content: center; text-align: center; width: 100%;">
-            <span style="font-weight: 600; color: #64748b;">{{ $globalSettings['footer_copyright'] ?? '© 2026 University File Management System' }}</span>
+            <span style="font-weight: 600; color: #64748b;"><?php echo e($globalSettings['footer_copyright'] ?? '© 2026 University File Management System'); ?></span>
         </div>
     </div>
 
-    @stack('modals')
+    <?php echo $__env->yieldPushContent('modals'); ?>
 
     <script>
         // Sidebar toggle logic
@@ -297,11 +297,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Include SweetAlert partial if exists -->
-    @if(view()->exists('partials.sweetalert'))
-        @include('partials.sweetalert')
-    @endif
+    <?php if(view()->exists('partials.sweetalert')): ?>
+        <?php echo $__env->make('partials.sweetalert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php endif; ?>
     
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
     <script>
         // Global Search Logic
         const searchInput = document.getElementById('globalSearchInput');
@@ -367,7 +367,7 @@
                 console.error(e);
             }
 
-            fetch("{{ route('admin.global-search') }}?q=" + encodeURIComponent(val))
+            fetch("<?php echo e(route('admin.global-search')); ?>?q=" + encodeURIComponent(val))
                 .then(response => response.json())
                 .then(data => {
                     initialState.style.display = 'none';
@@ -422,7 +422,7 @@
         });
 
         function fetchNotifications() {
-            fetch("{{ route('admin.notifications.fetch') }}")
+            fetch("<?php echo e(route('admin.notifications.fetch')); ?>")
                 .then(response => response.json())
                 .then(data => {
                     if(data.error) return;
@@ -481,7 +481,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
                 }
             })
             .then(res => res.json())
@@ -496,11 +496,11 @@
         };
 
         window.markNotificationsAsRead = function() {
-            fetch("{{ route('admin.notifications.read') }}", {
+            fetch("<?php echo e(route('admin.notifications.read')); ?>", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
                 }
             })
             .then(res => res.json())
@@ -513,3 +513,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views\layouts\admin.blade.php ENDPATH**/ ?>

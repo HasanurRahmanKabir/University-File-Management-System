@@ -1,10 +1,13 @@
 <header class="topbar">
-    <div>
-        <div class="tb-title">@yield('page_title', 'Dashboard')</div>
-        <div class="tb-breadcrumb">
-            <a href="{{ route('teacher.dashboard') }}">Home</a>
-            <span>/</span>
-            <span>@yield('page_title', 'Dashboard')</span>
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="sb-desktop-toggler d-lg-none" id="mobileToggleBtn" style="background: transparent; border: none; font-size: 1.25rem; color: var(--tx-m); padding: 0; display: none; align-items: center; justify-content: center;"><i class="fas fa-bars"></i></button>
+        <div>
+            <div class="tb-title">@yield('page_title', 'Dashboard')</div>
+            <div class="tb-breadcrumb">
+                <a href="{{ route('teacher.dashboard') }}">Home</a>
+                <span>/</span>
+                <span>@yield('page_title', 'Dashboard')</span>
+            </div>
         </div>
     </div>
     <div class="tb-right">

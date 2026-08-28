@@ -249,6 +249,81 @@ button{font-family:inherit;cursor:pointer;}
 .sb-overlay.show{display:block;animation:fadeIn .2s var(--ease);}
 
 /* ============================================================
+   COLLAPSED STATE (Desktop)
+   ============================================================ */
+@media (min-width: 993px) {
+    .sidebar.collapsed {
+        width: 76px;
+    }
+    .sidebar.collapsed .sb-text, 
+    .sidebar.collapsed .sb-lbl {
+        display: none !important;
+    }
+    .sidebar.collapsed .sb-brand {
+        padding: 24px 0 20px;
+        justify-content: center !important;
+    }
+    .sidebar.collapsed .sb-brand .brand-logo,
+    .sidebar.collapsed .sb-brand .brand-text {
+        display: none !important;
+    }
+    .sidebar.collapsed #toggleBtn {
+        display: flex !important;
+        margin: 0 auto !important;
+        align-self: center !important;
+        font-size: 1.25rem !important;
+    }
+    .sidebar.collapsed .sb-link {
+        padding: 12px 0;
+        justify-content: center;
+    }
+    .sidebar.collapsed .sb-link .sb-ico {
+        margin: 0;
+        font-size: 1.15rem;
+    }
+    .sidebar.collapsed .sb-logout {
+        justify-content: center;
+        padding: 12px 0;
+    }
+    .sidebar.collapsed .sb-logout i {
+        margin: 0;
+        font-size: 1.15rem;
+    }
+    .sidebar.collapsed ~ .main {
+        margin-left: 76px;
+    }
+}
+
+/* Mobile Icon change and brand collapse behavior */
+@media (max-width: 992px) {
+    .sidebar.collapsed .sb-brand {
+        padding: 18px 0 !important;
+        justify-content: center !important;
+    }
+    .sidebar.collapsed .sb-brand .brand-logo,
+    .sidebar.collapsed .sb-brand .brand-text {
+        display: none !important;
+    }
+    .sidebar.collapsed #toggleBtn {
+        display: flex !important;
+        margin: 0 auto !important;
+        font-size: 1.25rem !important;
+    }
+    #toggleBtn::before {
+        content: "\f00d" !important;
+    }
+}
+
+.sb-desktop-toggler {
+    display: block;
+}
+@media (max-width: 992px) {
+    .sb-desktop-toggler {
+        display: block !important;
+    }
+}
+
+/* ============================================================
    MAIN LAYOUT
    ============================================================ */
 .main{
@@ -605,8 +680,7 @@ button{font-family:inherit;cursor:pointer;}
     .sidebar{left:calc(-1 * var(--sb-width));}
     .sidebar.show{left:0;}
     .main{margin-left:0!important;}
-    .sb-toggler{display:flex; top: 12px; left: 12px;}
-    .topbar{padding-left:60px;}
+    .topbar{padding-left:28px;}
     .page-content{padding:20px 18px 0;}
     .page-footer{padding:16px 18px;}
 }
@@ -614,8 +688,7 @@ button{font-family:inherit;cursor:pointer;}
 @media(max-width:768px){
     .stats-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
     .page-content{padding:16px 14px 0;}
-    .topbar{padding-left:58px;padding-right:14px;height:56px;}
-    .sb-toggler{top: 9px; left: 10px;}
+    .topbar{padding-left:18px;padding-right:14px;height:56px;}
     .hero-banner{padding:20px 18px;}
     .hero-greeting{font-size:1.2rem;}
     .page-footer{padding:14px 14px;flex-direction:column;align-items:flex-start;gap:8px;}
@@ -638,11 +711,10 @@ button{font-family:inherit;cursor:pointer;}
     .stat-val{font-size:1.6rem;}
     .d-card-body{padding:14px;}
     .modal-header,.modal-body,.modal-footer{padding-left:14px;padding-right:14px;}
-    .topbar{height:auto;min-height:52px;padding-top:8px;padding-bottom:8px;flex-wrap:nowrap;gap:8px;align-items:center;}
+    .topbar{height:auto;min-height:52px;padding-top:8px;padding-bottom:8px;padding-left:12px;padding-right:12px;flex-wrap:nowrap;gap:8px;align-items:center;}
     .topbar > div:first-child{flex:1;min-width:0;}
     .tb-right{flex-shrink:0;}
     .tb-breadcrumb{flex-wrap:wrap;gap:2px 5px;}
-    .sb-toggler{top: 7px; left: 8px;}
 }
 
 @media(max-width:320px){

@@ -1,39 +1,40 @@
 <aside class="sidebar" id="sidebar">
     <div class="sb-scroll">
-        <div class="sb-brand">
+        <div class="sb-brand" style="align-items: center;">
             @if(isset($globalSettings['teacher_logo']) && $globalSettings['teacher_logo'])
-                <div style="width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div class="brand-logo" style="width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <img src="{{ asset('storage/' . $globalSettings['teacher_logo']) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
             @else
-                <div class="sb-logo">
+                <div class="sb-logo brand-logo">
                     <i class="fas fa-chalkboard-teacher"></i>
                 </div>
             @endif
-            <div>
-                <span class="sb-brand-name">{{ $globalSettings['teacher_dashboard_name'] ?? 'TeacherHub' }}</span>
-                <span class="sb-brand-tag">{{ $globalSettings['brand_tagline'] ?? 'OBE Portal' }}</span>
+            <div class="brand-text" style="flex: 1; min-width: 0;">
+                <span class="sb-brand-name" style="word-wrap: break-word; white-space: normal;">{{ $globalSettings['teacher_dashboard_name'] ?? 'TeacherHub' }}</span>
+                <span class="sb-brand-tag" style="word-wrap: break-word; white-space: normal;">{{ $globalSettings['brand_tagline'] ?? 'OBE Portal' }}</span>
             </div>
+            <i class="fas fa-bars sb-desktop-toggler" id="toggleBtn" style="cursor: pointer; align-self: flex-start; margin-top: 2px; color: var(--tx-m); font-size: 1.1rem; padding: 4px;"></i>
         </div>
         <nav class="sb-nav">
             <span class="sb-lbl">Overview</span>
             <ul>
-                <li><a href="{{ route('teacher.dashboard') }}" class="sb-link {{ request()->routeIs('teacher.dashboard') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-th-large"></i></div>Dashboard</a></li>
+                <li><a href="{{ route('teacher.dashboard') }}" class="sb-link {{ request()->routeIs('teacher.dashboard') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-th-large" title="Dashboard"></i></div><span class="sb-text">Dashboard</span></a></li>
             </ul>
             <span class="sb-lbl">Academics</span>
             <ul>
-                <li><a href="{{ route('teacher.courses.index') }}" class="sb-link {{ request()->routeIs('teacher.courses.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-book-open"></i></div>My Course Info</a></li>
-                <li><a href="{{ route('teacher.course-materials.index') }}" class="sb-link {{ request()->routeIs('teacher.course-materials.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-cloud-arrow-up"></i></div>Upload Materials</a></li>
-                <li><a href="{{ route('teacher.categories.index') }}" class="sb-link {{ request()->routeIs('teacher.categories.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-tags"></i></div>Category List</a></li>
-                <li><a href="{{ route('teacher.subcategories.index') }}" class="sb-link {{ request()->routeIs('teacher.subcategories.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-layer-group"></i></div>Subcategory List</a></li>
+                <li><a href="{{ route('teacher.courses.index') }}" class="sb-link {{ request()->routeIs('teacher.courses.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-book-open" title="My Course Info"></i></div><span class="sb-text">My Course Info</span></a></li>
+                <li><a href="{{ route('teacher.course-materials.index') }}" class="sb-link {{ request()->routeIs('teacher.course-materials.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-cloud-arrow-up" title="Upload Materials"></i></div><span class="sb-text">Upload Materials</span></a></li>
+                <li><a href="{{ route('teacher.categories.index') }}" class="sb-link {{ request()->routeIs('teacher.categories.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-tags" title="Category List"></i></div><span class="sb-text">Category List</span></a></li>
+                <li><a href="{{ route('teacher.subcategories.index') }}" class="sb-link {{ request()->routeIs('teacher.subcategories.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-layer-group" title="Subcategory List"></i></div><span class="sb-text">Subcategory List</span></a></li>
             </ul>
         </nav>
     </div>
     <div class="sb-footer">
         <form action="{{ route('logout') }}" method="POST" style="margin: 0; width: 100%;">
             @csrf
-            <button class="sb-logout" type="submit" style="justify-content: center; color: #94a3b8;">
-                <i class="fas fa-arrow-right-from-bracket" style="margin-right: 8px;"></i> Log Out
+            <button class="sb-logout" type="submit" style="justify-content: center; color: #94a3b8;" title="Log Out">
+                <i class="fas fa-arrow-right-from-bracket" style="margin-right: 8px;"></i> <span class="sb-text">Log Out</span>
             </button>
         </form>
     </div>
