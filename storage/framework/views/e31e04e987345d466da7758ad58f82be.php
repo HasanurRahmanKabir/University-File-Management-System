@@ -7,17 +7,18 @@
     <title><?php echo $__env->yieldContent('page-title', 'Admin'); ?> — <?php echo e($globalSettings['admin_tab_title'] ?? 'Admin Dashboard - OBE System'); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo e(asset('css/dashboard.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/dashboard.css')); ?>?v=<?php echo e(uniqid()); ?>">
     <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body>
 
-    <button class="sidebar-toggler" id="toggleBtn"><i class="fas fa-bars"></i></button>
+    
     <div class="sidebar-overlay" id="overlay"></div>
 
     <!-- ====== SIDEBAR ====== -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
+    <div class="sidebar" id="sidebar" style="position: fixed;">
+        
+        <div class="sidebar-brand d-flex align-items-start w-100" style="padding: 20px 15px;">
             <div class="brand-logo" style="<?php echo e(isset($globalSettings['admin_logo']) && $globalSettings['admin_logo'] ? 'background: transparent; box-shadow: none;' : ''); ?>">
                 <?php if(isset($globalSettings['admin_logo']) && $globalSettings['admin_logo']): ?>
                     <img src="<?php echo e(asset('storage/' . $globalSettings['admin_logo'])); ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
@@ -25,80 +26,106 @@
                     <i class="fas fa-graduation-cap"></i>
                 <?php endif; ?>
             </div>
-            <div class="brand-text">
-                <span class="brand-name"><?php echo e($globalSettings['admin_dashboard_name'] ?? 'UniAdmin'); ?></span>
-                <span class="brand-tagline"><?php echo e($globalSettings['brand_tagline'] ?? 'File Management'); ?></span>
+            <div class="brand-text" style="flex: 1; min-width: 0; word-wrap: break-word; padding-top: 2px;">
+                <span class="brand-name nav-text" style="display: block; line-height: 1.2; margin-bottom: 2px;"><?php echo e($globalSettings['admin_dashboard_name'] ?? 'UniAdmin'); ?></span>
+                <span class="brand-tagline nav-text" style="display: block; line-height: 1.2;"><?php echo e($globalSettings['brand_tagline'] ?? 'File Management'); ?></span>
             </div>
+            <!-- Desktop Inline Toggler -->
+            <button class="desktop-toggler" id="toggleBtn" title="Toggle Sidebar" style="display: flex; flex-shrink: 0; align-self: flex-start; margin-top: 2px; margin-left: auto; color: rgba(255, 255, 255, 0.7); background: transparent; border: none; font-size: 1.25rem; width: 32px; height: 32px; cursor: pointer; align-items: flex-start; justify-content: center; transition: color 0.2s ease;">
+                <i class="fas fa-bars" id="toggleIcon"></i>
+            </button>
         </div>
 
         <nav class="sidebar-nav">
-            <span class="nav-group-label">Overview</span>
+            <span class="nav-group-label nav-text">Overview</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.dashboard')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.dashboard') ? 'active' : ''); ?>">
-                        <i class="fas fa-th-large"></i> Dashboard
+                        <i class="fas fa-th-large" title="Dashboard
+                    "></i> <span class="nav-text">Dashboard
+                    </span>
                     </a>
                 </li>
             </ul>
 
-            <span class="nav-group-label">User Management</span>
+            <span class="nav-group-label nav-text">User Management</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.student-info.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.students.*', 'admin.student-info.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-user-graduate"></i> Students 
+                        <i class="fas fa-user-graduate" title="Students 
+                    "></i> <span class="nav-text">Students 
+                    </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.teacher-info.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.teachers.*', 'admin.teacher-info.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-chalkboard-teacher"></i> Teachers
+                        <i class="fas fa-chalkboard-teacher" title="Teachers
+                    "></i> <span class="nav-text">Teachers
+                    </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.admins.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.admins.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-user-shield"></i> Admins
+                        <i class="fas fa-user-shield" title="Admins
+                    "></i> <span class="nav-text">Admins
+                    </span>
                     </a>
                 </li>
             </ul>
 
-            <span class="nav-group-label">Academics</span>
+            <span class="nav-group-label nav-text">Academics</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.semesters.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.semesters.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-calendar-alt"></i> Semesters
+                        <i class="fas fa-calendar-alt" title="Semesters
+                    "></i> <span class="nav-text">Semesters
+                    </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.courses.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.courses.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-book-open"></i> Courses
+                        <i class="fas fa-book-open" title="Courses
+                    "></i> <span class="nav-text">Courses
+                    </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.course-files.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.course-files.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-file-alt"></i> Course Files
+                        <i class="fas fa-file-alt" title="Course Files
+                    "></i> <span class="nav-text">Course Files
+                    </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo e(Route::has('admin.departments.index') ? route('admin.departments.index') : '#'); ?>" class="nav-link <?php echo e(request()->routeIs('admin.departments.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-building-columns"></i> Departments
+                        <i class="fas fa-building-columns" title="Departments
+                    "></i> <span class="nav-text">Departments
+                    </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.categories.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.categories.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-tags"></i> Categories
+                        <i class="fas fa-tags" title="Categories
+                    "></i> <span class="nav-text">Categories
+                    </span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.subcategories.index')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.subcategories.*') ? 'active' : ''); ?>">
-                        <i class="fas fa-layer-group"></i> Subcategories
+                        <i class="fas fa-layer-group" title="Subcategories
+                    "></i> <span class="nav-text">Subcategories
+                    </span>
                     </a>
                 </li>
             </ul>
             
-            <span class="nav-group-label">System</span>
+            <span class="nav-group-label nav-text">System</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="<?php echo e(route('admin.system-settings')); ?>" class="nav-link <?php echo e(request()->routeIs('admin.system-settings') ? 'active' : ''); ?>">
-                        <i class="fas fa-gear"></i> Settings
+                        <i class="fas fa-gear" title="Settings
+                    "></i> <span class="nav-text">Settings
+                    </span>
                     </a>
                 </li>
             </ul>
@@ -107,8 +134,8 @@
         <div class="sidebar-footer">
             <form action="<?php echo e(route('logout')); ?>" method="POST" class="d-inline w-100">
                 <?php echo csrf_field(); ?>
-                <button type="submit" class="logout-btn w-100 border-0 bg-transparent text-start">
-                    <i class="fas fa-arrow-right-from-bracket"></i> Log Out
+                <button type="submit" class="logout-btn w-100 border-0 bg-transparent text-start" title="Log Out">
+                    <i class="fas fa-arrow-right-from-bracket"></i> <span class="nav-text">Log Out</span>
                 </button>
             </form>
         </div>
@@ -119,6 +146,7 @@
         <!-- Top Header -->
         <div class="top-header">
             <div class="header-left">
+                <button class="sidebar-toggler mobile-toggler d-lg-none" id="mobileToggleBtn"><i class="fas fa-bars"></i></button>
                 <div>
                     <h1 class="page-title"><?php echo $__env->yieldContent('page-title', 'Dashboard'); ?></h1>
                     <div class="breadcrumb-trail">
@@ -228,18 +256,41 @@
 
     <script>
         // Sidebar toggle logic
-        const toggleBtn = document.getElementById('toggleBtn');
+        const desktopToggleBtn = document.getElementById('toggleBtn');
+        const mobileToggleBtn = document.getElementById('mobileToggleBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         
-        if(toggleBtn && sidebar && overlay) {
-            toggleBtn.onclick = () => { 
-                sidebar.classList.toggle('show'); 
-                overlay.classList.toggle('show'); 
+        if(sidebar) {
+            // Restore state for desktop
+            if(localStorage.getItem('sidebar-collapsed') === 'true' && window.innerWidth > 992) {
+                sidebar.classList.add('collapsed');
             }
-            overlay.onclick = () => { 
-                sidebar.classList.remove('show'); 
-                overlay.classList.remove('show'); 
+
+            if(desktopToggleBtn) {
+                desktopToggleBtn.onclick = () => {
+                    if (window.innerWidth <= 992) {
+                        sidebar.classList.remove('show');
+                        if(overlay) overlay.classList.remove('show');
+                    } else {
+                        sidebar.classList.toggle('collapsed');
+                        localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+                    }
+                };
+            }
+
+            if(mobileToggleBtn) {
+                mobileToggleBtn.onclick = () => {
+                    sidebar.classList.toggle('show');
+                    if(overlay) overlay.classList.toggle('show');
+                };
+            }
+            
+            if(overlay) {
+                overlay.onclick = () => { 
+                    sidebar.classList.remove('show'); 
+                    overlay.classList.remove('show'); 
+                };
             }
         }
     </script>

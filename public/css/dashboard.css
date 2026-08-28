@@ -2081,3 +2081,105 @@ input:-webkit-autofill:active {
 .page-item:last-child .page-link {
     border-radius: 8px;
 }
+
+
+/* ============================================================
+   COLLAPSIBLE SIDEBAR (Desktop)
+   ============================================================ */
+@media (min-width: 993px) {
+    .sidebar.collapsed {
+        width: 76px;
+    }
+    .sidebar.collapsed .nav-text {
+        display: none !important;
+    }
+    .sidebar.collapsed .sidebar-brand {
+        padding: 24px 0 20px;
+        justify-content: center;
+    }
+    .sidebar.collapsed .sidebar-brand .brand-logo {
+        margin: 0;
+    }
+    .sidebar.collapsed .nav-link {
+        padding: 14px 0;
+        justify-content: center;
+    }
+    .sidebar.collapsed .nav-link i {
+        margin: 0;
+        font-size: 1.25rem;
+    }
+    .sidebar.collapsed .logout-btn {
+        justify-content: center;
+        padding: 14px 0;
+    }
+    .sidebar.collapsed .logout-btn i {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 76px;
+    }
+}
+
+/* Mobile toggle button (in header) */
+.mobile-toggler {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-heading);
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-base) var(--ease);
+}
+.mobile-toggler:hover {
+    background: var(--bg-muted);
+}
+
+/* Toggle button inline within sidebar brand */
+.sidebar-toggler {
+    cursor: pointer;
+    transition: all var(--duration-base) var(--ease);
+}
+.sidebar-toggler:hover {
+    color: var(--text-inverse) !important;
+}
+
+/* Change desktop toggler icon to 'X' on mobile */
+@media (max-width: 992px) {
+    #toggleIcon::before {
+        content: "\f00d" !important;
+    }
+}
+
+/* SHOW LOGO AND ICON CORRECTLY WHEN COLLAPSED */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.sidebar-brand .brand-logo {
+    min-width: 40px;
+    margin-right: 12px;
+}
+.sidebar.collapsed .sidebar-brand {
+    padding: 18px 0 !important;
+    justify-content: center !important;
+}
+.sidebar.collapsed .sidebar-brand .brand-logo,
+.sidebar.collapsed .sidebar-brand .brand-text {
+    display: none !important;
+}
+.sidebar.collapsed #toggleBtn {
+    display: flex !important;
+    margin: 0 auto !important;
+    font-size: 1.25rem !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+#toggleBtn:hover {
+    color: #fff !important;
+}
