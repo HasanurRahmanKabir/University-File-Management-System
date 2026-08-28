@@ -1,9 +1,8 @@
-@extends('layouts.admin')
-@section('title', 'Teachers - Admin Dashboard')
-@section('page-title', 'Teacher Management')
-@section('breadcrumb', 'Teacher Management')
+<?php $__env->startSection('title', 'Teachers - Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Teacher Management'); ?>
+<?php $__env->startSection('breadcrumb', 'Teacher Management'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header">
     <div class="heading-group"><h2>Faculty Members</h2><p>Manage teachers, departments, and course assignments.</p></div>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeacherModal"><i class="fas fa-user-plus"></i> Add Teacher</button>
@@ -12,15 +11,15 @@
 <div class="data-card">
     <div class="card-header">
         <div><h5 class="card-title"><i class="fas fa-chalkboard-teacher"></i> Faculty List</h5><p class="card-subtitle">All registered teachers with department info</p></div>
-        <form action="{{ route('admin.teacher-info.index') }}" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
+        <form action="<?php echo e(route('admin.teacher-info.index')); ?>" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.teacher-info.index') }}'" title="Clear Search">
+                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.teacher-info.index')); ?>'" title="Clear Search">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-weight: 500;">Search</button>
         </form>
@@ -29,98 +28,100 @@
         <table class="premium-table">
             <thead><tr><th>Teacher Name</th><th class="text-center">Email</th><th class="text-center">Department</th><th class="text-center">Status</th><th class="text-center">Offered Courses</th><th class="text-center">Action</th></tr></thead>
             <tbody>
-                @forelse($users as $teacher)
+                <?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $teacher): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr>
                     <td>
                         <div class="user-cell">
-                            @if($teacher->profile_image)
-                                <img src="{{ asset('storage/' . $teacher->profile_image) }}" alt="{{ $teacher->name }}" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
-                            @else
+                            <?php if($teacher->profile_image): ?>
+                                <img src="<?php echo e(asset('storage/' . $teacher->profile_image)); ?>" alt="<?php echo e($teacher->name); ?>" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
+                            <?php else: ?>
                                 <div class="avatar-sm purple d-flex align-items-center justify-content-center text-white fw-bold">
-                                    {{ strtoupper(substr($teacher->name, 0, 2)) }}
+                                    <?php echo e(strtoupper(substr($teacher->name, 0, 2))); ?>
+
                                 </div>
-                            @endif
+                            <?php endif; ?>
                             <div>
-                                <div class="user-name">{{ $teacher->name }}</div>
-                                <div class="user-sub">{{ $teacher->designation ?? 'Faculty Member' }}</div>
+                                <div class="user-name"><?php echo e($teacher->name); ?></div>
+                                <div class="user-sub"><?php echo e($teacher->designation ?? 'Faculty Member'); ?></div>
                             </div>
                         </div>
                     </td>
-                    <td class="text-center"><span style="color:var(--text-secondary); font-size:0.82rem;">{{ $teacher->email }}</span></td>
+                    <td class="text-center"><span style="color:var(--text-secondary); font-size:0.82rem;"><?php echo e($teacher->email); ?></span></td>
                     <td class="text-center">
-                        @if($teacher->department)
-                            <span class="badge primary"><i class="fas fa-building-columns"></i> {{ $teacher->department->name }}</span>
-                        @else
+                        <?php if($teacher->department): ?>
+                            <span class="badge primary"><i class="fas fa-building-columns"></i> <?php echo e($teacher->department->name); ?></span>
+                        <?php else: ?>
                             <span class="badge neutral"><i class="fas fa-building-columns"></i> Not Assigned</span>
-                        @endif
+                        <?php endif; ?>
                     </td>
                     <td class="text-center">
-                        @if($teacher->is_active)
+                        <?php if($teacher->is_active): ?>
                             <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                        @else
+                        <?php else: ?>
                             <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                        @endif
+                        <?php endif; ?>
                     </td>
                     <td class="text-center">
-                        @forelse($teacher->courses as $course)
-                            <span class="badge success">{{ $course->course_code }}</span>
-                        @empty
+                        <?php $__empty_2 = true; $__currentLoopData = $teacher->courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_2 = false; ?>
+                            <span class="badge success"><?php echo e($course->course_code); ?></span>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_2): ?>
                             <span class="text-muted" style="font-size: 0.8rem;">No courses assigned</span>
-                        @endforelse
+                        <?php endif; ?>
                     </td>
                     <td>
                         <div class="action-group justify-content-center">
                             <button class="action-btn edit edit-teacher-btn" data-bs-toggle="modal" data-bs-target="#editTeacherModal"
-                                data-id="{{ $teacher->id }}"
-                                data-name="{{ $teacher->name }}"
-                                data-email="{{ $teacher->email }}"
-                                data-department="{{ $teacher->department_id }}"
-                                data-designation="{{ $teacher->designation }}"
-                                data-active="{{ $teacher->is_active ? 1 : 0 }}"
-                                data-profile-image="{{ $teacher->profile_image }}"
-                                data-courses="{{ json_encode($teacher->courses->pluck('id')->toArray()) }}">
+                                data-id="<?php echo e($teacher->id); ?>"
+                                data-name="<?php echo e($teacher->name); ?>"
+                                data-email="<?php echo e($teacher->email); ?>"
+                                data-department="<?php echo e($teacher->department_id); ?>"
+                                data-designation="<?php echo e($teacher->designation); ?>"
+                                data-active="<?php echo e($teacher->is_active ? 1 : 0); ?>"
+                                data-profile-image="<?php echo e($teacher->profile_image); ?>"
+                                data-courses="<?php echo e(json_encode($teacher->courses->pluck('id')->toArray())); ?>">
                                 <i class="fas fa-pen"></i>
                             </button>
-                            <form action="{{ route('admin.teacher-info.destroy', $teacher->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                @csrf
-                                @method('DELETE')
+                            <form action="<?php echo e(route('admin.teacher-info.destroy', $teacher->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('DELETE'); ?>
                                 <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                             </form>
                         </div>
                     </td>
                 </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="6" class="text-center py-5">
                         <div class="empty-state">
                             <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                            @if(request('search'))
-                                <h6 class="text-heading fw-bold">No results found for "{{ request('search') }}"</h6>
+                            <?php if(request('search')): ?>
+                                <h6 class="text-heading fw-bold">No results found for "<?php echo e(request('search')); ?>"</h6>
                                 <p class="text-muted small">We couldn't find any teacher matching your search criteria.</p>
-                                <a href="{{ route('admin.teacher-info.index') }}" class="btn btn-sm btn-primary mt-3">Clear Search</a>
-                            @else
+                                <a href="<?php echo e(route('admin.teacher-info.index')); ?>" class="btn btn-sm btn-primary mt-3">Clear Search</a>
+                            <?php else: ?>
                                 <h6 class="text-heading fw-bold">No teachers found</h6>
                                 <p class="text-muted small">Add your first teacher to see them listed here.</p>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
-    @if($users->hasPages())
+    <?php if($users->hasPages()): ?>
         <div class="mt-3 px-3 pb-3 border-top pt-3">
-            {{ $users->links('pagination::bootstrap-5') }}
+            <?php echo e($users->links('pagination::bootstrap-5')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
     <!-- ADD TEACHER -->
-    <div class="modal fade" id="addTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="{{ route('admin.teacher-info.store') }}" method="POST" enctype="multipart/form-data">@csrf
+    <div class="modal fade" id="addTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="<?php echo e(route('admin.teacher-info.store')); ?>" method="POST" enctype="multipart/form-data"><?php echo csrf_field(); ?>
         <div class="form-group mb-4">
             <label class="form-label d-block text-muted small mb-2">Profile Image (Optional)</label>
             <div class="avatar-upload-container">
@@ -139,7 +140,7 @@
         </div>
         <div class="form-grid"><div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" class="form-input" placeholder="Enter full name" required></div><div class="form-group"><label class="form-label">Email Address</label><input type="email" name="email" class="form-input" placeholder="example@univ.edu" required></div></div>
         <div class="form-grid">
-            <div class="form-group"><label class="form-label">Department</label><select name="department_id" id="add_department_id" class="form-select" placeholder="Select Department"><option value="">Select Department</option>@foreach($departments as $dept)<option value="{{ $dept->id }}">{{ $dept->name }}</option>@endforeach</select></div>
+            <div class="form-group"><label class="form-label">Department</label><select name="department_id" id="add_department_id" class="form-select" placeholder="Select Department"><option value="">Select Department</option><?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></select></div>
             <div class="form-group"><label class="form-label">Designation</label><input type="text" name="designation" class="form-input" placeholder="e.g. Senior Lecturer"></div>
         </div>
         <div class="form-grid">
@@ -176,9 +177,9 @@
             </div>
             <select class="form-select" id="add_courses" name="courses[]" multiple placeholder="Select courses">
                 <option value="">Select Courses</option>
-                @foreach($courses as $course)
-                    <option value="{{ $course->id }}" data-department-id="{{ $course->department_id }}">{{ $course->course_code }} - {{ $course->title ?? 'Course' }}</option>
-                @endforeach
+                <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($course->id); ?>" data-department-id="<?php echo e($course->department_id); ?>"><?php echo e($course->course_code); ?> - <?php echo e($course->title ?? 'Course'); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
         <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
@@ -188,7 +189,7 @@
     </form></div></div></div></div>
 
     <!-- EDIT TEACHER MODAL -->
-    <div class="modal fade" id="editTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Edit Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editTeacherForm" action="" method="POST" enctype="multipart/form-data">@csrf @method('PUT')
+    <div class="modal fade" id="editTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Edit Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editTeacherForm" action="" method="POST" enctype="multipart/form-data"><?php echo csrf_field(); ?> <?php echo method_field('PUT'); ?>
         <input type="hidden" name="remove_image" id="remove_image_hidden" value="0">
         <div class="form-group mb-4">
             <label class="form-label d-block text-muted small mb-2">Update Profile Image</label>
@@ -211,7 +212,7 @@
         </div>
         <div class="form-grid"><div class="form-group"><label class="form-label">Full Name</label><input type="text" name="name" id="edit_name" class="form-input" required></div><div class="form-group"><label class="form-label">Email</label><input type="email" name="email" id="edit_email" class="form-input" required></div></div>
         <div class="form-grid">
-            <div class="form-group"><label class="form-label">Department</label><select name="department_id" id="edit_department_id" class="form-select" placeholder="Select Department"><option value="">Select Department</option>@foreach($departments as $dept)<option value="{{ $dept->id }}">{{ $dept->name }}</option>@endforeach</select></div>
+            <div class="form-group"><label class="form-label">Department</label><select name="department_id" id="edit_department_id" class="form-select" placeholder="Select Department"><option value="">Select Department</option><?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($dept->id); ?>"><?php echo e($dept->name); ?></option><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></select></div>
             <div class="form-group"><label class="form-label">Designation</label><input type="text" name="designation" id="edit_designation" class="form-input" placeholder="e.g. Professor"></div>
         </div>
         <div class="form-grid">
@@ -248,9 +249,9 @@
             </div>
             <select class="form-select edit-course-select" id="edit_courses" name="courses[]" multiple placeholder="Select courses">
                 <option value="">Select Courses</option>
-                @foreach($courses as $course)
-                    <option value="{{ $course->id }}" data-department-id="{{ $course->department_id }}">{{ $course->course_code }} - {{ $course->title ?? 'Course' }}</option>
-                @endforeach
+                <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($course->id); ?>" data-department-id="<?php echo e($course->department_id); ?>"><?php echo e($course->course_code); ?> - <?php echo e($course->title ?? 'Course'); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
         </div>
         <div class="form-actions">
@@ -258,9 +259,9 @@
             <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Save Changes</button>
         </div>
     </form></div></div></div></div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <style>
@@ -472,9 +473,9 @@
         });
 
         const allCourses = [
-            @foreach($courses as $course)
-            { value: "{{ $course->id }}", text: "{{ $course->course_code }} - {{ $course->title ?? 'Course' }}", department_id: "{{ $course->department_id }}" },
-            @endforeach
+            <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            { value: "<?php echo e($course->id); ?>", text: "<?php echo e($course->course_code); ?> - <?php echo e($course->title ?? 'Course'); ?>", department_id: "<?php echo e($course->department_id); ?>" },
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         ];
 
         function filterCourses(tsInstance, departmentId, allowCrossDept) {
@@ -622,7 +623,7 @@
                 }
                 
                 // Set form action
-                let actionUrl = "{{ route('admin.teacher-info.update', ':id') }}";
+                let actionUrl = "<?php echo e(route('admin.teacher-info.update', ':id')); ?>";
                 editForm.action = actionUrl.replace(':id', id);
 
                 // Set Profile Picture
@@ -712,4 +713,6 @@
         document.getElementById('remove_image_hidden').value = "1";
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/admin/teachers.blade.php ENDPATH**/ ?>

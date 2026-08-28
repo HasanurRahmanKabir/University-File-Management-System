@@ -165,31 +165,7 @@
                         <td style="color:var(--tx-s);">{{ $course->created_at->format('Y') }}</td>
                         <td><span class="badge b-green"><i class="fas fa-check" style="margin-right:4px;"></i>Completed</span></td>
                         <td class="text-center">
-                            @if($course->created_by == auth()->id())
-                                <div class="action-group d-flex justify-content-center gap-2">
-                                    <button class="action-btn edit edit-course-btn" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #64748b; transition: all 0.2s;" data-bs-toggle="modal" data-bs-target="#editCourseModal"
-                                        data-id="{{ $course->id }}"
-                                        data-code="{{ $course->course_code }}"
-                                        data-credit="{{ $course->credit }}"
-                                        data-title="{{ $course->title }}"
-                                        data-subtitle="{{ $course->subtitle }}"
-                                        data-status="{{ $course->is_active ? '1' : '0' }}"
-                                        data-department="{{ $course->department_id }}"
-                                        data-category="{{ $course->category_id }}"
-                                        data-subcategory="{{ $course->subcategory_id }}"
-                                        data-semester="{{ $course->semester_id }}"
-                                        onmouseover="this.style.background='#f1f5f9'; this.style.color='#3b82f6';" onmouseout="this.style.background='#f8fafc'; this.style.color='#64748b';">
-                                        <i class="fas fa-pen" style="font-size: 0.85rem;"></i>
-                                    </button>
-                                    <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="action-btn delete delete-btn" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #ef4444; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'; this.style.borderColor='#fca5a5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1';"><i class="fas fa-trash" style="font-size: 0.85rem;"></i></button>
-                                    </form>
-                                </div>
-                            @else
-                                <span class="badge b-gray" style="opacity: 0.7;">N/A</span>
-                            @endif
+                            <span class="badge b-gray" style="opacity: 0.7;">N/A</span>
                         </td>
                     </tr>
                     @empty
