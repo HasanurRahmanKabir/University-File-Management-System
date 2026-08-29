@@ -4,8 +4,11 @@
 @section('page_title', 'Category List')
 
 @section('content')
-<div class="p-hero">
-    <div><div class="p-hero-h">Course Categories</div><div class="p-hero-sub">Your assigned courses grouped by major categories</div></div>
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div class="heading-group">
+        <h2 class="mb-1" style="font-size: 1.5rem; font-weight: 700; color: var(--text-heading); letter-spacing: -0.5px;">Course Categories</h2>
+        <p class="text-muted m-0" style="font-size: 0.85rem;">Your assigned courses grouped by major categories.</p>
+    </div>
 </div>
 
 @forelse($categories as $index => $category)

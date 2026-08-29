@@ -155,10 +155,13 @@
 </div>
 
 <!-- Previous Semester Records -->
-<div class="mb-4 d-flex justify-content-between align-items-end" style="animation-delay:.12s; margin-top: 2rem;">
-    <div>
-        <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text-heading); margin-bottom: 4px;"><i class="fas fa-clock-rotate-left" style="color: var(--tx-s); margin-right: 8px;"></i>Previous Semester Records</h3>
-        <p style="font-size: 0.85rem; color: var(--tx-m); margin: 0;">Your completed or archived courses grouped by semester.</p>
+<div class="section-header d-flex align-items-center mb-4 mt-5" style="border-bottom: 1px solid var(--border-light, #e2e8f0); padding-bottom: 16px; animation-delay:.12s;">
+    <div class="section-icon me-3" style="width: 48px; height: 48px; background: #f1f5f9; color: #64748b; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
+        <i class="fas fa-clock-rotate-left"></i>
+    </div>
+    <div class="heading-group">
+        <h3 class="mb-1" style="font-size: 1.35rem; font-weight: 700; color: var(--text-heading); letter-spacing: -0.4px;">Previous Semester Records</h3>
+        <p class="text-muted m-0" style="font-size: 0.9rem;">A complete history of your past courses, neatly organized by semester.</p>
     </div>
 </div>
 
