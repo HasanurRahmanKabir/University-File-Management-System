@@ -12,13 +12,12 @@ class CourseController extends Controller
     public function index()
     {
         $teacherId = Auth::id();
-        $allStudents = \App\Models\User::where('role', 'student')->get();
 
         $teacherDepartmentId = Auth::user()->department_id;
         $activeSemesterIds = \App\Models\Semester::running($teacherDepartmentId)->pluck('id')->toArray();
         
-        $runningCoursesQuery = Course::with(['category', 'subcategory'])->where('teacher_id', $teacherId);
-        $previousCoursesQuery = Course::with(['category', 'subcategory'])->where('teacher_id', $teacherId);
+        $runningCoursesQuery = Course::with(['category', 'subcategory', 'semester'])->where('teacher_id', $teacherId);
+        $previousCoursesQuery = Course::with(['category', 'subcategory', 'semester'])->where('teacher_id', $teacherId);
         
         if (!empty($activeSemesterIds)) {
             $runningCoursesQuery->whereIn('semester_id', $activeSemesterIds);
@@ -32,30 +31,48 @@ class CourseController extends Controller
             $runningCoursesQuery->whereNull('id'); // Empty running
         }
 
-        $runningCourses = $runningCoursesQuery->latest()->get()->map(function($course) use ($allStudents) {
-            $course->enrolled_students = $allStudents->filter(function ($student) use ($course) {
-                $enrolled = is_string($student->enrolled_courses) ? json_decode($student->enrolled_courses, true) : $student->enrolled_courses;
-                return is_array($enrolled) && in_array($course->id, $enrolled);
-            })->count();
+        $runningCourses = $runningCoursesQuery->latest()->get()->map(function($course) {
+            $course->enrolled_students = \App\Models\User::where('role', 'student')
+                                                         ->where(function($q) use ($course) {
+                                                             $q->whereJsonContains('enrolled_courses', $course->id)
+                                                               ->orWhereJsonContains('enrolled_courses', (string)$course->id);
+                                                         })
+                                                         ->count();
             return $course;
         });
 
-        $previousCourses = $previousCoursesQuery->latest()->get()->map(function($course) use ($allStudents) {
-            $course->enrolled_students = $allStudents->filter(function ($student) use ($course) {
-                $enrolled = is_string($student->enrolled_courses) ? json_decode($student->enrolled_courses, true) : $student->enrolled_courses;
-                return is_array($enrolled) && in_array($course->id, $enrolled);
-            })->count();
+        $previousCourses = $previousCoursesQuery->latest()->get()->map(function($course) {
+            $course->enrolled_students = \App\Models\User::where('role', 'student')
+                                                         ->where(function($q) use ($course) {
+                                                             $q->whereJsonContains('enrolled_courses', $course->id)
+                                                               ->orWhereJsonContains('enrolled_courses', (string)$course->id);
+                                                         })
+                                                         ->count();
             return $course;
+        });
+
+        // Group previous courses by semester name, sorted by semester start_date/created_at if possible
+        // We'll group them and the view will handle the display. We sort the collection first.
+        $previousCourses = $previousCourses->sortByDesc(function($course) {
+            return $course->semester ? ($course->semester->start_date ?? $course->semester->created_at) : '0000-00-00';
+        });
+
+        $groupedPreviousCourses = $previousCourses->groupBy(function($course) {
+            return $course->semester ? $course->semester->name . ' ' . ($course->semester->year ?? '') : 'Unassigned Semester';
         });
 
         $activeCoursesCount = $runningCourses->count();
         
         $teacherCourseIds = Course::where('teacher_id', $teacherId)->pluck('id')->toArray();
-        $totalStudents = $allStudents->filter(function ($student) use ($teacherCourseIds) {
-            $enrolled = is_string($student->enrolled_courses) ? json_decode($student->enrolled_courses, true) : $student->enrolled_courses;
-            if (!is_array($enrolled)) return false;
-            return count(array_intersect($enrolled, $teacherCourseIds)) > 0;
-        })->count();
+        $totalStudents = 0;
+        if (!empty($teacherCourseIds)) {
+            $totalStudents = \App\Models\User::where('role', 'student')->where(function($q) use ($teacherCourseIds) {
+                foreach($teacherCourseIds as $id) {
+                    $q->orWhereJsonContains('enrolled_courses', $id)
+                      ->orWhereJsonContains('enrolled_courses', (string)$id);
+                }
+            })->count();
+        }
 
         $departments = \App\Models\Department::all();
         $categories = \App\Models\Category::where('is_active', true)->get();
@@ -66,7 +83,7 @@ class CourseController extends Controller
 
         $teacherDepartmentId = Auth::user()->department_id;
 
-        return view('teacher.mycourseinfo', compact('runningCourses', 'previousCourses', 'activeCoursesCount', 'totalStudents', 'departments', 'categories', 'subcategories', 'semesters', 'activeSemester', 'teacherDepartmentId'));
+        return view('teacher.mycourseinfo', compact('runningCourses', 'groupedPreviousCourses', 'activeCoursesCount', 'totalStudents', 'departments', 'categories', 'subcategories', 'semesters', 'activeSemester', 'teacherDepartmentId'));
     }
 
     public function show(Course $course)

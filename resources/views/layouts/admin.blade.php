@@ -247,9 +247,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="dashboard-footer" style="margin-top: auto; justify-content: center; text-align: center; width: 100%;">
-            <span style="font-weight: 600; color: #64748b;">{{ $globalSettings['footer_copyright'] ?? '© 2026 University File Management System' }}</span>
-        </div>
+        @include('layouts.partials.footer')
     </div>
 
     @stack('modals')

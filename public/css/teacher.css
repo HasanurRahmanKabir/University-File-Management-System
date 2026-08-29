@@ -730,3 +730,15 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
     -webkit-text-fill-color:var(--tx-b)!important;
     box-shadow:0 0 0 999px var(--bg-input) inset!important;
 }
+
+/* Footer Fix */
+.page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    margin-top: auto;
+    border-top: 1px solid var(--bd);
+    color: var(--tx-s);
+    width: 100%;
+}

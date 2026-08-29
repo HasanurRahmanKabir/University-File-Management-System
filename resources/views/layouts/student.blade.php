@@ -29,7 +29,7 @@
     </main>
 
     <!-- FOOTER -->
-    @include('layouts.partials.student-footer')
+    @include('layouts.partials.footer')
 
 </div>
 

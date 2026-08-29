@@ -49,7 +49,7 @@
         <div class="stat-ico ico-green"><i class="fas fa-circle-play"></i></div>
         <div class="stat-body">
             <div class="stat-lbl">Running Semester</div>
-            <div class="stat-val" style="font-size: 1.4rem;">Spring {{ date('Y') }}</div>
+            <div class="stat-val" style="font-size: 1.4rem;">{{ $activeSemester ? $activeSemester->name . ' ' . $activeSemester->year : 'No Active Semester' }}</div>
             <div class="stat-sub">Current Academic Session</div>
         </div>
     </div>
@@ -78,16 +78,27 @@
             <div class="d-card-ico" style="background:var(--success-lt);color:var(--success);"><i class="fas fa-circle-play"></i></div>
             Running Semester
         </div>
-        <span class="badge b-green" style="padding:5px 12px;">Spring {{ date('Y') }}</span>
+        @if($activeSemester)
+            <span class="badge b-green" style="padding:5px 12px;">{{ $activeSemester->name }} {{ $activeSemester->year }}</span>
+        @endif
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
             <table class="t-tbl">
-                <thead><tr><th>Code</th><th>Course Title</th><th>Credit</th><th>Students</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th class="text-start" style="width: 15%; min-width: 90px;">Course Code</th>
+                        <th class="text-center" style="width: 20%;">Course Title</th>
+                        <th class="text-center" style="width: 20%;">Credit</th>
+                        <th class="text-center" style="width: 15%;">Students</th>
+                        <th class="text-center" style="width: 15%;">Status</th>
+                        <th class="text-end" style="width: 15%; min-width: 90px;">Action</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @forelse($runningCourses as $course)
                     <tr>
-                        <td><span class="t-code">{{ $course->course_code }}</span></td>
+                        <td class="text-start" style="white-space: nowrap;"><span class="t-code">{{ $course->course_code }}</span></td>
                         <td><span class="t-name">{{ $course->title }}</span></td>
                         <td><span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span></td>
                         <td><span style="font-weight:600;color:var(--tx-h);">{{ $course->enrolled_students }}</span> <span style="color:var(--tx-m);font-size:.75rem;">students</span></td>
@@ -98,9 +109,9 @@
                                 <span class="badge b-gray"><i class="fas fa-times-circle" style="margin-right:4px;"></i>Inactive</span>
                             @endif
                         </td>
-                        <td class="text-center">
+                        <td class="text-end">
                             @if($course->created_by == auth()->id())
-                                <div class="action-group d-flex justify-content-center gap-2">
+                                <div class="action-group d-flex justify-content-end gap-2">
                                     <button class="action-btn edit edit-course-btn" style="width: 32px; height: 32px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #64748b; transition: all 0.2s;" data-bs-toggle="modal" data-bs-target="#editCourseModal"
                                         data-id="{{ $course->id }}"
                                         data-code="{{ $course->course_code }}"
@@ -143,51 +154,68 @@
     </div>
 </div>
 
-<!-- Previous Semester -->
-<div class="d-card" style="animation-delay:.12s">
-    <div class="d-card-header">
-        <div class="d-card-title">
-            <div class="d-card-ico" style="background:var(--bg-muted);color:var(--tx-s);"><i class="fas fa-clock-rotate-left"></i></div>
-            Previous Semester Records
+<!-- Previous Semester Records -->
+<div class="mb-4 d-flex justify-content-between align-items-end" style="animation-delay:.12s; margin-top: 2rem;">
+    <div>
+        <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text-heading); margin-bottom: 4px;"><i class="fas fa-clock-rotate-left" style="color: var(--tx-s); margin-right: 8px;"></i>Previous Semester Records</h3>
+        <p style="font-size: 0.85rem; color: var(--tx-m); margin: 0;">Your completed or archived courses grouped by semester.</p>
+    </div>
+</div>
+
+@forelse($groupedPreviousCourses as $semesterName => $courses)
+<div class="d-card mb-4" style="animation-delay:.{{ 12 + ($loop->index * 2) }}s">
+    <div class="d-card-header" style="background: #f8fafc; border-bottom: 1px solid var(--border-light); padding: 12px 20px;">
+        <div class="d-card-title" style="font-size: 1.1rem; color: var(--text-heading);">
+            <div class="d-card-ico" style="background:var(--bg-muted);color:var(--primary); width: 32px; height: 32px; border-radius: 6px;"><i class="fas fa-calendar-check" style="font-size: 0.9rem;"></i></div>
+            {{ $semesterName }}
         </div>
-        <span class="badge b-gray" style="padding:5px 12px;">Archived</span>
+        <span class="badge b-gray" style="padding:5px 12px; font-weight: 600;">{{ $courses->count() }} {{ Str::plural('Course', $courses->count()) }}</span>
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
             <table class="t-tbl">
-                <thead><tr><th>Semester</th><th>Course Code</th><th>Course Title</th><th>Year</th><th>Status</th><th class="text-center">Action</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th class="text-start" style="width: 20%; min-width: 90px;">Course Code</th>
+                        <th class="text-center" style="width: 25%;">Course Title</th>
+                        <th class="text-center" style="width: 25%;">Credit</th>
+                        <th class="text-center" style="width: 15%;">Students</th>
+                        <th class="text-end" style="width: 15%;">Status</th>
+                    </tr>
+                </thead>
                 <tbody>
-                    @forelse($previousCourses as $course)
+                    @foreach($courses as $course)
                     <tr>
-                        <td><span class="badge b-purple">Fall</span></td>
-                        <td><span class="t-code">{{ $course->course_code }}</span></td>
+                        <td class="text-start" style="white-space: nowrap;"><span class="t-code">{{ $course->course_code }}</span></td>
                         <td><span class="t-name">{{ $course->title }}</span></td>
-                        <td style="color:var(--tx-s);">{{ $course->created_at->format('Y') }}</td>
-                        <td><span class="badge b-green"><i class="fas fa-check" style="margin-right:4px;"></i>Completed</span></td>
-                        <td class="text-center">
-                            <span class="badge b-gray" style="opacity: 0.7;">N/A</span>
+                        <td><span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span></td>
+                        <td><span style="font-weight:600;color:var(--tx-h);">{{ $course->enrolled_students }}</span> <span style="color:var(--tx-m);font-size:.75rem;">students</span></td>
+                        <td class="text-end">
+                            @if($course->is_active)
+                                <span class="badge b-green"><i class="fas fa-check" style="margin-right:4px;"></i>Completed</span>
+                            @else
+                                <span class="badge b-gray"><i class="fas fa-check" style="margin-right:4px;"></i>Completed</span>
+                            @endif
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
-                                <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-box-archive"></i></div>
-                                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Previous Semester Courses</h5>
-                                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">You have no completed or archived courses from previous semesters.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
+@empty
+<div class="d-card" style="animation-delay:.12s">
+    <div class="d-card-body">
+        <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+            <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-box-archive"></i></div>
+            <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Previous Semester Courses</h5>
+            <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">You have no completed or archived courses from previous semesters.</p>
         </div>
     </div>
 </div>
+@endforelse
+
 @endsection
 
 @push('modals')
