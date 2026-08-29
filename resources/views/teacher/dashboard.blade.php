@@ -59,14 +59,14 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl">
+            <table class="t-tbl" style="table-layout: fixed; width: 100%;">
                 <thead>
                     <tr>
-                        <th>Course Code</th>
-                        <th>Course Title</th>
-                        <th>Files</th>
-                        <th>Year</th>
-                        <th>Action</th>
+                        <th style="width: 20%;">Course Code</th>
+                        <th style="width: 20%;">Course Title</th>
+                        <th style="width: 20%;">Files</th>
+                        <th style="width: 20%;">Year</th>
+                        <th style="width: 20%; text-align:right;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,7 +76,7 @@
                         <td><span class="t-name">{{ $course->title }}</span></td>
                         <td><span class="badge b-blue">{{ $course->materials_count }} files</span></td>
                         <td style="color:var(--tx-s);">{{ date('Y') }}</td>
-                        <td><button class="btn-ico bi-view" title="Quick View" data-bs-toggle="modal" data-bs-target="#viewCourseModal{{ $course->id }}"><i class="fas fa-eye"></i></button></td>
+                        <td style="text-align:right;"><button class="btn-ico bi-view" title="Quick View" data-bs-toggle="modal" data-bs-target="#viewCourseModal{{ $course->id }}"><i class="fas fa-eye"></i></button></td>
                     </tr>
                     @empty
                     <tr>
