@@ -14,10 +14,12 @@ use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
 use App\Http\Controllers\Teacher\CourseMaterialController as TeacherCourseMaterialController;
+use App\Http\Controllers\Teacher\AnnouncementController as TeacherAnnouncementController;
 
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
 use App\Http\Controllers\Student\CourseMaterialController as StudentCourseMaterialController;
+use App\Http\Controllers\Student\AnnouncementController as StudentAnnouncementController;
 
 use App\Http\Controllers\AuthController;
 
@@ -83,6 +85,9 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::get('profile', [TeacherProfileController::class, 'index'])->name('profile');
     Route::get('settings', [TeacherProfileController::class, 'settings'])->name('settings');
     Route::post('settings', [TeacherProfileController::class, 'updateSettings'])->name('settings.update');
+
+    // Course Announcements
+    Route::resource('announcements', TeacherAnnouncementController::class)->except(['create', 'edit', 'show']);
 });
 
 use App\Http\Controllers\Student\CategoryController as StudentCategoryController;
@@ -100,8 +105,10 @@ Route::middleware(['web', 'auth', 'is_student'])->prefix('student')->name('stude
     Route::resource('subcategories', StudentSubcategoryController::class)->only(['index']);
     Route::get('/instructors', [StudentInstructorController::class, 'index'])->name('instructors');
     
-    // Profile & Settings
     Route::get('/profile', [StudentProfileController::class, 'index'])->name('profile');
     Route::get('/settings', [StudentProfileController::class, 'settings'])->name('settings');
     Route::post('/settings', [StudentProfileController::class, 'updateSettings'])->name('settings.update');
+
+    // Class Notices
+    Route::get('/announcements', [StudentAnnouncementController::class, 'index'])->name('announcements.index');
 });

@@ -25,6 +25,7 @@
             <ul>
                 <li><a href="{{ route('teacher.courses.index') }}" class="sb-link {{ request()->routeIs('teacher.courses.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-book-open" title="My Course Info"></i></div><span class="sb-text">My Course Info</span></a></li>
                 <li><a href="{{ route('teacher.course-materials.index') }}" class="sb-link {{ request()->routeIs('teacher.course-materials.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-cloud-arrow-up" title="Upload Materials"></i></div><span class="sb-text">Upload Materials</span></a></li>
+                <li><a href="{{ route('teacher.announcements.index') }}" class="sb-link {{ request()->routeIs('teacher.announcements.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-bullhorn" title="Course Announcements"></i></div><span class="sb-text">Course Announcements</span></a></li>
                 <li><a href="{{ route('teacher.categories.index') }}" class="sb-link {{ request()->routeIs('teacher.categories.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-tags" title="Category List"></i></div><span class="sb-text">Category List</span></a></li>
                 <li><a href="{{ route('teacher.subcategories.index') }}" class="sb-link {{ request()->routeIs('teacher.subcategories.*') ? 'active' : '' }}"><div class="sb-ico"><i class="fas fa-layer-group" title="Subcategory List"></i></div><span class="sb-text">Subcategory List</span></a></li>
             </ul>
