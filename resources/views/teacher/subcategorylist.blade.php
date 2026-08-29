@@ -5,74 +5,80 @@
 
 @section('content')
 <div class="p-hero">
-    <div><div class="p-hero-h">Subcategory (Course) List</div><div class="p-hero-sub">Subcategories mapped to major categories and course codes</div></div>
+    <div><div class="p-hero-h">Course Subcategories</div><div class="p-hero-sub">Your assigned courses grouped by subcategories</div></div>
 </div>
 
-<div class="d-card" style="animation-delay:.05s">
-    <div class="d-card-header">
-        <div class="d-card-title"><div class="d-card-ico"><i class="fas fa-layer-group"></i></div>Subcategories Under Major Categories</div>
-        <span class="badge b-green" style="padding:5px 12px;">{{ str_pad($subcategories->total(), 2, '0', STR_PAD_LEFT) }} records</span>
+@forelse($subcategories as $index => $subcategory)
+@php
+    $delay = 0.05 * ($index + 1);
+    $colors = [
+        ['bg' => 'var(--success-lt)', 'text' => 'var(--success)', 'icon' => 'fa-code-branch', 'badge' => 'b-green'],
+        ['bg' => 'var(--purple-lt)', 'text' => 'var(--purple)', 'icon' => 'fa-sitemap', 'badge' => 'b-purple'],
+        ['bg' => 'var(--info-lt)', 'text' => 'var(--info)', 'icon' => 'fa-layer-group', 'badge' => 'b-blue'],
+        ['bg' => 'var(--warning-lt)', 'text' => 'var(--warning)', 'icon' => 'fa-hashtag', 'badge' => 'b-orange'],
+    ];
+    $style = $colors[$index % count($colors)];
+@endphp
+<div class="d-card mb-4" style="animation-delay:{{ $delay }}s">
+    <div class="d-card-header" style="background: #f8fafc; border-bottom: 1px solid var(--border-light); padding: 12px 20px;">
+        <div class="d-card-title" style="font-size: 1.1rem; color: var(--text-heading);">
+            <div class="d-card-ico" style="background:{{ $style['bg'] }};color:{{ $style['text'] }}; width: 32px; height: 32px; border-radius: 6px;"><i class="fas {{ $style['icon'] }}" style="font-size: 0.9rem;"></i></div>
+            {{ $subcategory->name }}
+        </div>
+        <span class="badge {{ $style['badge'] }}" style="padding:5px 12px; font-weight: 600;">{{ $subcategory->courses->count() }} {{ Str::plural('Course', $subcategory->courses->count()) }}</span>
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
             <table class="t-tbl">
                 <thead>
                     <tr>
-                        <th style="text-align:center; width: 60px;">#</th>
-                        <th style="text-align:center;">Subcategory Name</th>
-                        <th style="text-align:center;">Courses</th>
-                        <th style="text-align:center;">Status</th>
+                        <th class="text-start" style="width: 25%; min-width: 90px;">Course Code</th>
+                        <th class="text-center" style="width: 25%;">Course Title</th>
+                        <th class="text-center" style="width: 25%;">Course Credit</th>
+                        <th class="text-end" style="width: 25%;">Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $colors = [
-                            ['bg' => 'var(--success-lt)', 'text' => 'var(--success)', 'icon' => 'fa-code-branch'],
-                            ['bg' => 'var(--purple-lt)', 'text' => 'var(--purple)', 'icon' => 'fa-sitemap'],
-                            ['bg' => 'var(--info-lt)', 'text' => 'var(--info)', 'icon' => 'fa-layer-group'],
-                            ['bg' => 'var(--warning-lt)', 'text' => 'var(--warning)', 'icon' => 'fa-hashtag'],
-                        ];
-                    @endphp
-                    @forelse($subcategories as $index => $subcategory)
-                        @php $style = $colors[$index % count($colors)]; @endphp
-                        <tr>
-                            <td style="text-align:center;"><span class="t-num">{{ str_pad($subcategories->firstItem() + $index, 2, '0', STR_PAD_LEFT) }}</span></td>
-                            <td style="text-align:center;">
-                                <div style="display:flex;align-items:center;justify-content:center;gap:9px;">
-                                    <div style="width:7px;height:7px;border-radius:50%;background:{{ $style['text'] }};box-shadow:0 0 0 2px {{ $style['bg'] }};flex-shrink:0;"></div>
-                                    <span class="t-name" style="width:95px;text-align:left;word-break:break-word;line-height:1.3;">{{ $subcategory->name }}</span>
-                                </div>
-                            </td>
-                            <td style="text-align:center;">
-                                <div style="display:flex;align-items:center;justify-content:center;gap:7px;">
-                                    <div class="cat-ico" style="width:24px;height:24px;background:var(--info-lt, #e0f2fe);color:var(--info, #0ea5e9);font-size:.60rem;"><i class="fas fa-book"></i></div>
-                                    <span class="badge b-blue" style="font-weight: 600;">{{ str_pad($subcategory->courses->count(), 2, '0', STR_PAD_LEFT) }} Courses</span>
-                                </div>
-                            </td>
-                            <td style="text-align:center;">
-                                @if($subcategory->is_active)
-                                    <span class="badge b-green"><i class="fas fa-check" style="margin-right:4px;"></i>Active</span>
-                                @else
-                                    <span class="badge b-gray" style="color:var(--tx-m);"><i class="fas fa-ban" style="margin-right:4px;"></i>Inactive</span>
-                                @endif
-                            </td>
-                        </tr>
+                    @forelse($subcategory->courses as $course)
+                    <tr>
+                        <td class="text-start" style="white-space: nowrap;"><span class="t-code">{{ $course->course_code }}</span></td>
+                        <td class="text-center"><span class="t-name">{{ $course->title }}</span></td>
+                        <td class="text-center"><span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span></td>
+                        <td class="text-end">
+                            @if($course->is_active)
+                                <span class="badge b-green"><i class="fas fa-check-circle" style="margin-right:4px;"></i>Active</span>
+                            @else
+                                <span class="badge b-gray"><i class="fas fa-times-circle" style="margin-right:4px;"></i>Inactive</span>
+                            @endif
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="4">
-                                <div class="empty-state" style="padding: 60px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-                                    <div class="empty-ico" style="font-size: 3.5rem; color: var(--bd); margin-bottom: 20px;"><i class="fas fa-layer-group"></i></div>
-                                    <h5 style="color: var(--tx-h); font-weight: 700; margin-bottom: 8px; font-size: 1.1rem;">No Subcategories Available</h5>
-                                    <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 450px; margin: 0 auto; line-height: 1.5;">There are currently no subcategories assigned or available in the system.</p>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+                                <div class="empty-ico" style="font-size: 2.5rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
+                                <h6 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Courses</h6>
+                                <p style="color: var(--tx-m); font-size: 0.85rem; max-width: 400px; margin: 0 auto;">No courses found in this subcategory.</p>
+                            </div>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+@empty
+<div class="d-card" style="animation-delay:.12s">
+    <div class="d-card-body">
+        <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+            <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-layer-group"></i></div>
+            <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Subcategories Available</h5>
+            <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">There are currently no course subcategories assigned to your courses.</p>
+        </div>
+    </div>
+</div>
+@endforelse
 
 @if($subcategories->hasPages())
 <div style="padding: 15px 20px; display:flex; justify-content:flex-end;">
