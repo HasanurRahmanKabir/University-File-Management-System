@@ -32,6 +32,9 @@
                 <li><a href="{{ route('student.course-materials.index') }}" class="sb-link {{ request()->routeIs('student.course-materials.*') ? 'active' : '' }}">
                     <div class="sb-ico"><i class="fas fa-file-lines" title="Course File Info"></i></div><span class="sb-text">Course File Info</span>
                 </a></li>
+                <li><a href="{{ route('student.instructors') }}" class="sb-link {{ request()->routeIs('student.instructors') ? 'active' : '' }}">
+                    <div class="sb-ico"><i class="fas fa-chalkboard-teacher" title="My Instructors"></i></div><span class="sb-text">My Instructors</span>
+                </a></li>
                 <li><a href="{{ route('student.categories.index') }}" class="sb-link {{ request()->routeIs('student.categories.*') ? 'active' : '' }}">
                     <div class="sb-ico"><i class="fas fa-tags" title="Category List"></i></div><span class="sb-text">Category List</span>
                 </a></li>
