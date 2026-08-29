@@ -91,8 +91,8 @@
             </div>
             <div class="d-card-body p0">
                 <div class="t-wrap">
-                    <table class="t-tbl">
-                        <thead><tr><th>File Info</th><th style="text-align:center;">Course</th><th style="text-align:center;">Privacy</th><th style="text-align:center;">Action</th></tr></thead>
+                    <table class="t-tbl" style="table-layout: fixed; width: 100%;">
+                        <thead><tr><th class="text-start" style="width: 25%;">File Info</th><th style="width: 25%; text-align:center;">Course</th><th style="width: 25%; text-align:center;">Privacy</th><th style="width: 25%; text-align:right;">Action</th></tr></thead>
                         <tbody>
                             @forelse($materials as $material)
                             <tr>
@@ -124,7 +124,7 @@
                                     <span class="badge b-gray"><i class="fas fa-lock"></i> Only Me</span>
                                     @endif
                                 </td>
-                                <td style="text-align:center;"><div style="display:flex;gap:5px;justify-content:center;">
+                                <td style="text-align:right;"><div style="display:flex;gap:5px;justify-content:flex-end;">
                                     <button type="button" class="btn-ico bi-ed" data-bs-toggle="modal" data-bs-target="#editModal" onclick="populateEditModal({{ $material->id }}, '{{ addslashes($material->title) }}', {{ $material->course_id }}, {{ $material->is_active ? 1 : 0 }})"><i class="fas fa-pen"></i></button>
                                     <form action="{{ route('teacher.course-materials.destroy', $material->id) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
