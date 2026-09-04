@@ -66,7 +66,7 @@ class CourseFileController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('course_materials', 'public');
+            $path = $request->file('file')->store('course_materials', 'local');
             $validated['file_path'] = $path;
             $validated['file_type'] = $request->file('file')->getClientOriginalExtension();
             $validated['file_size'] = $request->file('file')->getSize();
@@ -96,10 +96,10 @@ class CourseFileController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            if ($courseMaterial->file_path && Storage::disk('public')->exists($courseMaterial->file_path)) {
-                Storage::disk('public')->delete($courseMaterial->file_path);
+            if ($courseMaterial->file_path && Storage::disk('local')->exists($courseMaterial->file_path)) {
+                Storage::disk('local')->delete($courseMaterial->file_path);
             }
-            $path = $request->file('file')->store('course_materials', 'public');
+            $path = $request->file('file')->store('course_materials', 'local');
             $validated['file_path'] = $path;
             $validated['file_type'] = $request->file('file')->getClientOriginalExtension();
             $validated['file_size'] = $request->file('file')->getSize();
@@ -119,8 +119,8 @@ class CourseFileController extends Controller
     public function destroy(CourseMaterial $courseMaterial)
     {
         $title = $courseMaterial->title;
-        if ($courseMaterial->file_path && Storage::disk('public')->exists($courseMaterial->file_path)) {
-            Storage::disk('public')->delete($courseMaterial->file_path);
+        if ($courseMaterial->file_path && Storage::disk('local')->exists($courseMaterial->file_path)) {
+            Storage::disk('local')->delete($courseMaterial->file_path);
         }
         $courseMaterial->delete();
         
@@ -131,5 +131,14 @@ class CourseFileController extends Controller
         ]);
         
         return back()->with('success', 'Material deleted successfully.');
+    }
+
+    public function download(\App\Models\CourseMaterial $material)
+    {
+        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
+            abort(404, 'File not found on the server.');
+        }
+        
+        return response()->download(storage_path('app/' . $material->file_path));
     }
 }

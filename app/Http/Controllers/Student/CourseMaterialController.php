@@ -12,10 +12,7 @@ class CourseMaterialController extends Controller
     {
         $user = \Illuminate\Support\Facades\Auth::user();
         
-        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
-        if (!is_array($enrolledIds)) {
-            $enrolledIds = [];
-        }
+        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
 
         $courses = \App\Models\Course::with(['materials' => function($q) {
             $q->where('is_active', true)->latest();
@@ -32,20 +29,17 @@ class CourseMaterialController extends Controller
     {
         $user = \Illuminate\Support\Facades\Auth::user();
         
-        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
-        if (!is_array($enrolledIds)) {
-            $enrolledIds = [];
-        }
+        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
 
         // Security Check: Prevent IDOR (Insecure Direct Object Reference)
         if (!in_array($material->course_id, $enrolledIds)) {
             abort(403, 'Unauthorized access. You are not enrolled in this course.');
         }
 
-        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('public')->exists($material->file_path)) {
+        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
             abort(404, 'File not found on the server.');
         }
         
-        return response()->download(storage_path('app/public/' . $material->file_path));
+        return response()->download(storage_path('app/' . $material->file_path));
     }
 }

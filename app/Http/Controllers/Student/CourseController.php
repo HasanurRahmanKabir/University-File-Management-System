@@ -14,10 +14,7 @@ class CourseController extends Controller
         $studentDepartmentId = $user->department_id;
         
         // Get enrolled course IDs
-        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
-        if (!is_array($enrolledIds)) {
-            $enrolledIds = [];
-        }
+        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
         
         $activeSemesterIds = \App\Models\Semester::running($studentDepartmentId)->pluck('id')->toArray();
         $activeSemester = \App\Models\Semester::running($studentDepartmentId)->first();

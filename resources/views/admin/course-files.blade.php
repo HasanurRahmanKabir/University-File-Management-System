@@ -245,7 +245,7 @@
                                     $badgeClass = 'cyan';
                                 }
                             @endphp
-                            <a href="{{ Storage::url($material->file_path) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 0.75rem; border-radius: var(--radius-sm); transition: all 0.2s;">
+                            <a href="{{ route('admin.course-files.download', $material->id) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 0.75rem; border-radius: var(--radius-sm); transition: all 0.2s;">
                                 <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
                             </a>
                         </td>

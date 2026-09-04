@@ -36,7 +36,7 @@ class CourseMaterialController extends Controller
         if ($course->teacher_id !== Auth::id()) abort(403);
 
         if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('course_materials', 'public');
+            $path = $request->file('file')->store('course_materials', 'local');
             $validated['file_path'] = $path;
             $validated['file_type'] = $request->file('file')->getClientOriginalExtension();
             $validated['file_size'] = $request->file('file')->getSize();
@@ -52,8 +52,8 @@ class CourseMaterialController extends Controller
     {
         if ($course_material->course->teacher_id !== Auth::id()) abort(403);
         
-        if ($course_material->file_path && Storage::disk('public')->exists($course_material->file_path)) {
-            Storage::disk('public')->delete($course_material->file_path);
+        if ($course_material->file_path && Storage::disk('local')->exists($course_material->file_path)) {
+            Storage::disk('local')->delete($course_material->file_path);
         }
         $course_material->delete();
         return back()->with('success', 'Material deleted successfully.');
@@ -75,12 +75,12 @@ class CourseMaterialController extends Controller
 
         if ($request->hasFile('file')) {
             // Delete old file
-            if ($course_material->file_path && Storage::disk('public')->exists($course_material->file_path)) {
-                Storage::disk('public')->delete($course_material->file_path);
+            if ($course_material->file_path && Storage::disk('local')->exists($course_material->file_path)) {
+                Storage::disk('local')->delete($course_material->file_path);
             }
             
             // Store new file
-            $path = $request->file('file')->store('course_materials', 'public');
+            $path = $request->file('file')->store('course_materials', 'local');
             $validated['file_path'] = $path;
             $validated['file_type'] = $request->file('file')->getClientOriginalExtension();
             $validated['file_size'] = $request->file('file')->getSize();
@@ -88,5 +88,18 @@ class CourseMaterialController extends Controller
 
         $course_material->update($validated);
         return back()->with('success', 'Material updated successfully.');
+    }
+
+    public function download(\App\Models\CourseMaterial $material)
+    {
+        if ($material->course->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
+            abort(404, 'File not found on the server.');
+        }
+        
+        return response()->download(storage_path('app/' . $material->file_path));
     }
 }

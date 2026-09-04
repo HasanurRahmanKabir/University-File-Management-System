@@ -13,10 +13,7 @@ class SubcategoryController extends Controller
     {
         $user = Auth::user();
         
-        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
-        if (!is_array($enrolledIds)) {
-            $enrolledIds = [];
-        }
+        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
 
         // Fetch subcategories that have at least one course the student is enrolled in
         $subcategories = \App\Models\Subcategory::whereHas('courses', function($q) use ($enrolledIds) {

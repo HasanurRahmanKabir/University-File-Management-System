@@ -13,10 +13,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         
         // Get enrolled course IDs and strictly ensure it's an array to prevent SQL errors
-        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
-        if (!is_array($enrolledIds)) {
-            $enrolledIds = [];
-        }
+        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
         
         // Fetch the student's courses
         $myCourses = Course::with(['teacher', 'semester'])->whereIn('id', $enrolledIds)->get();

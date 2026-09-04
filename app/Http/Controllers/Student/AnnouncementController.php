@@ -11,7 +11,7 @@ class AnnouncementController extends Controller
     public function index()
     {
         $student = Auth::user();
-        $enrolledCourseIds = collect($student->enrolled_courses ?? [])->map(fn($id) => (int) $id)->toArray();
+        $enrolledCourseIds = $student->enrolledCourses()->pluck('courses.id')->toArray();
 
         $announcements = CourseAnnouncement::with(['course', 'teacher'])
             ->whereIn('course_id', $enrolledCourseIds)

@@ -36,8 +36,10 @@ class StudentInfoController extends Controller
                     $q->orWhere('is_active', 0);
                 }
                   
-                foreach($matchingCourseIds as $courseId) {
-                    $q->orWhere('enrolled_courses', 'like', '%"'. $courseId .'"%');
+                if (!empty($matchingCourseIds)) {
+                    $q->orWhereHas('enrolledCourses', function($q2) use ($matchingCourseIds) {
+                        $q2->whereIn('courses.id', $matchingCourseIds);
+                    });
                 }
             });
         }
@@ -81,11 +83,16 @@ class StudentInfoController extends Controller
         $validated['is_active'] = $request->boolean('is_active') ? 1 : 0;
 
         if (isset($validated['courses'])) {
-            $validated['enrolled_courses'] = json_encode($validated['courses']);
+            $courses = $validated['courses'];
             unset($validated['courses']);
         }
 
-        StudentInfo::create($validated);
+        $student = StudentInfo::create($validated);
+        
+        if (isset($courses) && is_array($courses)) {
+            $student->enrolledCourses()->sync($courses);
+        }
+        
         return back()->with('success', 'Student Created Successfully.');
     }
 
@@ -113,10 +120,10 @@ class StudentInfoController extends Controller
         }
         
         if (isset($validated['courses'])) {
-            $validated['enrolled_courses'] = json_encode($validated['courses']);
+            $courses = $validated['courses'];
             unset($validated['courses']);
         } else {
-            $validated['enrolled_courses'] = null;
+            $courses = [];
         }
 
         if ($request->has('remove_image') && $request->remove_image == 1) {
@@ -135,6 +142,11 @@ class StudentInfoController extends Controller
         $validated['is_active'] = $request->boolean('is_active') ? 1 : 0;
 
         $user->update($validated);
+        
+        if (isset($courses)) {
+            $user->enrolledCourses()->sync($courses);
+        }
+
         return back()->with('success', 'Student Updated Successfully.');
     }
 

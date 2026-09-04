@@ -211,7 +211,7 @@
                         </td>
                         <td class="text-center">
                             @php
-                                $enrolled = json_decode($student->enrolled_courses, true) ?? [];
+                                $enrolled = $student->enrolledCourses->pluck('id')->toArray();
                                 $courseNames = $courses->whereIn('id', $enrolled)->pluck('course_code')->toArray();
                             @endphp
                             @if(count($courseNames) > 0)
@@ -247,7 +247,7 @@
                                     data-semester="{{ $student->semester }}"
                                     data-department="{{ $student->department_id }}"
                                     data-isactive="{{ $student->is_active ? 1 : 0 }}"
-                                    data-courses="{{ $student->enrolled_courses }}"
+                                    data-courses="{{ json_encode($student->enrolledCourses->pluck('id')->toArray()) }}"
                                     data-image="{{ $student->profile_image ? asset('storage/' . $student->profile_image) : '' }}">
                                     <i class="fas fa-pen"></i>
                                 </button>

@@ -14,10 +14,7 @@ class InstructorController extends Controller
         $user = Auth::user();
         
         // Get enrolled course IDs and ensure it's an array
-        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
-        if (!is_array($enrolledIds)) {
-            $enrolledIds = [];
-        }
+        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
 
         // Fetch courses the student is enrolled in, along with the teacher's details
         // We strictly load the 'teacher' relationship to display their info

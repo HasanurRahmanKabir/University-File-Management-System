@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\LogsGlobalActivity;
 
-#[Fillable(['name', 'student_id', 'semester', 'email', 'password', 'role', 'is_active', 'enrolled_courses', 'profile_image', 'department_id', 'designation', 'contact_number'])]
+#[Fillable(['name', 'student_id', 'semester', 'email', 'password', 'role', 'is_active', 'profile_image', 'department_id', 'designation', 'contact_number'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,7 +29,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
-            'enrolled_courses' => 'array',
         ];
     }
 
@@ -39,6 +38,16 @@ class User extends Authenticatable
     public function courses()
     {
         return $this->hasMany(Course::class, 'teacher_id');
+    }
+
+    /**
+     * Get the courses this user is enrolled in (if student).
+     */
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 
     /**

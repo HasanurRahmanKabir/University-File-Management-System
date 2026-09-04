@@ -59,6 +59,7 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     Route::resource('course-files', CourseFileController::class)->parameters([
         'course-files' => 'courseMaterial'
     ]);
+    Route::get('course-files/{courseMaterial}/download', [CourseFileController::class, 'download'])->name('course-files.download');
     Route::resource('departments', DepartmentController::class);
     Route::resource('announcements', App\Http\Controllers\Admin\AnnouncementController::class)->only(['index', 'destroy']);
     // Profile & Settings
@@ -80,6 +81,7 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
     Route::resource('courses', TeacherCourseController::class)->except(['create', 'edit']);
     Route::resource('course-materials', TeacherCourseMaterialController::class);
+    Route::get('/course-materials/{material}/download', [TeacherCourseMaterialController::class, 'download'])->name('course-materials.download');
     Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
     Route::get('subcategories', [TeacherSubcategoryController::class, 'index'])->name('subcategories.index');
     

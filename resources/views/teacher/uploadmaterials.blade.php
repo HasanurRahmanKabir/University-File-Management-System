@@ -110,7 +110,7 @@
                                         </div>
                                         <div>
                                             <div class="t-name" style="font-size:.82rem;">
-                                                <a href="{{ Storage::url($material->file_path) }}" target="_blank" style="color:inherit;text-decoration:none;">{{ $material->title }}</a>
+                                                <a href="{{ route('teacher.course-materials.download', $material->id) }}" target="_blank" style="color:inherit;text-decoration:none;">{{ $material->title }}</a>
                                             </div>
                                             <div class="t-sub">{{ strtoupper($ext) }} · {{ number_format($material->file_size / 1024 / 1024, 2) }} MB</div>
                                         </div>
