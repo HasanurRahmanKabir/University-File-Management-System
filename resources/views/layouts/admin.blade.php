@@ -117,6 +117,13 @@
                     </span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.announcements.index') }}" class="nav-link {{ request()->routeIs('admin.announcements.*') ? 'active' : '' }}">
+                        <i class="fas fa-bullhorn" title="Announcements
+                    "></i> <span class="nav-text">Announcements
+                    </span>
+                    </a>
+                </li>
             </ul>
             
             <span class="nav-group-label nav-text">System</span>

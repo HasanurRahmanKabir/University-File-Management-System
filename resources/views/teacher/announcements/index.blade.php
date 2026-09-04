@@ -56,86 +56,99 @@
         </div>
     </div>
 @else
-    <div class="row g-4">
-        @foreach($announcements as $ann)
-        <div class="col-xl-4 col-lg-6 col-12">
-            <div class="ann-card d-card" style="animation-delay:.{{ $loop->index * 5 }}s">
-                <div class="d-card-body" style="padding:20px;flex:1;">
-                    {{-- Top row: course badge + type badge --}}
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <span class="badge b-blue" style="font-size:0.78rem;padding:5px 10px;">
-                            {{ optional($ann->course)->course_code ?? 'N/A' }}
-                        </span>
-                        @if($ann->type == 'Assignment')
-                            <span class="ann-badge" style="background:rgba(245,158,11,0.12);color:#d97706;"><i class="fas fa-tasks me-1"></i>Assignment</span>
-                        @elseif($ann->type == 'Class Test (CT)')
-                            <span class="ann-badge" style="background:rgba(239,68,68,0.12);color:#ef4444;"><i class="fas fa-edit me-1"></i>Class Test</span>
-                        @elseif($ann->type == 'Exam')
-                            <span class="ann-badge" style="background:rgba(59,130,246,0.12);color:#3b82f6;"><i class="fas fa-graduation-cap me-1"></i>Exam</span>
-                        @else
-                            <span class="ann-badge" style="background:rgba(14,165,233,0.12);color:#0ea5e9;"><i class="fas fa-info-circle me-1"></i>Notice</span>
-                        @endif
-                    </div>
-
-                    {{-- Title --}}
-                    <h6 style="font-weight:700;color:var(--tx-h);margin-bottom:8px;font-size:0.95rem;">{{ $ann->title }}</h6>
-
-                    {{-- Topic details --}}
-                    <p style="color:var(--tx-m);font-size:0.83rem;line-height:1.55;margin-bottom:14px;">
-                        {{ Str::limit($ann->topic_details, 90) }}
-                    </p>
-
-                    {{-- Deadline / Exam date --}}
-                    @if($ann->deadline)
-                    <div class="d-flex align-items-center gap-2 mb-2" style="font-size:0.8rem;color:#d97706;">
-                        <i class="fas fa-clock"></i>
-                        <span><strong>Deadline:</strong> {{ $ann->deadline->format('d M Y, h:i A') }}</span>
-                    </div>
-                    @endif
-                    @if($ann->exam_date)
-                    <div class="d-flex align-items-center gap-2 mb-2" style="font-size:0.8rem;color:#ef4444;">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span><strong>Exam:</strong> {{ $ann->exam_date->format('d M Y, h:i A') }}</span>
-                    </div>
-                    @endif
-                </div>
-
-                {{-- Card footer: actions --}}
-                <div style="padding:12px 20px;border-top:1px solid var(--bd-dark,#e2e8f0);display:flex;align-items:center;justify-content:flex-end;gap:8px;">
-                    @if($ann->attachment)
-                    <a href="{{ Storage::url($ann->attachment) }}" target="_blank"
-                       style="width:32px;height:32px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;color:#0ea5e9;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.2s;"
-                       onmouseover="this.style.background='#e0f7ff'" onmouseout="this.style.background='#f8fafc'">
-                        <i class="fas fa-download" style="font-size:0.85rem;"></i>
-                    </a>
-                    @endif
-                    <button class="action-btn edit edit-ann-btn"
-                        style="width:32px;height:32px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;color:#64748b;transition:all 0.2s;"
-                        data-bs-toggle="modal" data-bs-target="#announcementModal"
-                        data-id="{{ $ann->id }}"
-                        data-course="{{ $ann->course_id }}"
-                        data-type="{{ $ann->type }}"
-                        data-title="{{ $ann->title }}"
-                        data-topic="{{ $ann->topic_details }}"
-                        data-deadline="{{ $ann->deadline ? $ann->deadline->format('Y-m-d\TH:i') : '' }}"
-                        data-exam="{{ $ann->exam_date ? $ann->exam_date->format('Y-m-d\TH:i') : '' }}"
-                        onmouseover="this.style.background='#f1f5f9';this.style.color='#3b82f6';"
-                        onmouseout="this.style.background='#f8fafc';this.style.color='#64748b';">
-                        <i class="fas fa-pen" style="font-size:0.85rem;"></i>
-                    </button>
-                    <form action="{{ route('teacher.announcements.destroy', $ann) }}" method="POST" class="m-0 p-0 delete-form">
-                        @csrf @method('DELETE')
-                        <button type="button" class="action-btn delete delete-btn"
-                            style="width:32px;height:32px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;color:#ef4444;transition:all 0.2s;"
-                            onmouseover="this.style.background='#fef2f2';this.style.borderColor='#fca5a5';"
-                            onmouseout="this.style.background='#f8fafc';this.style.borderColor='#cbd5e1';">
-                            <i class="fas fa-trash" style="font-size:0.85rem;"></i>
-                        </button>
-                    </form>
-                </div>
+    <div class="d-card" style="animation-delay:.05s;">
+        <div class="d-card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="min-width: 900px; table-layout: fixed; width: 100%;">
+                    <thead style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                        <tr>
+                            <th class="text-start" style="width:16.66%; padding: 15px 20px; font-weight: 600; color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Course</th>
+                            <th class="text-center" style="width:16.66%; padding: 15px 20px; font-weight: 600; color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Type</th>
+                            <th class="text-center" style="width:16.66%; padding: 15px 20px; font-weight: 600; color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Title</th>
+                            <th class="text-center" style="width:16.66%; padding: 15px 20px; font-weight: 600; color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Details</th>
+                            <th class="text-center" style="width:16.66%; padding: 15px 20px; font-weight: 600; color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Date/Deadline</th>
+                            <th class="text-end" style="width:16.66%; padding: 15px 20px; font-weight: 600; color: #64748b; font-size: 0.85rem; text-transform: uppercase;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($announcements as $ann)
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td class="text-start" style="padding: 15px 20px;">
+                                <span class="badge b-blue" style="font-size:0.78rem;padding:5px 10px;">
+                                    {{ optional($ann->course)->course_code ?? 'N/A' }}
+                                </span>
+                            </td>
+                            <td class="text-center" style="padding: 15px 20px;">
+                                @if($ann->type == 'Assignment')
+                                    <span class="ann-badge" style="background:rgba(245,158,11,0.12);color:#d97706; white-space:nowrap;"><i class="fas fa-tasks me-1"></i>Assignment</span>
+                                @elseif($ann->type == 'Class Test (CT)')
+                                    <span class="ann-badge" style="background:rgba(239,68,68,0.12);color:#ef4444; white-space:nowrap;"><i class="fas fa-edit me-1"></i>Class Test</span>
+                                @elseif($ann->type == 'Exam')
+                                    <span class="ann-badge" style="background:rgba(59,130,246,0.12);color:#3b82f6; white-space:nowrap;"><i class="fas fa-graduation-cap me-1"></i>Exam</span>
+                                @else
+                                    <span class="ann-badge" style="background:rgba(14,165,233,0.12);color:#0ea5e9; white-space:nowrap;"><i class="fas fa-info-circle me-1"></i>Notice</span>
+                                @endif
+                            </td>
+                            <td class="text-center" style="padding: 15px 20px;">
+                                <span style="font-weight:600; color:var(--tx-h); font-size:0.95rem; word-break: break-word;">{{ $ann->title }}</span>
+                            </td>
+                            <td class="text-center" style="padding: 15px 20px;">
+                                <span style="color:var(--tx-m); font-size:0.83rem; word-break: break-word; display: block;">
+                                    {{ Str::limit($ann->topic_details, 60) }}
+                                </span>
+                            </td>
+                            <td class="text-center" style="padding: 15px 20px;">
+                                @if($ann->deadline)
+                                <div style="font-size:0.8rem;color:#d97706; margin-bottom: 4px;">
+                                    <i class="fas fa-clock"></i> {{ $ann->deadline->format('d M Y, h:i A') }}
+                                </div>
+                                @endif
+                                @if($ann->exam_date)
+                                <div style="font-size:0.8rem;color:#ef4444;">
+                                    <i class="fas fa-calendar-alt"></i> {{ $ann->exam_date->format('d M Y, h:i A') }}
+                                </div>
+                                @endif
+                            </td>
+                            <td class="text-end" style="padding: 15px 20px;">
+                                <div class="d-flex align-items-center justify-content-end gap-2">
+                                    @if($ann->attachment)
+                                    <a href="{{ Storage::url($ann->attachment) }}" target="_blank"
+                                       style="width:32px;height:32px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;color:#0ea5e9;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.2s;"
+                                       onmouseover="this.style.background='#e0f7ff'" onmouseout="this.style.background='#f8fafc'">
+                                        <i class="fas fa-download" style="font-size:0.85rem;"></i>
+                                    </a>
+                                    @endif
+                                    <button class="action-btn edit edit-ann-btn"
+                                        style="width:32px;height:32px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;color:#64748b;transition:all 0.2s; padding:0;"
+                                        data-bs-toggle="modal" data-bs-target="#announcementModal"
+                                        data-id="{{ $ann->id }}"
+                                        data-course="{{ $ann->course_id }}"
+                                        data-type="{{ $ann->type }}"
+                                        data-title="{{ $ann->title }}"
+                                        data-topic="{{ $ann->topic_details }}"
+                                        data-deadline="{{ $ann->deadline ? $ann->deadline->format('Y-m-d\TH:i') : '' }}"
+                                        data-exam="{{ $ann->exam_date ? $ann->exam_date->format('Y-m-d\TH:i') : '' }}"
+                                        onmouseover="this.style.background='#f1f5f9';this.style.color='#3b82f6';"
+                                        onmouseout="this.style.background='#f8fafc';this.style.color='#64748b';">
+                                        <i class="fas fa-pen" style="font-size:0.85rem;"></i>
+                                    </button>
+                                    <form action="{{ route('teacher.announcements.destroy', $ann) }}" method="POST" class="m-0 p-0 delete-form">
+                                        @csrf @method('DELETE')
+                                        <button type="button" class="action-btn delete delete-btn"
+                                            style="width:32px;height:32px;border-radius:6px;border:1px solid #cbd5e1;background:#f8fafc;color:#ef4444;transition:all 0.2s; padding:0;"
+                                            onmouseover="this.style.background='#fef2f2';this.style.borderColor='#fca5a5';"
+                                            onmouseout="this.style.background='#f8fafc';this.style.borderColor='#cbd5e1';">
+                                            <i class="fas fa-trash" style="font-size:0.85rem;"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
-        @endforeach
     </div>
 
     <div class="mt-4 d-flex justify-content-center">
@@ -219,8 +232,18 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Blur datetime-local inputs as soon as a complete date & time is selected
+    document.querySelectorAll('input[type="datetime-local"]').forEach(function(input) {
+        input.addEventListener('input', function() {
+            if (this.value) {
+                this.blur();
+            }
+        });
+    });
+
     // TomSelect — exact same config as mycourseinfo.blade.php
     let tsConfig = {
         create: false,
@@ -249,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('announcementForm').action      = '{{ route("teacher.announcements.store") }}';
         document.getElementById('announcementForm').reset();
         window.courseSelect.clear(true);
+        window.courseSelect.setValue('');
     });
 
     // Edit buttons — populate modal with existing data
@@ -281,13 +305,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Ensure only one date can be selected at a time
+    const deadlineInput = document.getElementById('deadline');
+    const examDateInput = document.getElementById('exam_date');
+
+    deadlineInput.addEventListener('change', function() {
+        if (this.value) {
+            examDateInput.value = '';
+        }
+    });
+
+    examDateInput.addEventListener('change', function() {
+        if (this.value) {
+            deadlineInput.value = '';
+        }
+    });
+
     // Delete confirm
-    document.querySelectorAll('.delete-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
             const form = this.closest('form');
-            if (confirm('Are you sure you want to delete this announcement?')) {
-                form.submit();
-            }
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This announcement will be permanently deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#cbd5e1',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 });

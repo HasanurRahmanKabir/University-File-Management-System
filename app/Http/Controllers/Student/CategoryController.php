@@ -13,7 +13,7 @@ class CategoryController extends Controller
     {
         $user = Auth::user();
         
-        $enrolledIds = $user->enrolled_courses ? json_decode($user->enrolled_courses, true) : [];
+        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
         if (!is_array($enrolledIds)) {
             $enrolledIds = [];
         }

@@ -14,7 +14,7 @@ class InstructorController extends Controller
         $user = Auth::user();
         
         // Get enrolled course IDs and ensure it's an array
-        $enrolledIds = $user->enrolled_courses ? json_decode($user->enrolled_courses, true) : [];
+        $enrolledIds = is_array($user->enrolled_courses) ? $user->enrolled_courses : [];
         if (!is_array($enrolledIds)) {
             $enrolledIds = [];
         }

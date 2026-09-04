@@ -60,6 +60,7 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
         'course-files' => 'courseMaterial'
     ]);
     Route::resource('departments', DepartmentController::class);
+    Route::resource('announcements', App\Http\Controllers\Admin\AnnouncementController::class)->only(['index', 'destroy']);
     // Profile & Settings
     Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
     Route::get('/account-settings', [\App\Http\Controllers\Admin\ProfileController::class, 'settings'])->name('account-settings');

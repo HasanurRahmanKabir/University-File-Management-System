@@ -38,7 +38,10 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'course_id'    => 'required|exists:courses,id',
+            'course_id'    => [
+                'required',
+                \Illuminate\Validation\Rule::exists('courses', 'id')->where('teacher_id', Auth::id()),
+            ],
             'type'         => 'required|in:Notice,Assignment,Class Test (CT),Exam',
             'title'        => 'required|string|max:255',
             'topic_details'=> 'required|string',
@@ -74,7 +77,10 @@ class AnnouncementController extends Controller
         }
 
         $request->validate([
-            'course_id'    => 'required|exists:courses,id',
+            'course_id'    => [
+                'required',
+                \Illuminate\Validation\Rule::exists('courses', 'id')->where('teacher_id', Auth::id()),
+            ],
             'type'         => 'required|in:Notice,Assignment,Class Test (CT),Exam',
             'title'        => 'required|string|max:255',
             'topic_details'=> 'required|string',
