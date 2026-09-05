@@ -125,6 +125,9 @@
                                     @endif
                                 </td>
                                 <td style="text-align:right;"><div style="display:flex;gap:5px;justify-content:flex-end;">
+                                    @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg']))
+                                    <button type="button" onclick="openPreviewModal('{{ route('teacher.course-materials.preview', $material->id) }}', '{{ addslashes($material->title) }}', '{{ $ext }}')" class="btn-ico" style="background-color: var(--primary-light); color: var(--primary);" title="View File"><i class="fas fa-eye"></i></button>
+                                    @endif
                                     <button type="button" class="btn-ico bi-ed" data-bs-toggle="modal" data-bs-target="#editModal" onclick="populateEditModal({{ $material->id }}, '{{ addslashes($material->title) }}', {{ $material->course_id }}, {{ $material->is_active ? 1 : 0 }})"><i class="fas fa-pen"></i></button>
                                     <form action="{{ route('teacher.course-materials.destroy', $material->id) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
@@ -199,7 +202,72 @@
 </div>
 @endpush
 
+@push('modals')
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">File Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0" style="height: 80vh; background-color: #f8f9fa; position: relative;">
+                <!-- Spinner (Positioned behind iframe) -->
+                <div id="iframeLoader" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <!-- Iframe (Positioned above spinner, covers it when loaded) -->
+                <iframe id="previewIframe" src="" style="width: 100%; height: 100%; border: none; position: relative; z-index: 2; background: transparent;"></iframe>
+                <!-- Img (For images) -->
+                <img id="previewImage" src="" style="width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 2; display: none; margin: auto;">
+            </div>
+        </div>
+    </div>
+</div>
+@endpush
+
 @push('scripts')
+<script>
+    function openPreviewModal(url, title, ext) {
+        document.getElementById('previewModalLabel').innerText = title;
+        
+        // Show spinner
+        document.getElementById('iframeLoader').style.display = 'block';
+        
+        const isImage = ['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(ext ? ext.toLowerCase() : '');
+        const iframe = document.getElementById('previewIframe');
+        const img = document.getElementById('previewImage');
+        
+        if (isImage) {
+            iframe.style.display = 'none';
+            iframe.src = "";
+            img.style.display = 'block';
+            img.src = url;
+            img.onload = function() {
+                document.getElementById('iframeLoader').style.display = 'none';
+            };
+        } else {
+            img.style.display = 'none';
+            img.src = "";
+            iframe.style.display = 'block';
+            iframe.src = url;
+        }
+        
+        // Use getOrCreateInstance to prevent memory leaks and backdrop bugs
+        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('previewModal'));
+        myModal.show();
+    }
+    
+    // Clear iframe src when modal closes to stop audio/video and clear memory
+    document.getElementById('previewModal').addEventListener('hidden.bs.modal', function (event) {
+        document.getElementById('previewIframe').src = "";
+        document.getElementById('previewImage').src = "";
+        document.getElementById('iframeLoader').style.display = 'none';
+    });
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <script>
     let editCourseSelect;

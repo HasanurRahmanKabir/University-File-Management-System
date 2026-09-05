@@ -251,6 +251,11 @@
                         </td>
                         <td>
                             <div class="action-group">
+                                @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg']))
+                                <button type="button" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);" onclick="openPreviewModal('{{ route('admin.course-files.preview', $material->id) }}', '{{ addslashes($material->title) }}', '{{ $ext }}')" title="Preview">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                @endif
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editFileModal"
                                     data-id="{{ $material->id }}"
                                     data-course="{{ $material->course_id }}"
@@ -410,7 +415,71 @@
         </div>
     </div>
 </div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content premium">
+            <div class="modal-head gradient">
+                <h5 class="modal-title" id="previewModalLabel"><i class="fas fa-eye"></i> File Preview</h5>
+                <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body p-0" style="height: 80vh; background-color: #f8f9fa; position: relative;">
+                <!-- Spinner (Positioned behind iframe) -->
+                <div id="iframeLoader" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <!-- Iframe (Positioned above spinner, covers it when loaded) -->
+                <iframe id="previewIframe" src="" style="width: 100%; height: 100%; border: none; position: relative; z-index: 2; background: transparent;"></iframe>
+                <!-- Img (For images) -->
+                <img id="previewImage" src="" style="width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 2; display: none; margin: auto;">
+            </div>
+        </div>
+    </div>
+</div>
 @endpush
+
+@push('scripts')
+<script>
+    function openPreviewModal(url, title, ext) {
+        document.getElementById('previewModalLabel').innerHTML = '<i class="fas fa-eye"></i> ' + title;
+        
+        // Show spinner
+        document.getElementById('iframeLoader').style.display = 'block';
+        
+        const isImage = ['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(ext ? ext.toLowerCase() : '');
+        const iframe = document.getElementById('previewIframe');
+        const img = document.getElementById('previewImage');
+        
+        if (isImage) {
+            iframe.style.display = 'none';
+            iframe.src = "";
+            img.style.display = 'block';
+            img.src = url;
+            img.onload = function() {
+                document.getElementById('iframeLoader').style.display = 'none';
+            };
+        } else {
+            img.style.display = 'none';
+            img.src = "";
+            iframe.style.display = 'block';
+            iframe.src = url;
+        }
+        
+        // Use getOrCreateInstance to prevent memory leaks and backdrop bugs
+        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('previewModal'));
+        myModal.show();
+    }
+    
+    // Clear iframe src when modal closes
+    document.getElementById('previewModal').addEventListener('hidden.bs.modal', function (event) {
+        document.getElementById('previewIframe').src = "";
+        document.getElementById('previewImage').src = "";
+        document.getElementById('iframeLoader').style.display = 'none';
+    });
+</script>
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>

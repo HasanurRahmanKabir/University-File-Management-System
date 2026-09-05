@@ -60,6 +60,7 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
         'course-files' => 'courseMaterial'
     ]);
     Route::get('course-files/{courseMaterial}/download', [CourseFileController::class, 'download'])->name('course-files.download');
+    Route::get('course-files/{material}/preview', [CourseFileController::class, 'preview'])->name('course-files.preview');
     Route::resource('departments', DepartmentController::class);
     Route::resource('announcements', App\Http\Controllers\Admin\AnnouncementController::class)->only(['index', 'destroy']);
     // Profile & Settings
@@ -82,6 +83,7 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::resource('courses', TeacherCourseController::class)->except(['create', 'edit']);
     Route::resource('course-materials', TeacherCourseMaterialController::class);
     Route::get('/course-materials/{material}/download', [TeacherCourseMaterialController::class, 'download'])->name('course-materials.download');
+    Route::get('/course-materials/{material}/preview', [TeacherCourseMaterialController::class, 'preview'])->name('course-materials.preview');
     Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
     Route::get('subcategories', [TeacherSubcategoryController::class, 'index'])->name('subcategories.index');
     
@@ -104,6 +106,7 @@ Route::middleware(['web', 'auth', 'is_student'])->prefix('student')->name('stude
     Route::resource('courses', StudentCourseController::class)->only(['index', 'show']);
     Route::resource('course-materials', StudentCourseMaterialController::class)->only(['index']);
     Route::get('/course-materials/{material}/download', [StudentCourseMaterialController::class, 'download'])->name('course-materials.download');
+    Route::get('/course-materials/{material}/preview', [StudentCourseMaterialController::class, 'preview'])->name('course-materials.preview');
     Route::resource('categories', StudentCategoryController::class)->only(['index']);
     Route::resource('subcategories', StudentSubcategoryController::class)->only(['index']);
     Route::get('/instructors', [StudentInstructorController::class, 'index'])->name('instructors');

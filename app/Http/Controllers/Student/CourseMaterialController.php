@@ -42,4 +42,23 @@ class CourseMaterialController extends Controller
         
         return response()->download(storage_path('app/' . $material->file_path));
     }
+
+    public function preview(CourseMaterial $material)
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        
+        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
+
+        // Security Check
+        if (!in_array($material->course_id, $enrolledIds)) {
+            abort(403, 'Unauthorized access. You are not enrolled in this course.');
+        }
+
+        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
+            abort(404, 'File not found on the server.');
+        }
+        
+        // Return file inline instead of forcing download
+        return response()->file(storage_path('app/' . $material->file_path));
+    }
 }

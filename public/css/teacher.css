@@ -114,7 +114,7 @@ button{font-family:inherit;cursor:pointer;}
     width:var(--sb-width);
     background:var(--sb-bg);
     display:flex;flex-direction:column;
-    z-index:1050;
+    z-index:1040;
     transition:left var(--slow) var(--ease);
     border-right:1px solid var(--sb-border);
 }

@@ -102,4 +102,17 @@ class CourseMaterialController extends Controller
         
         return response()->download(storage_path('app/' . $material->file_path));
     }
+
+    public function preview(\App\Models\CourseMaterial $material)
+    {
+        if ($material->course->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
+            abort(404, 'File not found on the server.');
+        }
+        
+        return response()->file(storage_path('app/' . $material->file_path));
+    }
 }
