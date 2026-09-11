@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CourseMaterial;
+use App\Models\CourseFolder;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,8 +32,14 @@ class CourseFileController extends Controller
                   });
             });
         }
+        if ($request->has('folder_id') && $request->folder_id != '') {
+            $query->where('folder_id', $request->folder_id);
+            $activeFolder = \App\Models\CourseFolder::find($request->folder_id);
+        } else {
+            $activeFolder = null;
+        }
 
-        $materials = $query->latest()->paginate(15)->appends($request->all());
+        $materials = $query->with('folder')->latest()->paginate(15)->appends($request->all());
         $courses = Course::where('is_active', true)->get();
         
         // Dynamic Stats
@@ -52,18 +59,29 @@ class CourseFileController extends Controller
 
         $teachers = User::where('role', 'teacher')->where('is_active', true)->get();
 
-        return view('admin.course-files', compact('materials', 'courses', 'totalFiles', 'weeklyFiles', 'pdfCount', 'pdfPercentage', 'storageUsed', 'teachers'));
+        // Load all folders grouped by course for the folder view & upload dropdown
+        $allFolders = CourseFolder::with('course')->orderBy('name')->get()->groupBy('course_id');
+
+        return view('admin.course-files', compact('materials', 'courses', 'totalFiles', 'weeklyFiles', 'pdfCount', 'pdfPercentage', 'storageUsed', 'teachers', 'allFolders', 'activeFolder'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'course_id' => 'required|exists:courses,id',
+            'course_id'   => 'required|exists:courses,id',
+            'folder_id'   => 'nullable|exists:course_folders,id',
             'uploaded_by' => 'nullable|exists:users,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file' => 'required|file|max:20480', // Max 20MB limit
+            'title'       => 'required|string|max:255',
+            'file'        => 'required|file|max:20480',
         ]);
+
+        // Validate folder belongs to the selected course
+        if (!empty($validated['folder_id'])) {
+            $folder = CourseFolder::findOrFail($validated['folder_id']);
+            if ($folder->course_id !== (int) $validated['course_id']) {
+                return back()->with('error', 'Invalid folder selected.');
+            }
+        }
 
         if ($request->hasFile('file')) {
             $path = $request->file('file')->store('course_materials', 'local');
@@ -73,12 +91,13 @@ class CourseFileController extends Controller
         }
         
         $validated['uploaded_by'] = $request->uploaded_by ?? auth()->id();
+        $validated['folder_id']   = $validated['folder_id'] ?? null;
 
         CourseMaterial::create($validated);
         
         \App\Models\ActivityLog::create([
-            'user_id' => auth()->id(),
-            'action' => 'uploaded_material',
+            'user_id'     => auth()->id(),
+            'action'      => 'uploaded_material',
             'description' => 'Uploaded new material <strong>' . e($validated['title']) . '</strong>'
         ]);
         
@@ -88,12 +107,20 @@ class CourseFileController extends Controller
     public function update(Request $request, CourseMaterial $courseMaterial)
     {
         $validated = $request->validate([
-            'course_id' => 'required|exists:courses,id',
+            'course_id'   => 'required|exists:courses,id',
+            'folder_id'   => 'nullable|exists:course_folders,id',
             'uploaded_by' => 'nullable|exists:users,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file' => 'nullable|file|max:20480', // Max 20MB limit
+            'title'       => 'required|string|max:255',
+            'file'        => 'nullable|file|max:20480',
         ]);
+
+        // Validate folder belongs to the selected course
+        if (!empty($validated['folder_id'])) {
+            $folder = CourseFolder::findOrFail($validated['folder_id']);
+            if ($folder->course_id !== (int) $validated['course_id']) {
+                return back()->with('error', 'Invalid folder selected.');
+            }
+        }
 
         if ($request->hasFile('file')) {
             if ($courseMaterial->file_path && Storage::disk('local')->exists($courseMaterial->file_path)) {
@@ -105,11 +132,12 @@ class CourseFileController extends Controller
             $validated['file_size'] = $request->file('file')->getSize();
         }
 
+        $validated['folder_id'] = $validated['folder_id'] ?? null;
         $courseMaterial->update($validated);
         
         \App\Models\ActivityLog::create([
-            'user_id' => auth()->id(),
-            'action' => 'updated_material',
+            'user_id'     => auth()->id(),
+            'action'      => 'updated_material',
             'description' => 'Updated material <strong>' . e($validated['title']) . '</strong>'
         ]);
         
@@ -133,21 +161,21 @@ class CourseFileController extends Controller
         return back()->with('success', 'Material deleted successfully.');
     }
 
-    public function download(\App\Models\CourseMaterial $material)
+    public function download(\App\Models\CourseMaterial $courseMaterial)
     {
-        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
+        if (!$courseMaterial->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($courseMaterial->file_path)) {
             abort(404, 'File not found on the server.');
         }
         
-        return response()->download(storage_path('app/' . $material->file_path));
+        return response()->download(storage_path('app/' . $courseMaterial->file_path));
     }
 
-    public function preview(\App\Models\CourseMaterial $material)
+    public function preview(\App\Models\CourseMaterial $courseMaterial)
     {
-        if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
+        if (!$courseMaterial->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($courseMaterial->file_path)) {
             abort(404, 'File not found on the server.');
         }
         
-        return response()->file(storage_path('app/' . $material->file_path));
+        return response()->file(storage_path('app/' . $courseMaterial->file_path));
     }
 }

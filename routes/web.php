@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\GlobalSearchController;
+use App\Http\Controllers\Admin\CourseFolderController as AdminCourseFolderController;
 
 use App\Http\Controllers\Admin\CourseFileController;
 use App\Http\Controllers\Admin\DepartmentController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
 use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
 use App\Http\Controllers\Teacher\CourseMaterialController as TeacherCourseMaterialController;
+use App\Http\Controllers\Teacher\CourseFolderController as TeacherCourseFolderController;
 use App\Http\Controllers\Teacher\AnnouncementController as TeacherAnnouncementController;
 
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
@@ -60,9 +62,12 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
         'course-files' => 'courseMaterial'
     ]);
     Route::get('course-files/{courseMaterial}/download', [CourseFileController::class, 'download'])->name('course-files.download');
-    Route::get('course-files/{material}/preview', [CourseFileController::class, 'preview'])->name('course-files.preview');
+    Route::get('course-files/{courseMaterial}/preview', [CourseFileController::class, 'preview'])->name('course-files.preview');
     Route::resource('departments', DepartmentController::class);
     Route::resource('announcements', App\Http\Controllers\Admin\AnnouncementController::class)->only(['index', 'destroy']);
+    // Course Folders
+    Route::post('/course-folders', [AdminCourseFolderController::class, 'store'])->name('course-folders.store');
+    Route::delete('/course-folders/{folder}', [AdminCourseFolderController::class, 'destroy'])->name('course-folders.destroy');
     // Profile & Settings
     Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
     Route::get('/account-settings', [\App\Http\Controllers\Admin\ProfileController::class, 'settings'])->name('account-settings');
@@ -93,6 +98,9 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
 
     // Course Announcements
     Route::resource('announcements', TeacherAnnouncementController::class)->except(['create', 'edit', 'show']);
+    // Course Folders
+    Route::post('/course-folders', [TeacherCourseFolderController::class, 'store'])->name('course-folders.store');
+    Route::delete('/course-folders/{folder}', [TeacherCourseFolderController::class, 'destroy'])->name('course-folders.destroy');
 });
 
 use App\Http\Controllers\Student\CategoryController as StudentCategoryController;

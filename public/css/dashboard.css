@@ -2183,3 +2183,11 @@ input:-webkit-autofill:active {
 #toggleBtn:hover {
     color: #fff !important;
 }
+
+/* Force visible border for TomSelect dropdowns globally and in modals */
+body .modal .ts-wrapper .ts-control,
+.ts-wrapper .ts-control {
+    border: 2px solid #64748b !important;
+    border-radius: 6px !important;
+    background-color: #ffffff !important;
+}

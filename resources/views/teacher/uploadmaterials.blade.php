@@ -6,12 +6,16 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
-    /* Ensure TomSelect matches the standard professional design */
     .ts-wrapper.custom-ts { display: block !important; width: 100% !important; padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; margin: 0; }
     .ts-wrapper.custom-ts .ts-control { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; background-color: #f8fafc !important; background-image: none !important; color: #334155 !important; font-size: 0.9rem !important; font-weight: 500 !important; padding: 10px 15px !important; min-height: 44px !important; box-shadow: none !important; display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px; transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
     .ts-wrapper.custom-ts.focus .ts-control { border-color: var(--primary) !important; background-color: #ffffff !important; box-shadow: 0 0 0 3px var(--primary-light) !important; outline: 0 !important; }
     .ts-dropdown { border: 1px solid #cbd5e1 !important; border-radius: 8px !important; background-color: #ffffff !important; box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important; z-index: 9999 !important; overflow: hidden; }
     .ts-dropdown .ts-dropdown-content { max-height: 250px !important; overflow-y: auto !important; padding: 5px 0; }
+    
+    /* Fix for TomSelect dropdown growing large when cleared */
+    .ts-wrapper.custom-ts .ts-control { flex-wrap: nowrap !important; overflow: hidden !important; }
+    .ts-wrapper.custom-ts .ts-control > input { width: 0 !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; border: none !important; opacity: 0 !important; }
+    
     .ts-dropdown .option[data-value=""] { display: none !important; }
     .ts-dropdown .option { padding: 8px 15px !important; color: #475569 !important; font-size: 0.9rem !important; cursor: pointer; }
     .ts-dropdown .option:hover, .ts-dropdown .active { background-color: #f1f5f9 !important; color: var(--primary) !important; }
@@ -21,6 +25,29 @@
     .ts-control::after { content: ""; display: block; width: 8px; height: 8px; border-right: 2px solid #64748b; border-bottom: 2px solid #64748b; transform: rotate(45deg); position: absolute; right: 15px; top: 42%; transition: transform 0.2s ease; }
     .ts-wrapper.dropdown-active .ts-control::after { transform: rotate(-135deg); top: 48%; }
     .ts-wrapper.dropdown-active .ts-control .item, .ts-wrapper.has-items .ts-control .item { display: block !important; opacity: 1 !important; }
+
+    /* Folder Management Styles */
+    .folder-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: var(--bg-muted, #f8fafc);
+        border: 1px solid var(--bd-light, #e2e8f0);
+        margin-bottom: 6px;
+        transition: all 0.2s ease;
+    }
+    .folder-item:hover { background: var(--primary-light, #eff6ff); border-color: var(--primary, #2563eb); }
+    .folder-item:last-child { margin-bottom: 0; }
+    .folder-item-name { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 600; color: var(--tx-h, #1e293b); }
+    .folder-item-name i { color: #f59e0b; font-size: 0.95rem; }
+    .folder-item-count { font-size: 0.72rem; color: var(--tx-s, #64748b); font-weight: 500; }
+    .folder-del-btn { background: var(--danger-lt, #fef2f2); border: none; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: var(--danger, #ef4444); cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; }
+    .folder-del-btn:hover { background: var(--danger, #ef4444); color: #fff; }
+    .folder-empty { text-align: center; padding: 20px 10px; color: var(--tx-s, #64748b); font-size: 0.82rem; }
+    .folder-empty i { font-size: 2rem; color: var(--bd-dark, #cbd5e1); display: block; margin-bottom: 8px; }
+    .folder-badge { background: var(--primary-light, #eff6ff); color: var(--primary, #2563eb); border-radius: 5px; padding: 2px 8px; font-size: 0.68rem; font-weight: 700; }
 </style>
 @endpush
 
@@ -32,11 +59,18 @@
     </div>
 </div>
 
+{{-- Pass folders data to JS --}}
+<script>
+    const allFoldersData = @json($folders);
+</script>
+
 <div class="row g-4">
 
-    <!-- Upload Form -->
+    {{-- LEFT COLUMN: Upload Form + Folder Manager --}}
     <div class="col-xl-5 col-lg-5 col-12">
-        <div class="d-card" style="animation-delay:.05s">
+
+        {{-- Upload Form --}}
+        <div class="d-card mb-4" style="animation-delay:.05s">
             <div class="d-card-header">
                 <div class="d-card-title"><div class="d-card-ico"><i class="fas fa-cloud-arrow-up"></i></div>Add New File</div>
             </div>
@@ -45,11 +79,17 @@
                     @csrf
                     <div class="fg">
                         <label class="flabel">Select Course</label>
-                        <select class="finput" style="cursor:pointer;" name="course_id" id="add_course_id" required>
+                        <select class="finput" style="cursor:pointer;" name="course_id" id="add_course_id" required onchange="loadFolders(this.value, 'add_folder_id')">
                             <option selected disabled value="">— Select Course —</option>
                             @foreach($courses as $course)
                             <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <label class="flabel">Save to Folder <span style="color:var(--tx-s);font-weight:400;">(Optional)</span></label>
+                        <select class="finput" style="cursor:pointer;" name="folder_id" id="add_folder_id">
+                            <option value="">📂 Root (No Folder)</option>
                         </select>
                     </div>
                     <div class="fg">
@@ -80,9 +120,72 @@
                 </form>
             </div>
         </div>
+
+        {{-- Folder Manager --}}
+        <div class="d-card" style="animation-delay:.1s">
+            <div class="d-card-header">
+                <div class="d-card-title"><div class="d-card-ico"><i class="fas fa-folder-plus"></i></div>Manage Folders</div>
+                <span class="badge b-blue" style="padding:5px 12px;">
+                    {{ $folders->flatten()->count() }} folder{{ $folders->flatten()->count() !== 1 ? 's' : '' }}
+                </span>
+            </div>
+            <div class="d-card-body">
+                {{-- Create Folder Form --}}
+                <form action="{{ route('teacher.course-folders.store') }}" method="POST" class="mb-3">
+                    @csrf
+                    <div class="fg">
+                        <label class="flabel">Course</label>
+                        <select class="finput" name="course_id" id="folder_course_id" required style="cursor:pointer;">
+                            <option value="" disabled selected>Select Course</option>
+                            @foreach($courses as $course)
+                            <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="fg" style="margin-bottom: 0;">
+                        <label class="flabel">Folder Name</label>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" class="finput" name="name" id="folder_name_input" placeholder="e.g. Lecture Notes, Assignments..." required style="flex:1;">
+                            <button type="submit" class="btn-primary" style="padding: 10px 16px; white-space:nowrap; flex-shrink:0;" title="Create Folder">
+                                <i class="fas fa-folder-plus"></i> Create
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <hr style="border-color: var(--bd-light, #e2e8f0); margin: 15px 0;">
+
+                {{-- Folder List --}}
+                <div id="folderListContainer" style="max-height: 320px; overflow-y: auto;">
+                    @forelse($folders->flatten() as $folder)
+                    <div class="folder-item">
+                        <div class="folder-item-name">
+                            <i class="fas fa-folder"></i>
+                            <div>
+                                <div>{{ $folder->name }}</div>
+                                <div class="folder-item-count">{{ $folder->course->course_code ?? 'N/A' }} · {{ $folder->materials_count }} file{{ $folder->materials_count !== 1 ? 's' : '' }}</div>
+                            </div>
+                        </div>
+                        <form action="{{ route('teacher.course-folders.destroy', $folder->id) }}" method="POST" class="folder-del-form">
+                            @csrf @method('DELETE')
+                            <button type="button" class="folder-del-btn folder-delete-btn" title="Delete Folder">
+                                <i class="fas fa-trash-alt" style="font-size:.7rem;"></i>
+                            </button>
+                        </form>
+                    </div>
+                    @empty
+                    <div class="folder-empty">
+                        <i class="fas fa-folder-open"></i>
+                        No folders created yet.<br>Create your first folder above.
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- File List -->
+    {{-- RIGHT COLUMN: File List --}}
     <div class="col-xl-7 col-lg-7 col-12">
         <div class="d-card" style="animation-delay:.12s">
             <div class="d-card-header">
@@ -92,7 +195,13 @@
             <div class="d-card-body p0">
                 <div class="t-wrap">
                     <table class="t-tbl" style="table-layout: fixed; width: 100%;">
-                        <thead><tr><th class="text-start" style="width: 25%;">File Info</th><th style="width: 25%; text-align:center;">Course</th><th style="width: 25%; text-align:center;">Privacy</th><th style="width: 25%; text-align:right;">Action</th></tr></thead>
+                        <thead><tr>
+                            <th class="text-start" style="width: 30%;">File Info</th>
+                            <th style="width: 20%; text-align:center;">Course</th>
+                            <th style="width: 20%; text-align:center;">Folder</th>
+                            <th style="width: 15%; text-align:center;">Privacy</th>
+                            <th style="width: 15%; text-align:right;">Action</th>
+                        </tr></thead>
                         <tbody>
                             @forelse($materials as $material)
                             <tr>
@@ -118,6 +227,16 @@
                                 </td>
                                 <td style="text-align:center;"><span class="badge b-blue">{{ $material->course->course_code }}</span></td>
                                 <td style="text-align:center;">
+                                    @if($material->folder)
+                                        <span class="folder-badge" title="{{ $material->folder->name }}">
+                                            <i class="fas fa-folder" style="color:#f59e0b;"></i>
+                                            {{ Str::limit($material->folder->name, 12) }}
+                                        </span>
+                                    @else
+                                        <span style="font-size:0.72rem;color:var(--tx-s);">— Root —</span>
+                                    @endif
+                                </td>
+                                <td style="text-align:center;">
                                     @if($material->is_active)
                                     <span class="badge b-green"><i class="fas fa-globe"></i> Public</span>
                                     @else
@@ -128,7 +247,14 @@
                                     @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg']))
                                     <button type="button" onclick="openPreviewModal('{{ route('teacher.course-materials.preview', $material->id) }}', '{{ addslashes($material->title) }}', '{{ $ext }}')" class="btn-ico" style="background-color: var(--primary-light); color: var(--primary);" title="View File"><i class="fas fa-eye"></i></button>
                                     @endif
-                                    <button type="button" class="btn-ico bi-ed" data-bs-toggle="modal" data-bs-target="#editModal" onclick="populateEditModal({{ $material->id }}, '{{ addslashes($material->title) }}', {{ $material->course_id }}, {{ $material->is_active ? 1 : 0 }})"><i class="fas fa-pen"></i></button>
+                                    <button type="button" class="btn-ico bi-ed" data-bs-toggle="modal" data-bs-target="#editModal"
+                                        onclick="populateEditModal(
+                                            {{ $material->id }},
+                                            '{{ addslashes($material->title) }}',
+                                            {{ $material->course_id }},
+                                            {{ $material->is_active ? 1 : 0 }},
+                                            {{ $material->folder_id ?? 'null' }}
+                                        )"><i class="fas fa-pen"></i></button>
                                     <form action="{{ route('teacher.course-materials.destroy', $material->id) }}" method="POST" style="display:inline;">
                                         @csrf @method('DELETE')
                                         <button class="btn-ico bi-del delete-btn" type="submit"><i class="fas fa-trash-alt"></i></button>
@@ -137,7 +263,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4">
+                                <td colspan="5">
                                     <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
                                         <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-box-open"></i></div>
                                         <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Materials Found</h5>
@@ -149,16 +275,21 @@
                         </tbody>
                     </table>
                 </div>
+
+                @if($materials->hasPages())
+                <div style="padding: 12px 16px; border-top: 1px solid var(--bd-light, #e2e8f0);">
+                    {{ $materials->links('pagination::bootstrap-5') }}
+                </div>
+                @endif
             </div>
         </div>
     </div>
 
 </div>
-
 @endsection
 
 @push('modals')
-<!-- Edit Modal -->
+{{-- Edit Modal --}}
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -172,10 +303,16 @@
                     </div>
                     <div class="fg">
                         <label class="flabel">Select Course</label>
-                        <select class="finput" style="cursor:pointer;" name="course_id" id="edit_course_id" required>
+                        <select class="finput" style="cursor:pointer;" name="course_id" id="edit_course_id" required onchange="loadFolders(this.value, 'edit_folder_id')">
                             @foreach($courses as $course)
                             <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <label class="flabel">Folder <span style="color:var(--tx-s);font-weight:400;">(Optional)</span></label>
+                        <select class="finput" style="cursor:pointer;" name="folder_id" id="edit_folder_id">
+                            <option value="">📂 Root (No Folder)</option>
                         </select>
                     </div>
                     <div class="fg" style="margin-bottom:0;">
@@ -203,7 +340,7 @@
 @endpush
 
 @push('modals')
-<!-- Preview Modal -->
+{{-- Preview Modal --}}
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -212,15 +349,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0" style="height: 80vh; background-color: #f8f9fa; position: relative;">
-                <!-- Spinner (Positioned behind iframe) -->
                 <div id="iframeLoader" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
                     <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <!-- Iframe (Positioned above spinner, covers it when loaded) -->
                 <iframe id="previewIframe" src="" style="width: 100%; height: 100%; border: none; position: relative; z-index: 2; background: transparent;"></iframe>
-                <!-- Img (For images) -->
                 <img id="previewImage" src="" style="width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 2; display: none; margin: auto;">
             </div>
         </div>
@@ -232,40 +366,44 @@
 <script>
     function openPreviewModal(url, title, ext) {
         document.getElementById('previewModalLabel').innerText = title;
-        
-        // Show spinner
         document.getElementById('iframeLoader').style.display = 'block';
-        
         const isImage = ['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(ext ? ext.toLowerCase() : '');
         const iframe = document.getElementById('previewIframe');
         const img = document.getElementById('previewImage');
-        
         if (isImage) {
-            iframe.style.display = 'none';
-            iframe.src = "";
-            img.style.display = 'block';
-            img.src = url;
-            img.onload = function() {
-                document.getElementById('iframeLoader').style.display = 'none';
-            };
+            iframe.style.display = 'none'; iframe.src = "";
+            img.style.display = 'block'; img.src = url;
+            img.onload = function() { document.getElementById('iframeLoader').style.display = 'none'; };
         } else {
-            img.style.display = 'none';
-            img.src = "";
-            iframe.style.display = 'block';
-            iframe.src = url;
+            img.style.display = 'none'; img.src = "";
+            iframe.style.display = 'block'; iframe.src = url;
         }
-        
-        // Use getOrCreateInstance to prevent memory leaks and backdrop bugs
-        var myModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('previewModal'));
-        myModal.show();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('previewModal')).show();
     }
-    
-    // Clear iframe src when modal closes to stop audio/video and clear memory
-    document.getElementById('previewModal').addEventListener('hidden.bs.modal', function (event) {
+    document.getElementById('previewModal').addEventListener('hidden.bs.modal', function() {
         document.getElementById('previewIframe').src = "";
         document.getElementById('previewImage').src = "";
         document.getElementById('iframeLoader').style.display = 'none';
     });
+
+    /**
+     * Populate a folder <select> based on selected course_id.
+     * Uses the globally available allFoldersData object (keyed by course_id).
+     */
+    function loadFolders(courseId, selectId) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        // Clear previous options
+        select.innerHTML = '<option value="">📂 Root (No Folder)</option>';
+        if (!courseId) return;
+        const courseFolders = allFoldersData[courseId] || [];
+        courseFolders.forEach(function(folder) {
+            const opt = document.createElement('option');
+            opt.value = folder.id;
+            opt.textContent = '📁 ' + folder.name;
+            select.appendChild(opt);
+        });
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
@@ -289,9 +427,19 @@
         let searchInputAdd = addCourseSelect.dropdown.querySelector('input');
         if(searchInputAdd) searchInputAdd.setAttribute('placeholder', 'Search course...');
 
+        // Listen to TomSelect change event for add form's course
+        addCourseSelect.on('change', function(val) {
+            loadFolders(val, 'add_folder_id');
+        });
+
         editCourseSelect = new TomSelect('#edit_course_id', tsConfig);
         let searchInputEdit = editCourseSelect.dropdown.querySelector('input');
         if(searchInputEdit) searchInputEdit.setAttribute('placeholder', 'Search course...');
+
+        // Listen to TomSelect change event for edit form's course
+        editCourseSelect.on('change', function(val) {
+            loadFolders(val, 'edit_folder_id');
+        });
 
         let tsConfigNoSearch = {
             create: false,
@@ -317,44 +465,24 @@
             }
         };
         editPrivacySelect = new TomSelect('#edit_privacy', tsConfigNoSearch);
-    });
-    const dz=document.getElementById('dropZone');
-    if(dz) {
-        ['dragover','dragenter'].forEach(e=>dz.addEventListener(e,ev=>{ev.preventDefault();dz.style.borderColor='var(--primary)';dz.style.background='var(--primary-light)';}));
-        ['dragleave','drop'].forEach(e=>dz.addEventListener(e,ev=>{ev.preventDefault();dz.style.borderColor='';dz.style.background='';}));
-    }
 
-    const dzEdit=document.getElementById('dropZoneEdit');
-    if(dzEdit) {
-        ['dragover','dragenter'].forEach(e=>dzEdit.addEventListener(e,ev=>{ev.preventDefault();dzEdit.style.borderColor='var(--primary)';dzEdit.style.background='var(--primary-light)';}));
-        ['dragleave','drop'].forEach(e=>dzEdit.addEventListener(e,ev=>{ev.preventDefault();dzEdit.style.borderColor='';dzEdit.style.background='';}));
-    }
-
-    function populateEditModal(id, title, courseId, isActive) {
-        document.getElementById('editForm').action = `/teacher/course-materials/${id}`;
-        document.getElementById('edit_title').value = title;
-        if(editCourseSelect) {
-            editCourseSelect.setValue(courseId);
-        } else {
-            document.getElementById('edit_course_id').value = courseId;
+        // Drag & Drop
+        const dz = document.getElementById('dropZone');
+        if(dz) {
+            ['dragover','dragenter'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.style.borderColor = 'var(--primary)'; dz.style.background = 'var(--primary-light)'; }));
+            ['dragleave','drop'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.style.borderColor = ''; dz.style.background = ''; }));
         }
-        if(editPrivacySelect) {
-            editPrivacySelect.setValue(String(isActive));
-        } else {
-            document.getElementById('edit_privacy').value = isActive;
+        const dzEdit = document.getElementById('dropZoneEdit');
+        if(dzEdit) {
+            ['dragover','dragenter'].forEach(e => dzEdit.addEventListener(e, ev => { ev.preventDefault(); dzEdit.style.borderColor = 'var(--primary)'; dzEdit.style.background = 'var(--primary-light)'; }));
+            ['dragleave','drop'].forEach(e => dzEdit.addEventListener(e, ev => { ev.preventDefault(); dzEdit.style.borderColor = ''; dzEdit.style.background = ''; }));
         }
-        
-        document.getElementById('fileInEdit').value = '';
-        document.getElementById('fileTextEdit').innerText = 'Click or drag & drop to replace file';
-    }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        deleteButtons.forEach(btn => {
+        // Delete confirmations
+        document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const form = this.closest('form');
-                
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "This material file will be permanently deleted!",
@@ -364,12 +492,56 @@
                     cancelButtonColor: '#94a3b8',
                     confirmButtonText: 'Yes, delete!'
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+                    if (result.isConfirmed) form.submit();
+                });
+            });
+        });
+
+        // Folder delete confirmations
+        document.querySelectorAll('.folder-delete-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('form');
+                Swal.fire({
+                    title: 'Delete Folder?',
+                    text: "Files inside will move to root. This cannot be undone.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#94a3b8',
+                    confirmButtonText: 'Yes, delete folder!'
+                }).then((result) => {
+                    if (result.isConfirmed) form.submit();
                 });
             });
         });
     });
+
+    function populateEditModal(id, title, courseId, isActive, folderId) {
+        document.getElementById('editForm').action = `/teacher/course-materials/${id}`;
+        document.getElementById('edit_title').value = title;
+
+        if(editCourseSelect) {
+            editCourseSelect.setValue(courseId);
+        } else {
+            document.getElementById('edit_course_id').value = courseId;
+        }
+
+        // Load folders for the course, then set selected folder
+        loadFolders(courseId, 'edit_folder_id');
+        setTimeout(function() {
+            const folderSelect = document.getElementById('edit_folder_id');
+            if(folderSelect && folderId) folderSelect.value = folderId;
+        }, 50);
+
+        if(editPrivacySelect) {
+            editPrivacySelect.setValue(String(isActive));
+        } else {
+            document.getElementById('edit_privacy').value = isActive;
+        }
+
+        document.getElementById('fileInEdit').value = '';
+        document.getElementById('fileTextEdit').innerText = 'Click or drag & drop to replace file';
+    }
 </script>
 @endpush

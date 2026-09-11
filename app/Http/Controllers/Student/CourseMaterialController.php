@@ -15,7 +15,7 @@ class CourseMaterialController extends Controller
         $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
 
         $courses = \App\Models\Course::with(['materials' => function($q) {
-            $q->where('is_active', true)->latest();
+            $q->where('is_active', true)->with('folder')->latest();
         }])
         ->whereIn('id', $enrolledIds)
         ->where('is_active', true)
