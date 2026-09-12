@@ -167,7 +167,11 @@ class CourseFileController extends Controller
             abort(404, 'File not found on the server.');
         }
         
-        return response()->download(storage_path('app/' . $courseMaterial->file_path));
+        return response()->download(storage_path('app/' . $courseMaterial->file_path), $courseMaterial->title . '.' . $courseMaterial->file_type, [
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
 
     public function preview(\App\Models\CourseMaterial $courseMaterial)
@@ -176,6 +180,10 @@ class CourseFileController extends Controller
             abort(404, 'File not found on the server.');
         }
         
-        return response()->file(storage_path('app/' . $courseMaterial->file_path));
+        return response()->file(storage_path('app/' . $courseMaterial->file_path), [
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
 }

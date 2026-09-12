@@ -40,9 +40,9 @@
 
     /* Folder Grid */
     .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; padding: 24px; }
-    .folder-card { background: var(--bg-card); border: 1px solid #f59e0b; border-radius: var(--radius-lg); padding: 18px 16px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; }
+    .folder-card { background: var(--bg-card); border: 2px solid var(--border-light); border-radius: var(--radius-lg); padding: 18px 16px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; margin-top: 4px; margin-bottom: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
     .folder-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #f59e0b, #f97316); opacity: 1; }
-    .folder-card:hover { box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.2), 0 4px 6px -4px rgba(245, 158, 11, 0.1); transform: translateY(-6px); border-color: #f97316; }
+    .folder-card:hover { box-shadow: 0 14px 24px -6px rgba(245, 158, 11, 0.2), 0 8px 12px -4px rgba(245, 158, 11, 0.1); transform: translateY(-8px) scale(1.02); border-color: #f59e0b; }
     .folder-ico { font-size: 2.4rem; color: #f59e0b; line-height: 1; }
     .folder-name { font-size: 0.85rem; font-weight: 700; color: var(--text-heading); word-break: break-word; }
     .folder-meta { font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
@@ -122,15 +122,15 @@
         <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-3" style="padding: 16px 24px; border-bottom: 1px solid var(--border-light);">
             <div>
                 @if(isset($activeFolder) && $activeFolder)
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 4px;">
-                        <a href="{{ route('admin.course-files.index') }}" style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-muted); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); text-decoration: none; transition: all 0.2s; border: 1px solid var(--border-light);" title="Go back to all files" onmouseover="this.style.background='var(--primary-light)'; this.style.color='var(--primary)'; this.style.borderColor='var(--primary-subtle)'; this.style.transform='translateX(-2px)';" onmouseout="this.style.background='var(--bg-muted)'; this.style.color='var(--text-secondary)'; this.style.borderColor='var(--border-light)'; this.style.transform='translateX(0)';">
-                            <i class="fas fa-arrow-left"></i>
+                    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 4px;">
+                        <a href="{{ route('admin.course-files.index') }}" class="btn btn-sm" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: var(--text-heading); background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 14px; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#e2e8f0'; this.style.borderColor='#94a3b8'; this.style.transform='translateX(-2px)';" onmouseout="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'; this.style.transform='translateX(0)';">
+                            <i class="fas fa-arrow-left"></i> Back to Folders
                         </a>
-                        <h5 class="card-title mb-0" style="display: flex; align-items: center; gap: 8px;">
+                        <h5 class="card-title mb-0" style="display: flex; align-items: center; gap: 8px; font-size: 1.25rem;">
                             <i class="fas fa-folder-open" style="color:#f59e0b;"></i> {{ $activeFolder->name }}
                         </h5>
                     </div>
-                    <p class="card-subtitle" style="margin-left: 44px;">Viewing files inside this folder</p>
+                    <p class="card-subtitle" style="margin-top: 6px;">Viewing files inside this folder</p>
                 @else
                     <h5 class="card-title"><i class="fas fa-folder-open"></i> Teacher's Uploaded Files</h5>
                     <p class="card-subtitle">All course materials with file types</p>
@@ -285,9 +285,9 @@
                             {{ $folder->creator->name ?? 'Admin' }}
                         </div>
                     </div>
-                    <form action="{{ route('admin.course-folders.destroy', $folder->id) }}" method="POST" class="folder-del-form">
+                    <form action="{{ route('admin.course-folders.destroy', $folder->id) }}" method="POST" class="folder-del-form" onclick="event.stopPropagation();" style="position: absolute; top: 12px; right: 12px; z-index: 10;">
                         @csrf @method('DELETE')
-                        <button type="button" class="action-btn delete admin-folder-delete-btn" style="position: absolute; top: 12px; right: 12px; transition: all 0.2s;" title="Delete Folder">
+                        <button type="button" class="action-btn delete delete-btn" title="Delete Folder" style="opacity: 1 !important; visibility: visible !important;">
                             <i class="fas fa-trash"></i>
                         </button>
                     </form>
