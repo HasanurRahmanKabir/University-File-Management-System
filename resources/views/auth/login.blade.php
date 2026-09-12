@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ $globalSettings['login_subtitle'] ?? 'Welcome to the Official File Management Portal of our University. Sign in to access your dashboard.' }}">
     <title>{{ $globalSettings['login_tab_title'] ?? 'Sign In — University OBE Portal' }}</title>
+    @if(isset($globalSettings['login_favicon']) && $globalSettings['login_favicon'])
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $globalSettings['login_favicon']) }}">
+    @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">

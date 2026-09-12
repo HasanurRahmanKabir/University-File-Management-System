@@ -153,6 +153,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group mt-3 mb-0">
+                        <label class="form-label">Dashboard Favicon</label>
+                        <div class="file-upload-wrapper" style="min-height: 100px;">
+                            <input type="hidden" name="remove_admin_favicon" value="0">
+                            <input type="file" name="admin_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'admin-favicon-preview')">
+                            
+                            <div class="file-upload-placeholder" style="{{ isset($settings['admin_favicon']) && $settings['admin_favicon'] ? 'display:none;' : 'display:block;' }}">
+                                <i class="fas fa-cloud-upload-alt file-upload-icon" style="font-size: 1.5rem;"></i>
+                                <div class="file-upload-text">Upload favicon</div>
+                            </div>
+                            
+                            <div class="preview-container" style="{{ isset($settings['admin_favicon']) && $settings['admin_favicon'] ? 'display:inline-block;' : 'display:none;' }}">
+                                <button type="button" class="remove-logo-btn" onclick="removeLogo(event, this)"><i class="fas fa-times"></i></button>
+                                <img id="admin-favicon-preview" class="preview-logo" src="{{ isset($settings['admin_favicon']) ? asset('storage/' . $settings['admin_favicon']) : '' }}" style="display:block; max-height: 60px;" alt="Preview">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -187,6 +205,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group mt-3 mb-0">
+                        <label class="form-label">Dashboard Favicon</label>
+                        <div class="file-upload-wrapper" style="min-height: 100px;">
+                            <input type="hidden" name="remove_teacher_favicon" value="0">
+                            <input type="file" name="teacher_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'teacher-favicon-preview')">
+                            
+                            <div class="file-upload-placeholder" style="{{ isset($settings['teacher_favicon']) && $settings['teacher_favicon'] ? 'display:none;' : 'display:block;' }}">
+                                <i class="fas fa-cloud-upload-alt file-upload-icon" style="font-size: 1.5rem;"></i>
+                                <div class="file-upload-text">Upload favicon</div>
+                            </div>
+                            
+                            <div class="preview-container" style="{{ isset($settings['teacher_favicon']) && $settings['teacher_favicon'] ? 'display:inline-block;' : 'display:none;' }}">
+                                <button type="button" class="remove-logo-btn" onclick="removeLogo(event, this)"><i class="fas fa-times"></i></button>
+                                <img id="teacher-favicon-preview" class="preview-logo" src="{{ isset($settings['teacher_favicon']) ? asset('storage/' . $settings['teacher_favicon']) : '' }}" style="display:block; max-height: 60px;" alt="Preview">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -218,6 +254,24 @@
                             <div class="preview-container" style="{{ isset($settings['student_logo']) && $settings['student_logo'] ? 'display:inline-block;' : 'display:none;' }}">
                                 <button type="button" class="remove-logo-btn" onclick="removeLogo(event, this)"><i class="fas fa-times"></i></button>
                                 <img id="student-logo-preview" class="preview-logo" src="{{ isset($settings['student_logo']) ? asset('storage/' . $settings['student_logo']) : '' }}" style="display:block;" alt="Preview">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3 mb-0">
+                        <label class="form-label">Dashboard Favicon</label>
+                        <div class="file-upload-wrapper" style="min-height: 100px;">
+                            <input type="hidden" name="remove_student_favicon" value="0">
+                            <input type="file" name="student_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'student-favicon-preview')">
+                            
+                            <div class="file-upload-placeholder" style="{{ isset($settings['student_favicon']) && $settings['student_favicon'] ? 'display:none;' : 'display:block;' }}">
+                                <i class="fas fa-cloud-upload-alt file-upload-icon" style="font-size: 1.5rem;"></i>
+                                <div class="file-upload-text">Upload favicon</div>
+                            </div>
+                            
+                            <div class="preview-container" style="{{ isset($settings['student_favicon']) && $settings['student_favicon'] ? 'display:inline-block;' : 'display:none;' }}">
+                                <button type="button" class="remove-logo-btn" onclick="removeLogo(event, this)"><i class="fas fa-times"></i></button>
+                                <img id="student-favicon-preview" class="preview-logo" src="{{ isset($settings['student_favicon']) ? asset('storage/' . $settings['student_favicon']) : '' }}" style="display:block; max-height: 60px;" alt="Preview">
                             </div>
                         </div>
                     </div>
@@ -265,6 +319,24 @@
                                     <div class="preview-container" style="{{ isset($settings['login_logo']) && $settings['login_logo'] ? 'display:inline-block;' : 'display:none;' }}">
                                         <button type="button" class="remove-logo-btn" onclick="removeLogo(event, this)"><i class="fas fa-times"></i></button>
                                         <img id="login-logo-preview" class="preview-logo" src="{{ isset($settings['login_logo']) ? asset('storage/' . $settings['login_logo']) : '' }}" style="display:block;" alt="Preview">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3 mb-0">
+                                <label class="form-label">Login Page Favicon</label>
+                                <div class="file-upload-wrapper" style="min-height: 100px;">
+                                    <input type="hidden" name="remove_login_favicon" value="0">
+                                    <input type="file" name="login_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'login-favicon-preview')">
+                                    
+                                    <div class="file-upload-placeholder" style="{{ isset($settings['login_favicon']) && $settings['login_favicon'] ? 'display:none;' : 'display:block;' }}">
+                                        <i class="fas fa-cloud-upload-alt file-upload-icon" style="font-size: 1.5rem;"></i>
+                                        <div class="file-upload-text">Upload favicon for login screen</div>
+                                    </div>
+                                    
+                                    <div class="preview-container" style="{{ isset($settings['login_favicon']) && $settings['login_favicon'] ? 'display:inline-block;' : 'display:none;' }}">
+                                        <button type="button" class="remove-logo-btn" onclick="removeLogo(event, this)"><i class="fas fa-times"></i></button>
+                                        <img id="login-favicon-preview" class="preview-logo" src="{{ isset($settings['login_favicon']) ? asset('storage/' . $settings['login_favicon']) : '' }}" style="display:block; max-height: 60px;" alt="Preview">
                                     </div>
                                 </div>
                             </div>
