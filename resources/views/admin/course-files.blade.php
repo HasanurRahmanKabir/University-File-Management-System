@@ -539,15 +539,30 @@
     function loadAdminFolders(courseId, selectId) {
         const select = document.getElementById(selectId);
         if (!select) return;
-        select.innerHTML = '<option value="">📂 Root (No Folder)</option>';
-        if (!courseId) return;
-        const courseFolders = adminAllFolders[courseId] || [];
-        courseFolders.forEach(function(folder) {
-            const opt = document.createElement('option');
-            opt.value = folder.id;
-            opt.textContent = '📁 ' + folder.name;
-            select.appendChild(opt);
-        });
+        
+        const ts = select.tomselect;
+        if (ts) {
+            ts.clearOptions();
+            ts.addOption({value: '', text: '📂 Root (No Folder)'});
+            if (courseId) {
+                const courseFolders = adminAllFolders[courseId] || [];
+                courseFolders.forEach(function(folder) {
+                    ts.addOption({value: folder.id, text: '📁 ' + folder.name});
+                });
+            }
+            ts.refreshOptions(false);
+            ts.setValue('');
+        } else {
+            select.innerHTML = '<option value="">📂 Root (No Folder)</option>';
+            if (!courseId) return;
+            const courseFolders = adminAllFolders[courseId] || [];
+            courseFolders.forEach(function(folder) {
+                const opt = document.createElement('option');
+                opt.value = folder.id;
+                opt.textContent = '📁 ' + folder.name;
+                select.appendChild(opt);
+            });
+        }
     }
 </script>
 
@@ -564,6 +579,7 @@
             sortField: { field: "text", direction: "asc" }
         };
         const tsConfigCourse = { ...tsConfig, wrapperClass: 'ts-wrapper form-select ts-course' };
+        const tsConfigFolder = { ...tsConfig, wrapperClass: 'ts-wrapper form-select ts-folder' };
 
         if(document.getElementById('add_teacher')) {
             let addT = new TomSelect("#add_teacher", tsConfig);
@@ -586,6 +602,17 @@
             let si = window.editCourseSelect.dropdown.querySelector('input');
             if(si) si.setAttribute('placeholder', 'Search course...');
             window.editCourseSelect.on('change', function(val) { loadAdminFolders(val, 'edit_folder_id'); });
+        }
+        
+        if(document.getElementById('add_folder_id')) {
+            let ts = new TomSelect("#add_folder_id", tsConfigFolder);
+            let si = ts.dropdown.querySelector('input');
+            if(si) si.setAttribute('placeholder', 'Search folder...');
+        }
+        if(document.getElementById('edit_folder_id')) {
+            let ts = new TomSelect("#edit_folder_id", tsConfigFolder);
+            let si = ts.dropdown.querySelector('input');
+            if(si) si.setAttribute('placeholder', 'Search folder...');
         }
         
         if(document.getElementById('inline_create_course')) {
@@ -618,7 +645,11 @@
                 loadAdminFolders(courseId, 'edit_folder_id');
                 setTimeout(function() {
                     const fs = document.getElementById('edit_folder_id');
-                    if(fs && folderId) fs.value = folderId;
+                    if (fs && fs.tomselect) {
+                        fs.tomselect.setValue(folderId || '');
+                    } else if (fs && folderId) {
+                        fs.value = folderId;
+                    }
                 }, 50);
 
                 let filePath = this.getAttribute('data-filepath');
@@ -735,7 +766,11 @@
                     // Wait for folders to load via AJAX, then select active folder
                     setTimeout(() => {
                         const folderSelect = document.getElementById('add_folder_id');
-                        if (folderSelect) folderSelect.value = "{{ $activeFolder->id }}";
+                        if (folderSelect && folderSelect.tomselect) {
+                            folderSelect.tomselect.setValue("{{ $activeFolder->id }}");
+                        } else if (folderSelect) {
+                            folderSelect.value = "{{ $activeFolder->id }}";
+                        }
                     }, 500);
                 }
 

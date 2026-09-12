@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CourseMaterialController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $teacherDepartmentId = Auth::user()->department_id;
         $activeSemesterIds = \App\Models\Semester::running($teacherDepartmentId)->pluck('id')->toArray();
@@ -24,11 +24,17 @@ class CourseMaterialController extends Controller
 
         $courseIds = $courses->pluck('id');
 
-        // Load materials (paginated) with folder info
-        $materials = CourseMaterial::with(['course', 'folder'])
-            ->whereIn('course_id', $courseIds)
-            ->latest()
-            ->paginate(15);
+        $query = CourseMaterial::with(['course', 'folder'])
+            ->whereIn('course_id', $courseIds);
+
+        if ($request->has('folder_id') && $request->folder_id != '') {
+            $query->where('folder_id', $request->folder_id);
+            $activeFolder = CourseFolder::find($request->folder_id);
+        } else {
+            $activeFolder = null;
+        }
+
+        $materials = $query->latest()->paginate(15)->appends($request->all());
 
         // Load folders grouped by course_id for the sidebar/dropdowns
         $folders = CourseFolder::whereIn('course_id', $courseIds)
@@ -36,7 +42,7 @@ class CourseMaterialController extends Controller
             ->get()
             ->groupBy('course_id');
 
-        return view('teacher.uploadmaterials', compact('materials', 'courses', 'folders'));
+        return view('teacher.uploadmaterials', compact('materials', 'courses', 'folders', 'activeFolder'));
     }
 
     public function store(Request $request)

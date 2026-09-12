@@ -158,7 +158,10 @@
                 {{-- Folder List --}}
                 <div id="folderListContainer" style="max-height: 320px; overflow-y: auto;">
                     @forelse($folders->flatten() as $folder)
-                    <div class="folder-item">
+                    @php
+                        $isActive = isset($activeFolder) && $activeFolder->id == $folder->id;
+                    @endphp
+                    <div class="folder-item" style="cursor: pointer; {{ $isActive ? 'background: var(--primary-light); border-color: var(--primary);' : '' }}" onclick="window.location.href='{{ route('teacher.course-materials.index', ['folder_id' => $folder->id]) }}'">
                         <div class="folder-item-name">
                             <i class="fas fa-folder"></i>
                             <div>
@@ -166,7 +169,7 @@
                                 <div class="folder-item-count">{{ $folder->course->course_code ?? 'N/A' }} · {{ $folder->materials_count }} file{{ $folder->materials_count !== 1 ? 's' : '' }}</div>
                             </div>
                         </div>
-                        <form action="{{ route('teacher.course-folders.destroy', $folder->id) }}" method="POST" class="folder-del-form">
+                        <form action="{{ route('teacher.course-folders.destroy', $folder->id) }}" method="POST" class="folder-del-form" onclick="event.stopPropagation();">
                             @csrf @method('DELETE')
                             <button type="button" class="folder-del-btn folder-delete-btn" title="Delete Folder">
                                 <i class="fas fa-trash-alt" style="font-size:.7rem;"></i>
@@ -188,8 +191,17 @@
     {{-- RIGHT COLUMN: File List --}}
     <div class="col-xl-7 col-lg-7 col-12">
         <div class="d-card" style="animation-delay:.12s">
-            <div class="d-card-header">
-                <div class="d-card-title"><div class="d-card-ico"><i class="fas fa-folder-open"></i></div>Manage Uploaded Materials</div>
+            <div class="d-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                @if(isset($activeFolder) && $activeFolder)
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <a href="{{ route('teacher.course-materials.index') }}" class="btn btn-sm" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: var(--text-heading); background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 14px; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
+                            <i class="fas fa-arrow-left"></i> All Files
+                        </a>
+                        <div class="d-card-title m-0"><div class="d-card-ico"><i class="fas fa-folder-open" style="color:#f59e0b;"></i></div>{{ $activeFolder->name }}</div>
+                    </div>
+                @else
+                    <div class="d-card-title m-0"><div class="d-card-ico"><i class="fas fa-folder-open"></i></div>Manage Uploaded Materials</div>
+                @endif
                 <span class="badge b-green" style="padding:5px 12px;">{{ $materials->total() }} file{{ $materials->total() !== 1 ? 's' : '' }}</span>
             </div>
             <div class="d-card-body p0">
@@ -393,16 +405,30 @@
     function loadFolders(courseId, selectId) {
         const select = document.getElementById(selectId);
         if (!select) return;
-        // Clear previous options
-        select.innerHTML = '<option value="">📂 Root (No Folder)</option>';
-        if (!courseId) return;
-        const courseFolders = allFoldersData[courseId] || [];
-        courseFolders.forEach(function(folder) {
-            const opt = document.createElement('option');
-            opt.value = folder.id;
-            opt.textContent = '📁 ' + folder.name;
-            select.appendChild(opt);
-        });
+
+        const ts = select.tomselect;
+        if (ts) {
+            ts.clearOptions();
+            ts.addOption({value: '', text: '📂 Root (No Folder)'});
+            if (courseId) {
+                const courseFolders = allFoldersData[courseId] || [];
+                courseFolders.forEach(function(folder) {
+                    ts.addOption({value: folder.id, text: '📁 ' + folder.name});
+                });
+            }
+            ts.refreshOptions(false);
+            ts.setValue('');
+        } else {
+            select.innerHTML = '<option value="">📂 Root (No Folder)</option>';
+            if (!courseId) return;
+            const courseFolders = allFoldersData[courseId] || [];
+            courseFolders.forEach(function(folder) {
+                const opt = document.createElement('option');
+                opt.value = folder.id;
+                opt.textContent = '📁 ' + folder.name;
+                select.appendChild(opt);
+            });
+        }
     }
 </script>
 
@@ -440,6 +466,19 @@
         editCourseSelect.on('change', function(val) {
             loadFolders(val, 'edit_folder_id');
         });
+
+        // Initialize TomSelect for folder dropdowns
+        if (document.getElementById('add_folder_id')) {
+            let addFolderSelect = new TomSelect('#add_folder_id', tsConfig);
+            let searchInputFolderAdd = addFolderSelect.dropdown.querySelector('input');
+            if (searchInputFolderAdd) searchInputFolderAdd.setAttribute('placeholder', 'Search folder...');
+        }
+        
+        if (document.getElementById('edit_folder_id')) {
+            let editFolderSelect = new TomSelect('#edit_folder_id', tsConfig);
+            let searchInputFolderEdit = editFolderSelect.dropdown.querySelector('input');
+            if (searchInputFolderEdit) searchInputFolderEdit.setAttribute('placeholder', 'Search folder...');
+        }
 
         let tsConfigNoSearch = {
             create: false,
@@ -515,6 +554,29 @@
                 });
             });
         });
+
+        // Pre-select course and folder if we are viewing a specific folder
+        @if(isset($activeFolder) && $activeFolder)
+            setTimeout(() => {
+                if (typeof addCourseSelect !== 'undefined') {
+                    addCourseSelect.setValue("{{ $activeFolder->course_id }}");
+                    
+                    // Wait for folders to load via AJAX, then select active folder
+                    setTimeout(() => {
+                        const folderSelect = document.getElementById('add_folder_id');
+                        if (folderSelect && folderSelect.tomselect) {
+                            folderSelect.tomselect.setValue("{{ $activeFolder->id }}");
+                        } else if (folderSelect) {
+                            folderSelect.value = "{{ $activeFolder->id }}";
+                        }
+                    }, 500);
+                }
+                
+                // Pre-select Course for Create Folder form
+                const folderCourseSelect = document.getElementById('folder_course_id');
+                if (folderCourseSelect) folderCourseSelect.value = "{{ $activeFolder->course_id }}";
+            }, 200);
+        @endif
     });
 
     function populateEditModal(id, title, courseId, isActive, folderId) {
@@ -531,7 +593,11 @@
         loadFolders(courseId, 'edit_folder_id');
         setTimeout(function() {
             const folderSelect = document.getElementById('edit_folder_id');
-            if(folderSelect && folderId) folderSelect.value = folderId;
+            if(folderSelect && folderSelect.tomselect) {
+                folderSelect.tomselect.setValue(folderId || '');
+            } else if(folderSelect && folderId) {
+                folderSelect.value = folderId;
+            }
         }, 50);
 
         if(editPrivacySelect) {
