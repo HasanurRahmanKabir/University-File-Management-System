@@ -123,7 +123,7 @@
             <div>
                 @if(isset($activeFolder) && $activeFolder)
                     <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 4px;">
-                        <a href="{{ route('admin.course-files.index') }}" class="btn btn-sm" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: var(--text-heading); background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 14px; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#e2e8f0'; this.style.borderColor='#94a3b8'; this.style.transform='translateX(-2px)';" onmouseout="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'; this.style.transform='translateX(0)';">
+                        <a href="{{ route('admin.course-files.index', ['tab' => 'folders']) }}" class="btn btn-sm" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; color: var(--text-heading); background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 14px; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#e2e8f0'; this.style.borderColor='#94a3b8'; this.style.transform='translateX(-2px)';" onmouseout="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1'; this.style.transform='translateX(0)';">
                             <i class="fas fa-arrow-left"></i> Back to Folders
                         </a>
                         <h5 class="card-title mb-0" style="display: flex; align-items: center; gap: 8px; font-size: 1.25rem;">
@@ -716,9 +716,34 @@
             });
         }
 
-        // Restore active tab if redirected back with error
+        // Restore active tab if redirected back with error or from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('tab') === 'folders') {
+            switchTab('folders');
+        }
         @if(session('active_tab') === 'folders')
         switchTab('folders');
+        @endif
+
+        // Pre-select course and folder if we are viewing a specific folder
+        @if(isset($activeFolder) && $activeFolder)
+            setTimeout(() => {
+                // Pre-select Course for Upload Modal
+                if (document.getElementById('add_course') && document.getElementById('add_course').tomselect) {
+                    document.getElementById('add_course').tomselect.setValue("{{ $activeFolder->course_id }}");
+                    
+                    // Wait for folders to load via AJAX, then select active folder
+                    setTimeout(() => {
+                        const folderSelect = document.getElementById('add_folder_id');
+                        if (folderSelect) folderSelect.value = "{{ $activeFolder->id }}";
+                    }, 500);
+                }
+
+                // Pre-select Course for Create Folder Modal
+                if (document.getElementById('modal_create_course') && document.getElementById('modal_create_course').tomselect) {
+                    document.getElementById('modal_create_course').tomselect.setValue("{{ $activeFolder->course_id }}");
+                }
+            }, 200);
         @endif
     });
 </script>
