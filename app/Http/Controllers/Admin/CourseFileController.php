@@ -12,6 +12,34 @@ use Illuminate\Support\Facades\Storage;
 
 class CourseFileController extends Controller
 {
+    private const ALLOWED_EXTENSIONS = [
+        'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'csv',
+        'zip', 'rar', '7z', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'txt',
+    ];
+
+    /** Extensions that may contain executable scripts — never inline-preview */
+    private const UNSAFE_PREVIEW_EXTENSIONS = ['svg', 'html', 'htm', 'xml', 'js'];
+
+    private function fileValidationRule(bool $required): array
+    {
+        return [
+            $required ? 'required' : 'nullable',
+            'file',
+            'max:20480',
+            'mimes:' . implode(',', self::ALLOWED_EXTENSIONS),
+        ];
+    }
+
+    private function assertAllowedExtension(\Illuminate\Http\UploadedFile $file): void
+    {
+        $ext = strtolower($file->getClientOriginalExtension());
+        if (!in_array($ext, self::ALLOWED_EXTENSIONS, true)) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'file' => 'File type ".' . $ext . '" is not allowed. Allowed: PDF, DOC/DOCX, PPT/PPTX, XLS, ZIP, images (JPG/PNG/GIF/WEBP), TXT. SVG is blocked for security.',
+            ]);
+        }
+    }
+
     public function index(Request $request)
     {
         $teachers = User::where('role', 'teacher')->where('is_active', true)->orderBy('name')->get();
@@ -217,7 +245,7 @@ class CourseFileController extends Controller
             'folder_id'   => 'nullable|exists:course_folders,id',
             'uploaded_by' => 'nullable|exists:users,id',
             'title'       => 'required|string|max:255',
-            'file'        => 'required|file|max:20480',
+            'file'        => $this->fileValidationRule(true),
         ]);
 
         if (!empty($validated['folder_id'])) {
@@ -228,6 +256,7 @@ class CourseFileController extends Controller
         }
 
         if ($request->hasFile('file')) {
+            $this->assertAllowedExtension($request->file('file'));
             $path = $request->file('file')->store('course_materials', 'local');
             $validated['file_path'] = $path;
             $validated['file_type'] = $request->file('file')->getClientOriginalExtension();
@@ -265,7 +294,7 @@ class CourseFileController extends Controller
             'folder_id'   => 'nullable|exists:course_folders,id',
             'uploaded_by' => 'nullable|exists:users,id',
             'title'       => 'required|string|max:255',
-            'file'        => 'nullable|file|max:20480',
+            'file'        => $this->fileValidationRule(false),
         ]);
 
         if (!empty($validated['folder_id'])) {
@@ -276,6 +305,7 @@ class CourseFileController extends Controller
         }
 
         if ($request->hasFile('file')) {
+            $this->assertAllowedExtension($request->file('file'));
             if ($courseMaterial->file_path && Storage::disk('local')->exists($courseMaterial->file_path)) {
                 Storage::disk('local')->delete($courseMaterial->file_path);
             }
@@ -333,10 +363,16 @@ class CourseFileController extends Controller
             abort(404, 'File not found on the server.');
         }
 
+        $ext = strtolower($courseMaterial->file_type ?? pathinfo($courseMaterial->file_path, PATHINFO_EXTENSION));
+        if (in_array($ext, self::UNSAFE_PREVIEW_EXTENSIONS, true)) {
+            abort(403, 'This file type cannot be previewed inline for security reasons. Please download it instead.');
+        }
+
         return response()->file(storage_path('app/' . $courseMaterial->file_path), [
             'Cache-Control' => 'no-cache, no-store, must-revalidate',
             'Pragma' => 'no-cache',
             'Expires' => '0',
+            'X-Content-Type-Options' => 'nosniff',
         ]);
     }
 

@@ -1099,7 +1099,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <input type="file" id="upload_file_input" name="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" required style="z-index:10; cursor:pointer;">
+                            <input type="file" id="upload_file_input" name="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" required style="z-index:10; cursor:pointer;" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.zip,.rar,.7z,.jpg,.jpeg,.png,.gif,.webp,.txt">
                         </div>
                     </div>
                     <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
@@ -1226,7 +1226,7 @@
                         <div class="file-info-bar mb-2">
                             <i class="fas fa-file-alt" id="edit_file_icon"></i> Current: <span id="edit_file_name"></span>
                         </div>
-                        <input type="file" name="file" class="form-input" style="padding:8px;">
+                        <input type="file" name="file" class="form-input" style="padding:8px;" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.zip,.rar,.7z,.jpg,.jpeg,.png,.gif,.webp,.txt">
                         <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">Leave empty if you don't want to change the file.</small>
                     </div>
                     <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
