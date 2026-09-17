@@ -1,10 +1,8 @@
-@extends('layouts.student')
+<?php $__env->startSection('title', 'Dashboard — StudentHub OBE'); ?>
+<?php $__env->startSection('page-title', 'Dashboard'); ?>
+<?php $__env->startSection('breadcrumb', 'Dashboard'); ?>
 
-@section('title', 'Dashboard — StudentHub OBE')
-@section('page-title', 'Dashboard')
-@section('breadcrumb', 'Dashboard')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     /* Full-value course table — scroll on small screens, no ellipsis truncation */
     .dash-course-tbl {
@@ -33,19 +31,19 @@
     .dash-course-tbl .cell-muted { color: var(--tx-s); }
     .t-wrap { max-width: 100%; }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <!-- Hero -->
 <div class="hero-banner">
     <div class="hero-inner">
         <div>
             <div class="hero-eyebrow"><i class="fas fa-circle" style="font-size:.4rem;color:#22c55e;"></i> Active Session</div>
-            <div class="hero-greeting">Welcome back, <span>{{ Auth::user()->name ?? 'Student' }}</span> 👋</div>
+            <div class="hero-greeting">Welcome back, <span><?php echo e(Auth::user()->name ?? 'Student'); ?></span> 👋</div>
             <div class="hero-sub">Here's an overview of your academic progress for today.</div>
         </div>
         <div class="hero-right">
-            <div class="hero-pill"><i class="fas fa-calendar-check"></i> Semester: {{ Auth::user()->semester ?? 'Not Assigned' }}</div>
+            <div class="hero-pill"><i class="fas fa-calendar-check"></i> Semester: <?php echo e(Auth::user()->semester ?? 'Not Assigned'); ?></div>
         </div>
     </div>
 </div>
@@ -57,15 +55,15 @@
             <div class="stat-lbl">Enrolled Courses</div>
             <div class="stat-ico ico-blue"><i class="fas fa-book-open"></i></div>
         </div>
-        <div class="stat-val" data-count="{{ $stats['courses'] }}">{{ str_pad($stats['courses'], 2, '0', STR_PAD_LEFT) }}</div>
-        <div class="stat-sub">{{ Auth::user()->semester ?? 'Current' }} Semester</div>
+        <div class="stat-val" data-count="<?php echo e($stats['courses']); ?>"><?php echo e(str_pad($stats['courses'], 2, '0', STR_PAD_LEFT)); ?></div>
+        <div class="stat-sub"><?php echo e(Auth::user()->semester ?? 'Current'); ?> Semester</div>
     </div>
     <div class="stat-card sc-green" style="animation-delay:.10s">
         <div class="stat-header">
             <div class="stat-lbl">New Files Uploaded</div>
             <div class="stat-ico ico-green"><i class="fas fa-file-arrow-up"></i></div>
         </div>
-        <div class="stat-val" data-count="{{ $stats['materials'] }}">{{ str_pad($stats['materials'], 2, '0', STR_PAD_LEFT) }}</div>
+        <div class="stat-val" data-count="<?php echo e($stats['materials']); ?>"><?php echo e(str_pad($stats['materials'], 2, '0', STR_PAD_LEFT)); ?></div>
         <div class="stat-sub">By your teachers</div>
     </div>
     <div class="stat-card sc-orange" style="animation-delay:.15s">
@@ -73,7 +71,7 @@
             <div class="stat-lbl">Class Notices</div>
             <div class="stat-ico ico-orange"><i class="fas fa-bullhorn"></i></div>
         </div>
-        <div class="stat-val" data-count="{{ $stats['notices'] }}">{{ str_pad($stats['notices'], 2, '0', STR_PAD_LEFT) }}</div>
+        <div class="stat-val" data-count="<?php echo e($stats['notices']); ?>"><?php echo e(str_pad($stats['notices'], 2, '0', STR_PAD_LEFT)); ?></div>
         <div class="stat-sub">From your teachers</div>
     </div>
 </div>
@@ -104,7 +102,7 @@
                 box-shadow: 0 2px 8px rgba(37,99,235,0.15);
             }
         </style>
-        <a href="{{ route('student.courses.index') }}" class="btn-ghost btn-view-all">
+        <a href="<?php echo e(route('student.courses.index')); ?>" class="btn-ghost btn-view-all">
             View All <i class="fas fa-arrow-right" style="font-size:.65rem; margin-left: 3px;"></i>
         </a>
     </div>
@@ -121,15 +119,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($recentCourses as $course)
+                    <?php $__empty_1 = true; $__currentLoopData = $recentCourses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td><span class="t-code">{{ $course->course_code }}</span></td>
-                        <td><span class="t-name">{{ $course->title ?? $course->course_name ?? 'Course' }}</span></td>
-                        <td class="cell-muted">{{ optional($course->teacher)->name ?? 'TBA' }}</td>
-                        <td class="cell-muted">{{ optional($course->created_at)->format('Y') ?? 'N/A' }}</td>
-                        <td><span class="badge b-blue">{{ Auth::user()->semester ?? 'Current Semester' }}</span></td>
+                        <td><span class="t-code"><?php echo e($course->course_code); ?></span></td>
+                        <td><span class="t-name"><?php echo e($course->title ?? $course->course_name ?? 'Course'); ?></span></td>
+                        <td class="cell-muted"><?php echo e(optional($course->teacher)->name ?? 'TBA'); ?></td>
+                        <td class="cell-muted"><?php echo e(optional($course->created_at)->format('Y') ?? 'N/A'); ?></td>
+                        <td><span class="badge b-blue"><?php echo e(Auth::user()->semester ?? 'Current Semester'); ?></span></td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="5" style="padding: 0; border-bottom: none;">
                             <div class="empty-state">
@@ -139,15 +137,15 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     // Animated counters
     document.querySelectorAll('.stat-val[data-count]').forEach(el=>{
@@ -168,4 +166,6 @@
         obs.observe(el);
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.student', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/student/dashboard.blade.php ENDPATH**/ ?>
