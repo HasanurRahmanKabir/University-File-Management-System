@@ -257,4 +257,19 @@ class CourseMaterialController extends Controller
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
+
+    public function downloadFolder(CourseFolder $folder, \App\Services\CourseFolderZipService $zipService)
+    {
+        $user = Auth::user();
+        $enrolledIds = $user->enrolledCourses()
+            ->wherePivot('status', 'active')
+            ->pluck('courses.id')
+            ->toArray();
+
+        if (!in_array($folder->course_id, $enrolledIds)) {
+            abort(403, 'Unauthorized access. You are not enrolled in this course.');
+        }
+
+        return $zipService->download($folder, true);
+    }
 }

@@ -505,7 +505,7 @@
             </a>
         </div>
         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createFolderModal"
-            @if($activeCourse) onclick="prefillFolderCourse({{ $activeCourse->id }})" @endif>
+            @if($activeCourse) onclick="prefillFolderCourse({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }}, @js($activeFolder?->name))" @endif>
             <i class="fas fa-folder-plus"></i> New Folder
         </button>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal"
@@ -645,8 +645,14 @@
                 <span class="sep">/</span>
                 @if($activeFolder)
                     <a href="{{ route('admin.course-files.index', ['course_id' => $activeCourse->id]) }}">{{ $activeCourse->course_code }}</a>
-                    <span class="sep">/</span>
-                    <span class="current"><i class="fas fa-folder-open" style="color:#f59e0b;"></i> {{ $activeFolder->name }}</span>
+                    @foreach(($folderBreadcrumbs ?? collect()) as $crumb)
+                        <span class="sep">/</span>
+                        @if($loop->last)
+                            <span class="current"><i class="fas fa-folder-open" style="color:#f59e0b;"></i> {{ $crumb->name }}</span>
+                        @else
+                            <a href="{{ route('admin.course-files.index', ['folder_id' => $crumb->id]) }}">{{ $crumb->name }}</a>
+                        @endif
+                    @endforeach
                 @else
                     <span class="current">{{ $activeCourse->course_code }}</span>
                 @endif
@@ -672,7 +678,7 @@
                 @endif
                 <div class="search-box position-relative">
                     <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" placeholder="Search files here..." value="{{ request('search') }}" style="padding-right: 30px;">
+                <input type="text" name="search" placeholder="Search folders & files..." value="{{ request('search') }}" style="padding-right: 30px;">
                     @if(request('search'))
                     <button type="button" class="btn-clear-search"
                         onclick="window.location.href='{{ route('admin.course-files.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}'"
@@ -682,6 +688,11 @@
                 @endif
             </div>
             <button type="submit" class="btn btn-primary" title="Search"><i class="fas fa-search"></i></button>
+            @if($activeFolder)
+                <a href="{{ route('admin.course-folders.download', $activeFolder->id) }}" class="btn btn-secondary" title="Download this folder as ZIP" style="height:40px; display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
+                    <i class="fas fa-file-zipper"></i> Download ZIP
+                </a>
+            @endif
         </form>
     </div>
 
@@ -701,13 +712,20 @@
                 <tbody>
                     {{-- Parent link when inside folder --}}
                     @if($activeFolder)
-                    <tr style="cursor:pointer;" onclick="window.location.href='{{ route('admin.course-files.index', ['course_id' => $activeCourse->id]) }}'">
+                    @php
+                        $backUrl = $activeFolder->parent_id
+                            ? route('admin.course-files.index', ['folder_id' => $activeFolder->parent_id])
+                            : route('admin.course-files.index', ['course_id' => $activeCourse->id]);
+                        $backLabel = $activeFolder->parent_id ? '.. (Back to parent folder)' : '.. (Back to course root)';
+                        $backSub = $activeFolder->parent_id ? 'Return to parent folder' : 'Return to folders & root files';
+                    @endphp
+                    <tr style="cursor:pointer;" onclick="window.location.href='{{ $backUrl }}'">
                         <td colspan="6">
                             <div class="fb-name-cell">
                                 <div class="fb-ico folder"><i class="fas fa-level-up-alt"></i></div>
                                 <div>
-                                    <div class="user-name">.. (Back to course root)</div>
-                                    <div class="user-sub">Return to folders &amp; root files</div>
+                                    <div class="user-name">{{ $backLabel }}</div>
+                                    <div class="user-sub">{{ $backSub }}</div>
                                 </div>
                             </div>
                         </td>
@@ -723,7 +741,13 @@
                                 <div class="fb-ico folder"><i class="fas fa-folder"></i></div>
                                 <div>
                                     <div class="user-name">{{ $folder->name }}</div>
-                                    <div class="user-sub">{{ $folder->materials_count }} file{{ $folder->materials_count !== 1 ? 's' : '' }} · by {{ $folder->creator->name ?? 'Admin' }}</div>
+                                    <div class="user-sub">
+                                        {{ $folder->materials_count }} file{{ $folder->materials_count !== 1 ? 's' : '' }}
+                                        @if(($folder->children_count ?? 0) > 0)
+                                            · {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
+                                        @endif
+                                        · by {{ $folder->creator->name ?? 'Admin' }}
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -736,6 +760,12 @@
                                 <a href="{{ route('admin.course-files.index', ['folder_id' => $folder->id]) }}" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);" title="Open">
                                     <i class="fas fa-folder-open"></i>
                                 </a>
+                                <button type="button" class="action-btn js-edit-folder" title="Rename Folder"
+                                    data-bs-toggle="modal" data-bs-target="#editFolderModal"
+                                    data-id="{{ $folder->id }}"
+                                    data-folder-name="{{ e($folder->name) }}">
+                                    <i class="fas fa-pen"></i>
+                                </button>
                                 <form action="{{ route('admin.course-folders.destroy', $folder->id) }}" method="POST" class="m-0 p-0 folder-del-form d-flex align-items-center">
                                     @csrf @method('DELETE')
                                     <button type="button" class="action-btn delete folder-delete-btn" title="Delete Folder"><i class="fas fa-trash"></i></button>
@@ -810,27 +840,40 @@
                         </td>
                     </tr>
                     @empty
-                        @if($browserFolders->isEmpty())
+                        @if(request('search') && $browserFolders->isEmpty())
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="empty-state">
+                                    <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                                    <h6 class="text-heading fw-bold">No folders or files match “{{ request('search') }}”</h6>
+                                    <p class="text-muted small">Try another keyword or clear search.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @elseif(!request('search') && $browserFolders->isEmpty())
                         <tr>
                             <td colspan="6" class="text-center py-5">
                                 <div class="empty-state">
                                     <i class="fas fa-folder-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                                    @if(request('search'))
-                                        <h6 class="text-heading fw-bold">No files match “{{ request('search') }}”</h6>
-                                        <p class="text-muted small">Try another keyword in this course.</p>
-                                    @elseif($activeFolder)
+                                    @if($activeFolder)
                                         <h6 class="text-heading fw-bold">This folder is empty</h6>
-                                        <p class="text-muted small">Upload a material into this folder to get started.</p>
-                                        <button class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#uploadModal"
-                                            onclick="prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id }})">
-                                            <i class="fas fa-cloud-upload-alt"></i> Upload Here
-                                        </button>
+                                        <p class="text-muted small">Create a subfolder or upload a material here.</p>
+                                        <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+                                            <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#createFolderModal"
+                                                onclick="prefillFolderCourse({{ $activeCourse->id }}, {{ $activeFolder->id }}, @js($activeFolder->name))">
+                                                <i class="fas fa-folder-plus"></i> New Folder
+                                            </button>
+                                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal"
+                                                onclick="prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id }})">
+                                                <i class="fas fa-cloud-upload-alt"></i> Upload Here
+                                            </button>
+                                        </div>
                                     @else
                                         <h6 class="text-heading fw-bold">No materials in this course yet</h6>
                                         <p class="text-muted small">Create a folder or upload files directly to the course root.</p>
-                                        <div class="d-flex justify-content-center gap-2 mt-3">
+                                        <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
                                             <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#createFolderModal"
-                                                onclick="prefillFolderCourse({{ $activeCourse->id }})">
+                                                onclick="prefillFolderCourse({{ $activeCourse->id }}, null, null)">
                                                 <i class="fas fa-folder-plus"></i> New Folder
                                             </button>
                                             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal"
@@ -1076,31 +1119,61 @@
             <div class="modal-head gradient">
                 <h5 class="modal-title"><i class="fas fa-folder-plus"></i> Create New Folder</h5>
                 <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
-                        </div>
+            </div>
             <div class="modal-body-content">
-                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 18px; line-height: 1.5;">
-                    Folders belong to one course. Students and teachers will see them inside that course only.
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 18px; line-height: 1.5;" id="createFolderHint">
+                    Folders belong to one course. You can create nested folders inside another folder.
                 </p>
-                    <form action="{{ route('admin.course-folders.store') }}" method="POST">
-                        @csrf
+                <form action="{{ route('admin.course-folders.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="parent_id" id="modal_create_parent" value="">
                     <div class="form-group">
                         <label class="form-label">Course <span class="text-danger">*</span></label>
                         <select name="course_id" id="modal_create_course" class="form-select" required placeholder="Select Course">
                             <option value="">Select Course</option>
-                                @foreach($courses as $course)
-                                    <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    <div class="form-group">
+                            @foreach($courses as $course)
+                                <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group" id="createFolderParentRow" style="display:none;">
+                        <label class="form-label">Parent Folder</label>
+                        <input type="text" class="form-input" id="modal_create_parent_label" readonly style="background:#f8fafc;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
                         <label class="form-label">Folder Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-input" placeholder="e.g. Lecture Notes, Week 1, Assignments..." required>
-                        </div>
+                        <input type="text" name="name" class="form-input" placeholder="e.g. Lecture Notes, Week 1, Assignments..." required maxlength="100">
+                    </div>
                     <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
                         <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155;" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" style="padding:10px 32px;"><i class="fas fa-folder-plus"></i> Create Folder</button>
-                        </div>
-                    </form>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT FOLDER -->
+<div class="modal fade" id="editFolderModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+        <div class="modal-content premium">
+            <div class="modal-head dark-grad">
+                <h5 class="modal-title"><i class="fas fa-pen"></i> Rename Folder</h5>
+                <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body-content">
+                <form id="editFolderForm" method="POST" action="#">
+                    @csrf @method('PUT')
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Folder Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="edit_folder_name" class="form-input" required maxlength="100">
+                    </div>
+                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                        <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155;" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="padding:10px 32px;"><i class="fas fa-check"></i> Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1223,7 +1296,7 @@
             if (courseId) {
                 const courseFolders = adminAllFolders[courseId] || [];
                 courseFolders.forEach(function(folder) {
-                    ts.addOption({ value: String(folder.id), text: folder.name });
+                    ts.addOption({ value: String(folder.id), text: folder.label || folder.name });
                 });
             }
             ts.refreshOptions(false);
@@ -1235,7 +1308,7 @@
             courseFolders.forEach(function(folder) {
                 const opt = document.createElement('option');
                 opt.value = folder.id;
-                opt.textContent = folder.name;
+                opt.textContent = folder.label || folder.name;
                 select.appendChild(opt);
             });
             if (selectedFolderId) select.value = selectedFolderId;
@@ -1270,12 +1343,38 @@
         }, 150);
     }
 
-    function prefillFolderCourse(courseId) {
+    function prefillFolderCourse(courseId, parentId, parentName) {
         setTimeout(function() {
             const sel = document.getElementById('modal_create_course');
             if (sel && sel.tomselect) sel.tomselect.setValue(String(courseId));
             else if (sel) sel.value = courseId;
+
+            const parentInput = document.getElementById('modal_create_parent');
+            const parentRow = document.getElementById('createFolderParentRow');
+            const parentLabel = document.getElementById('modal_create_parent_label');
+            const hint = document.getElementById('createFolderHint');
+            if (parentId) {
+                if (parentInput) parentInput.value = parentId;
+                if (parentRow) parentRow.style.display = 'block';
+                if (parentLabel) parentLabel.value = parentName || ('Folder #' + parentId);
+                if (hint) hint.textContent = 'This folder will be created inside the parent folder below.';
+            } else {
+                if (parentInput) parentInput.value = '';
+                if (parentRow) parentRow.style.display = 'none';
+                if (parentLabel) parentLabel.value = '';
+                if (hint) hint.textContent = 'Folders belong to one course. You can create nested folders inside another folder.';
+            }
         }, 150);
+    }
+
+    const ADMIN_FOLDER_BASE = @json(url('/admin/course-folders'));
+
+    function populateEditFolderModal(id, name) {
+        const form = document.getElementById('editFolderForm');
+        const nameInput = document.getElementById('edit_folder_name');
+        if (!form || !nameInput || !id) return;
+        form.action = ADMIN_FOLDER_BASE + '/' + id;
+        nameInput.value = name || '';
     }
 </script>
 
@@ -1444,9 +1543,28 @@
                 prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }});
             });
             document.getElementById('createFolderModal')?.addEventListener('show.bs.modal', function() {
-                prefillFolderCourse({{ $activeCourse->id }});
+                prefillFolderCourse({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }}, @js($activeFolder?->name));
             });
         @endif
+
+        const editFolderModal = document.getElementById('editFolderModal');
+        if (editFolderModal) {
+            editFolderModal.addEventListener('show.bs.modal', function(ev) {
+                const btn = ev.relatedTarget && ev.relatedTarget.closest
+                    ? (ev.relatedTarget.closest('.js-edit-folder') || ev.relatedTarget)
+                    : ev.relatedTarget;
+                if (btn && btn.classList && btn.classList.contains('js-edit-folder')) {
+                    populateEditFolderModal(btn.dataset.id, btn.dataset.folderName);
+                }
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            const editFolderBtn = e.target.closest('.js-edit-folder');
+            if (editFolderBtn) {
+                populateEditFolderModal(editFolderBtn.dataset.id, editFolderBtn.dataset.folderName);
+            }
+        });
     });
 </script>
 @endpush

@@ -205,6 +205,26 @@
     .sm-toolbar .btn-ghost:hover {
         background:var(--bg-muted); color:var(--tx-h); border-color:#94a3b8;
     }
+
+    /* Download ZIP — Drive / OneDrive style control */
+    .sm-zip-btn {
+        height:40px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center;
+        gap:6px; box-sizing:border-box; white-space:nowrap; text-decoration:none;
+        font-size:0.82rem; font-weight:700; border-radius:8px; cursor:pointer;
+        background:#fff; color:#334155; border:1.5px solid #cbd5e1;
+        box-shadow:0 1px 2px rgba(15,23,42,0.06), 0 4px 10px rgba(15,23,42,0.08);
+        transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease,
+                    box-shadow 0.18s ease, transform 0.18s ease;
+    }
+    .sm-zip-btn:hover {
+        background:#eff6ff; color:#1d4ed8; border-color:#93c5fd;
+        box-shadow:0 2px 4px rgba(37,99,235,0.12), 0 8px 18px rgba(37,99,235,0.18);
+        transform:translateY(-1px);
+    }
+    .sm-zip-btn:active {
+        transform:translateY(0);
+        box-shadow:0 1px 2px rgba(15,23,42,0.08);
+    }
 </style>
 @endpush
 
@@ -326,6 +346,11 @@
             <input type="hidden" name="course_id" value="{{ $activeCourse->id }}">
             @if($activeFolder)
                 <input type="hidden" name="folder_id" value="{{ $activeFolder->id }}">
+            @endif
+            @if($activeFolder)
+                <a href="{{ route('student.course-folders.download', $activeFolder->id) }}" class="sm-zip-btn" title="Download this folder as ZIP">
+                    <i class="fas fa-file-zipper"></i> Download ZIP
+                </a>
             @endif
             <div class="sm-search">
                 <i class="fas fa-search"></i>

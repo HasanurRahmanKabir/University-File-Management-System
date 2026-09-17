@@ -342,6 +342,11 @@
             @if($activeFolder)
                 <input type="hidden" name="folder_id" value="{{ $activeFolder->id }}">
             @endif
+            @if($activeFolder)
+                <a href="{{ route('teacher.course-folders.download', $activeFolder->id) }}" class="btn-ghost" style="height:40px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; text-decoration:none; font-weight:700;" title="Download this folder as ZIP">
+                    <i class="fas fa-file-zipper"></i> Download ZIP
+                </a>
+            @endif
             <div class="tm-search">
                 <i class="fas fa-search"></i>
                 <input type="text" name="search" placeholder="Search folders & files..." value="{{ request('search') }}">

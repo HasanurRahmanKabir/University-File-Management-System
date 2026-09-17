@@ -63,10 +63,12 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     ]);
     Route::get('course-files/{courseMaterial}/download', [CourseFileController::class, 'download'])->name('course-files.download');
     Route::get('course-files/{courseMaterial}/preview', [CourseFileController::class, 'preview'])->name('course-files.preview');
+    Route::get('course-folders/{folder}/download', [CourseFileController::class, 'downloadFolder'])->name('course-folders.download');
     Route::resource('departments', DepartmentController::class);
     Route::resource('announcements', App\Http\Controllers\Admin\AnnouncementController::class)->only(['index', 'destroy']);
-    // Course Folders
+    // Course Folders (nested + privacy — parity with teacher)
     Route::post('/course-folders', [AdminCourseFolderController::class, 'store'])->name('course-folders.store');
+    Route::put('/course-folders/{folder}', [AdminCourseFolderController::class, 'update'])->name('course-folders.update');
     Route::delete('/course-folders/{folder}', [AdminCourseFolderController::class, 'destroy'])->name('course-folders.destroy');
     // Profile & Settings
     Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
@@ -89,6 +91,7 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::resource('course-materials', TeacherCourseMaterialController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/course-materials/{material}/download', [TeacherCourseMaterialController::class, 'download'])->name('course-materials.download');
     Route::get('/course-materials/{material}/preview', [TeacherCourseMaterialController::class, 'preview'])->name('course-materials.preview');
+    Route::get('/course-folders/{folder}/download', [TeacherCourseMaterialController::class, 'downloadFolder'])->name('course-folders.download');
     Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
     Route::get('subcategories', [TeacherSubcategoryController::class, 'index'])->name('subcategories.index');
     
@@ -116,6 +119,7 @@ Route::middleware(['web', 'auth', 'is_student'])->prefix('student')->name('stude
     Route::resource('course-materials', StudentCourseMaterialController::class)->only(['index']);
     Route::get('/course-materials/{material}/download', [StudentCourseMaterialController::class, 'download'])->name('course-materials.download');
     Route::get('/course-materials/{material}/preview', [StudentCourseMaterialController::class, 'preview'])->name('course-materials.preview');
+    Route::get('/course-folders/{folder}/download', [StudentCourseMaterialController::class, 'downloadFolder'])->name('course-folders.download');
     Route::resource('categories', StudentCategoryController::class)->only(['index']);
     Route::resource('subcategories', StudentSubcategoryController::class)->only(['index']);
     Route::get('/instructors', [StudentInstructorController::class, 'index'])->name('instructors');

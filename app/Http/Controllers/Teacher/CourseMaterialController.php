@@ -316,4 +316,13 @@ class CourseMaterialController extends Controller
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
+
+    public function downloadFolder(CourseFolder $folder, \App\Services\CourseFolderZipService $zipService)
+    {
+        if ($folder->course->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        return $zipService->download($folder, false);
+    }
 }

@@ -34,14 +34,35 @@ class CourseFileController extends Controller
             $storageUsed = $totalSizeGB . ' GB';
         }
 
-        $allFolders = CourseFolder::with('course:id,course_code,title')
-            ->withCount('materials')
-            ->orderBy('name')
-            ->get()
-            ->groupBy('course_id');
+        $allFoldersFlat = CourseFolder::orderBy('name')->get();
+        $foldersById = $allFoldersFlat->keyBy('id');
+        $allFolders = $allFoldersFlat->groupBy('course_id')->map(function ($folders) use ($foldersById) {
+            return $folders->map(function ($folder) use ($foldersById) {
+                $parts = collect([$folder->name]);
+                $node = $folder;
+                $guard = 0;
+                while ($node->parent_id && $guard < 20) {
+                    $node = $foldersById[$node->parent_id] ?? null;
+                    if (!$node) {
+                        break;
+                    }
+                    $parts->prepend($node->name);
+                    $guard++;
+                }
+
+                return [
+                    'id' => $folder->id,
+                    'name' => $folder->name,
+                    'parent_id' => $folder->parent_id,
+                    'is_active' => (bool) $folder->is_active,
+                    'label' => $parts->implode(' / '),
+                ];
+            })->values();
+        });
 
         $activeCourse = null;
         $activeFolder = null;
+        $folderBreadcrumbs = collect();
         $browserFolders = collect();
         $materials = null;
         $courseLibrary = null;
@@ -49,9 +70,18 @@ class CourseFileController extends Controller
 
         // Resolve active folder / course context
         if ($request->filled('folder_id')) {
-            $activeFolder = CourseFolder::with(['course.teacher', 'course.department'])->find($request->folder_id);
+            $activeFolder = CourseFolder::with(['course.teacher', 'course.department', 'parent'])->find($request->folder_id);
             if ($activeFolder) {
                 $activeCourse = $activeFolder->course;
+                $chain = collect();
+                $node = $activeFolder;
+                $guard = 0;
+                while ($node && $guard < 20) {
+                    $chain->prepend($node);
+                    $node = $node->parent_id ? ($foldersById[$node->parent_id] ?? CourseFolder::find($node->parent_id)) : null;
+                    $guard++;
+                }
+                $folderBreadcrumbs = $chain;
             }
         } elseif ($request->filled('course_id')) {
             $activeCourse = Course::with(['teacher', 'department'])->find($request->course_id);
@@ -62,19 +92,12 @@ class CourseFileController extends Controller
             $materials = $this->buildMaterialsQuery($request)->paginate(15)->appends($request->all());
         } elseif ($activeCourse) {
             $viewMode = 'browser';
+            $parentScope = $activeFolder ? $activeFolder->id : null;
 
-            // Root folders of this course (or children if nested — currently root-level only)
-            $browserFolders = CourseFolder::where('course_id', $activeCourse->id)
-                ->whereNull('parent_id')
+            $foldersQuery = CourseFolder::where('course_id', $activeCourse->id)
+                ->where('parent_id', $parentScope)
                 ->with('creator:id,name')
-                ->withCount('materials')
-                ->orderBy('name')
-                ->get();
-
-            // When inside a folder, only list files in that folder (not sibling folders at root)
-            if ($activeFolder) {
-                $browserFolders = collect();
-            }
+                ->withCount(['materials', 'children']);
 
             $materialsQuery = CourseMaterial::with(['uploader', 'folder', 'course'])
                 ->where('course_id', $activeCourse->id);
@@ -87,6 +110,7 @@ class CourseFileController extends Controller
 
             if ($request->filled('search')) {
                 $search = $request->search;
+                $foldersQuery->where('name', 'like', "%{$search}%");
                 $materialsQuery->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
                         ->orWhere('file_type', 'like', "%{$search}%")
@@ -96,6 +120,7 @@ class CourseFileController extends Controller
                 });
             }
 
+            $browserFolders = $foldersQuery->orderBy('name')->get();
             $materials = $materialsQuery->latest()->paginate(20)->appends($request->all());
         } else {
             // Course library — pick a course to manage files
@@ -150,6 +175,7 @@ class CourseFileController extends Controller
             'allFolders',
             'activeFolder',
             'activeCourse',
+            'folderBreadcrumbs',
             'browserFolders',
             'courseLibrary',
             'viewMode',
@@ -312,5 +338,10 @@ class CourseFileController extends Controller
             'Pragma' => 'no-cache',
             'Expires' => '0',
         ]);
+    }
+
+    public function downloadFolder(CourseFolder $folder, \App\Services\CourseFolderZipService $zipService)
+    {
+        return $zipService->download($folder, false);
     }
 }

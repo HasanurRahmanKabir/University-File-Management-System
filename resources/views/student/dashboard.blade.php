@@ -39,11 +39,11 @@
     </div>
     <div class="stat-card sc-orange" style="animation-delay:.15s">
         <div class="stat-header">
-            <div class="stat-lbl">Pending Assignments</div>
-            <div class="stat-ico ico-orange"><i class="fas fa-clipboard-list"></i></div>
+            <div class="stat-lbl">Class Notices</div>
+            <div class="stat-ico ico-orange"><i class="fas fa-bullhorn"></i></div>
         </div>
-        <div class="stat-val" data-count="{{ $stats['assignments'] }}">{{ str_pad($stats['assignments'], 2, '0', STR_PAD_LEFT) }}</div>
-        <div class="stat-sub">Due this week</div>
+        <div class="stat-val" data-count="{{ $stats['notices'] }}">{{ str_pad($stats['notices'], 2, '0', STR_PAD_LEFT) }}</div>
+        <div class="stat-sub">From your teachers</div>
     </div>
 </div>
 
