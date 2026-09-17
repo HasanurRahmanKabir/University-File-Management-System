@@ -12,14 +12,36 @@ class InstructorController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
-        // Get enrolled course IDs and ensure it's an array
-        $enrolledIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
 
-        // Fetch courses the student is enrolled in, along with the teacher's details
-        // We strictly load the 'teacher' relationship to display their info
-        $courses = Course::with('teacher')->whereIn('id', $enrolledIds)->get();
+        $enrolledIds = $user->enrolledCourses()
+            ->wherePivot('status', 'active')
+            ->pluck('courses.id');
 
-        return view('student.instructors.index', compact('courses'));
+        $courses = Course::with('teacher')
+            ->whereIn('id', $enrolledIds)
+            ->where('is_active', true)
+            ->whereNotNull('teacher_id')
+            ->orderBy('course_code')
+            ->get();
+
+        // One card per instructor — all enrolled courses under that teacher
+        $instructors = $courses
+            ->groupBy('teacher_id')
+            ->map(function ($teacherCourses) {
+                $teacher = $teacherCourses->first()->teacher;
+                if (!$teacher) {
+                    return null;
+                }
+
+                return (object) [
+                    'teacher' => $teacher,
+                    'courses' => $teacherCourses->values(),
+                ];
+            })
+            ->filter()
+            ->sortBy(fn ($row) => strtolower($row->teacher->name ?? ''))
+            ->values();
+
+        return view('student.instructors.index', compact('instructors'));
     }
 }

@@ -6,25 +6,26 @@
 
 @section('content')
 <div class="row g-4">
-    @forelse($courses as $course)
+    @forelse($instructors as $row)
+    @php $teacher = $row->teacher; @endphp
     <div class="col-xl-4 col-lg-4 col-md-6 col-12">
         <div class="d-card h-100" style="animation-delay: .{{ 5 + ($loop->index * 2) }}s; transition: transform 0.2s ease, box-shadow 0.2s ease;">
             <div class="d-card-body d-flex flex-column" style="padding: 24px;">
                 <div class="d-flex align-items-start gap-3 mb-4">
                     <div class="flex-shrink-0" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-lt), #e0e7ff); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--blue);">
-                        @if(optional($course->teacher)->profile_image)
-                            <img src="{{ Storage::url($course->teacher->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; cursor: pointer; transition: opacity 0.2s;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $course->id }}" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                        @if($teacher->profile_image)
+                            <img src="{{ Storage::url($teacher->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; cursor: pointer; transition: opacity 0.2s;" data-bs-toggle="modal" data-bs-target="#imageModal{{ $teacher->id }}" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                         @else
                             <i class="fas fa-user-tie"></i>
                         @endif
                     </div>
                     <div class="flex-grow-1">
                         <h5 style="font-size: 1.1rem; font-weight: 700; color: var(--tx-main); margin: 0 0 4px 0; word-break: break-word;">
-                            {{ optional($course->teacher)->name ?? 'N/A' }}
+                            {{ $teacher->name ?? 'N/A' }}
                         </h5>
                         <p style="font-size: 0.85rem; color: var(--tx-m); margin: 0; font-weight: 500;">
-                            <i class="fas fa-id-badge" style="opacity: 0.7; margin-right: 4px;"></i> 
-                            {{ optional($course->teacher)->designation ?? 'N/A' }}
+                            <i class="fas fa-id-badge" style="opacity: 0.7; margin-right: 4px;"></i>
+                            {{ $teacher->designation ?? 'N/A' }}
                         </p>
                     </div>
                 </div>
@@ -33,8 +34,8 @@
                     <div class="d-flex align-items-center gap-2 mb-2">
                         <div style="width: 24px; text-align: center; color: var(--tx-s);"><i class="fas fa-envelope"></i></div>
                         <div class="text-truncate" style="font-size: 0.9rem; color: var(--tx-main); font-weight: 500;">
-                            @if(optional($course->teacher)->email)
-                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $course->teacher->email }}" target="_blank" style="color: inherit; text-decoration: none; word-break: break-all; white-space: normal;">{{ $course->teacher->email }}</a>
+                            @if($teacher->email)
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $teacher->email }}" target="_blank" style="color: inherit; text-decoration: none; word-break: break-all; white-space: normal;">{{ $teacher->email }}</a>
                             @else
                                 <span class="badge b-gray">N/A</span>
                             @endif
@@ -43,8 +44,8 @@
                     <div class="d-flex align-items-center gap-2">
                         <div style="width: 24px; text-align: center; color: var(--tx-s);"><i class="fas fa-phone-alt"></i></div>
                         <div class="text-truncate" style="font-size: 0.9rem; color: var(--tx-main); font-weight: 500;">
-                            @if(optional($course->teacher)->contact_number)
-                                <a href="tel:{{ $course->teacher->contact_number }}" style="color: inherit; text-decoration: none; word-break: break-all; white-space: normal;">{{ $course->teacher->contact_number }}</a>
+                            @if($teacher->contact_number)
+                                <a href="tel:{{ $teacher->contact_number }}" style="color: inherit; text-decoration: none; word-break: break-all; white-space: normal;">{{ $teacher->contact_number }}</a>
                             @else
                                 <span class="badge b-gray">N/A</span>
                             @endif
@@ -53,10 +54,19 @@
                 </div>
 
                 <div class="mt-auto pt-3" style="border-top: 1px dashed var(--border-light);">
-                    <div style="font-size: 0.75rem; color: var(--tx-s); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">Enrolled Course</div>
-                    <div class="d-flex align-items-center flex-wrap gap-2">
-                        <span class="badge b-blue text-truncate" style="font-size: 0.75rem; padding: 4px 8px; max-width: 100%;">{{ $course->course_code }}</span>
-                        <span class="text-wrap" style="font-size: 0.9rem; font-weight: 600; color: var(--tx-h); word-break: break-word;">{{ $course->title ?? $course->course_name ?? 'N/A' }}</span>
+                    <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                        <div style="font-size: 0.75rem; color: var(--tx-s); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                            Enrolled Course{{ $row->courses->count() !== 1 ? 's' : '' }}
+                        </div>
+                        <span class="badge b-gray" style="font-size: 0.7rem; padding: 3px 8px;">{{ $row->courses->count() }}</span>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        @foreach($row->courses as $course)
+                        <div class="d-flex align-items-start flex-wrap gap-2" style="padding: 8px 10px; background: var(--bg-body); border: 1px solid var(--sb-border); border-radius: 8px;">
+                            <span class="badge b-blue text-truncate" style="font-size: 0.72rem; padding: 4px 8px; max-width: 100%;">{{ $course->course_code }}</span>
+                            <span class="text-wrap" style="font-size: 0.88rem; font-weight: 600; color: var(--tx-h); word-break: break-word; line-height: 1.35;">{{ $course->title ?? $course->course_name ?? 'N/A' }}</span>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -80,17 +90,16 @@
 @endsection
 
 @push('modals')
-{{-- Generate Modals Outside the Grid Layout to Fix Z-Index and Close Button Issues --}}
-@foreach($courses as $course)
-    @if(optional($course->teacher)->profile_image)
-    <div class="modal fade" id="imageModal{{ $course->id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $course->id }}" aria-hidden="true">
+@foreach($instructors as $row)
+    @if(optional($row->teacher)->profile_image)
+    <div class="modal fade" id="imageModal{{ $row->teacher->id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ $row->teacher->id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
                 <div class="modal-header" style="border: none; padding: 0; justify-content: flex-end; z-index: 1060; position: relative;">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: #fff; border-radius: 50%; padding: 12px; margin-bottom: 10px; opacity: 1; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;"></button>
                 </div>
                 <div class="modal-body text-center" style="padding: 0; position: relative; z-index: 1055;">
-                    <img src="{{ Storage::url($course->teacher->profile_image) }}" alt="Teacher Profile" style="width: auto; height: auto; max-width: 100%; max-height: 85vh; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); background: #fff; display: inline-block;">
+                    <img src="{{ Storage::url($row->teacher->profile_image) }}" alt="Teacher Profile" style="width: auto; height: auto; max-width: 100%; max-height: 85vh; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); background: #fff; display: inline-block;">
                 </div>
             </div>
         </div>
