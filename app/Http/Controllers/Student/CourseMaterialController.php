@@ -108,7 +108,12 @@ class CourseMaterialController extends Controller
                         $q->where('is_active', true);
                     },
                     'children as children_count' => fn ($q) => $q->where('is_active', true),
-                ]);
+                ])
+                ->withSum([
+                    'materials as public_files_size' => function ($q) {
+                        $q->where('is_active', true);
+                    },
+                ], 'file_size');
 
             $materialsQuery = CourseMaterial::with(['course', 'folder'])
                 ->where('course_id', $activeCourse->id)

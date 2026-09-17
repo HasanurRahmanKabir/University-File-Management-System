@@ -28,14 +28,114 @@
     @media (max-width:1200px) { .sm-course-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
     @media (max-width:992px) {
         .sm-stats { grid-template-columns:1fr; }
+        .sm-toolbar { flex-direction:column; align-items:stretch; gap:14px; padding:14px 16px; }
+        .sm-toolbar-form {
+            display:flex;
+            flex-direction:column;
+            align-items:stretch;
+            gap:10px;
+            width:100%;
+            margin:0;
+        }
+        .sm-zip-btn { width:100%; justify-content:center; }
+        .sm-search-row {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            width:100%;
+            min-width:0;
+        }
+        .sm-search-row .sm-search {
+            flex:1 1 auto;
+            min-width:0;
+            width:auto !important;
+            max-width:none;
+        }
+        .sm-search-row .btn-primary,
+        .sm-search-row .btn-ghost {
+            flex:0 0 auto;
+        }
+        .sm-toolbar h5 { font-size:0.98rem; word-break:break-word; }
     }
     @media (max-width:640px) {
         .sm-stats { grid-template-columns:1fr; }
         .sm-course-grid { grid-template-columns:1fr; }
-        .sm-toolbar { flex-direction:column; align-items:stretch; }
-        .sm-search { width:100%; }
-        .sm-toolbar form { width:100%; }
-        .sm-toolbar form .sm-search { flex:1; min-width:0; width:auto; }
+        .sm-toolbar { padding:12px; max-width:100%; box-sizing:border-box; }
+        .sm-toolbar-form,
+        .sm-search-row { max-width:100%; box-sizing:border-box; }
+        .sm-search input { font-size:0.8rem; }
+        .sm-lib-search {
+            width:100%;
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            align-items:center;
+        }
+        .sm-lib-search .sm-search {
+            flex:1 1 100%;
+            width:100% !important;
+            min-width:0;
+        }
+        .sm-lib-search .btn-primary,
+        .sm-lib-search .btn-ghost {
+            flex:1 1 auto;
+        }
+        .d-card-header .d-card-title + p,
+        .d-card-header p { margin-left:0 !important; }
+
+        /* Phone file browser: fit screen — no 760px clip */
+        .d-card { max-width:100%; overflow:hidden; }
+        .sm-files-wrap {
+            overflow-x:visible;
+            max-width:100%;
+        }
+        .sm-file-list {
+            width:100%;
+            min-width:0;
+        }
+        .sm-file-row {
+            min-width:0;
+            width:100%;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            column-gap:10px;
+            padding:12px;
+        }
+        .sm-file-row .c-size,
+        .sm-file-row .c-date {
+            display:none !important;
+        }
+        .sm-file-list .t-name,
+        .sm-file-list .t-sub {
+            white-space:normal;
+            overflow:visible;
+            word-break:break-word;
+        }
+        .sm-file-empty {
+            padding:36px 16px;
+            width:100%;
+            box-sizing:border-box;
+        }
+        .sm-action-group { gap:6px; }
+    }
+    @media (max-width:320px) {
+        .sm-toolbar { padding:10px; gap:10px; }
+        .sm-zip-btn { font-size:0.78rem; height:38px; padding:0 12px; }
+        .sm-search-row .btn-primary { height:38px; padding:0 12px; }
+        .sm-stat { padding:12px 14px; gap:10px; }
+        .sm-stat-num { font-size:1.15rem; }
+        .sm-course-card { padding:14px; }
+    }
+    @media (max-width:280px) {
+        .sm-toolbar { padding:8px; }
+        .sm-stats { gap:10px; margin-bottom:12px; }
+        .sm-stat-ico { width:36px; height:36px; font-size:0.95rem; }
+        .sm-stat-label { font-size:0.65rem; }
+        .sm-breadcrumb { font-size:0.72rem; }
+        .sm-zip-btn { font-size:0.74rem; height:36px; }
+        .sm-search input { height:36px; font-size:0.76rem; }
+        .sm-search-row .btn-primary { height:36px; padding:0 10px; }
+        .sm-course-title { font-size:0.86rem; }
+        .sm-lib-search .btn-primary { font-size:0.78rem; padding:0 10px; height:36px; }
     }
 
     .sm-course-card {
@@ -82,8 +182,14 @@
         display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
         gap:12px; padding:16px 20px; border-bottom:1px solid var(--bd); background:#fff;
     }
-    .sm-toolbar form { display:flex; align-items:center; gap:8px; margin:0; flex-wrap:wrap; }
-    .sm-search { position:relative; width:220px; }
+    .sm-toolbar-form {
+        display:flex; align-items:center; gap:8px; margin:0; flex-wrap:wrap;
+        min-width:0;
+    }
+    .sm-search-row {
+        display:flex; align-items:center; gap:8px; min-width:0;
+    }
+    .sm-search { position:relative; width:220px; min-width:0; }
     .sm-search i {
         position:absolute; left:11px; top:50%; transform:translateY(-50%);
         color:var(--tx-m); font-size:0.78rem; pointer-events:none;
@@ -92,6 +198,7 @@
         width:100%; height:40px; padding:0 12px 0 34px; border:1px solid var(--bd);
         border-radius:8px; background:var(--bg-muted); font-size:0.82rem; color:var(--tx-b);
         outline:none; box-sizing:border-box;
+        min-width:0;
     }
     .sm-search input:focus {
         border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); background:#fff;
@@ -108,12 +215,19 @@
 
     .sm-files-wrap {
         overflow-x:auto; -webkit-overflow-scrolling:touch;
+        max-width:100%;
+        overscroll-behavior-x:contain;
     }
-    /* Equal-gap file browser grid (Drive / OneDrive style) */
-    .sm-file-list { min-width:760px; width:100%; }
+    /* File browser: full text, fills PC width evenly, scrolls on narrow screens */
+    .sm-file-list {
+        width: 100%;
+        min-width: 100%;
+    }
     .sm-file-row {
         display:grid;
-        grid-template-columns: minmax(0, 1.35fr) repeat(4, minmax(0, 1fr));
+        width: 100%;
+        min-width: 760px;
+        grid-template-columns: minmax(200px, 1.5fr) minmax(110px, 0.75fr) minmax(100px, 0.65fr) minmax(120px, 0.75fr) minmax(110px, 0.7fr);
         column-gap:20px;
         align-items:center;
         padding:14px 20px;
@@ -145,18 +259,18 @@
     .sm-file-row.is-head .c-action { justify-content:flex-end; }
     .sm-file-list .t-name {
         font-size:0.85rem; font-weight:600; color:var(--tx-h);
-        white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;
+        white-space:nowrap; overflow:visible; text-overflow:clip; max-width:none;
     }
     .sm-file-list .t-sub {
-        white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        white-space:nowrap; overflow:visible; text-overflow:clip; max-width:none;
         color:var(--tx-s); font-size:0.75rem;
     }
     .sm-file-list .cell-muted { color:var(--tx-s); font-weight:500; }
-    .sm-file-list .cell-size { font-weight:600; color:var(--tx-h); font-size:0.82rem; }
-    .sm-file-list .cell-date { color:var(--tx-s); font-size:0.78rem; font-weight:500; }
+    .sm-file-list .cell-size { font-weight:600; color:var(--tx-h); font-size:0.82rem; white-space:nowrap; }
+    .sm-file-list .cell-date { color:var(--tx-s); font-size:0.78rem; font-weight:500; white-space:nowrap; }
     .sm-file-empty { padding:48px 20px; text-align:center; }
     .fb-name { display:flex; align-items:center; gap:12px; min-width:0; }
-    .fb-name .fb-text { min-width:0; flex:1; overflow:hidden; }
+    .fb-name .fb-text { min-width:0; flex:1; overflow:visible; }
     .fb-ico {
         width:36px; height:36px; border-radius:8px; display:flex; align-items:center;
         justify-content:center; flex-shrink:0; font-size:0.95rem;
@@ -347,7 +461,7 @@
             </div>
             <h5 style="font-weight:700; color:var(--tx-h); margin:4px 0 0; font-size:1.05rem;">{{ $activeCourse->title }}</h5>
         </div>
-        <form action="{{ route('student.course-materials.index') }}" method="GET" style="display:flex; align-items:center; gap:8px; margin:0; flex-wrap:wrap;">
+        <form action="{{ route('student.course-materials.index') }}" method="GET" class="sm-toolbar-form">
             <input type="hidden" name="course_id" value="{{ $activeCourse->id }}">
             @if($activeFolder)
                 <input type="hidden" name="folder_id" value="{{ $activeFolder->id }}">
@@ -357,14 +471,16 @@
                     <i class="fas fa-file-zipper"></i> Download ZIP
                 </a>
             @endif
-            <div class="sm-search">
-                <i class="fas fa-search"></i>
-                <input type="text" name="search" placeholder="Search folders & files..." value="{{ request('search') }}">
+            <div class="sm-search-row">
+                <div class="sm-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="search" placeholder="Search folders & files..." value="{{ request('search') }}">
+                </div>
+                <button type="submit" class="btn-primary" title="Search" style="height:40px; padding:0 14px;"><i class="fas fa-search"></i></button>
+                @if(request('search'))
+                    <a href="{{ route('student.course-materials.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}" class="btn-ghost">Reset</a>
+                @endif
             </div>
-            <button type="submit" class="btn-primary" title="Search" style="height:40px; padding:0 14px;"><i class="fas fa-search"></i></button>
-            @if(request('search'))
-                <a href="{{ route('student.course-materials.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}" class="btn-ghost">Reset</a>
-            @endif
         </form>
     </div>
 
@@ -405,6 +521,16 @@
                 @endif
 
                 @foreach($browserFolders as $folder)
+                @php
+                    $folderSize = (int) ($folder->public_files_size ?? 0);
+                    $folderSizeLabel = $folderSize <= 0
+                        ? '—'
+                        : ($folderSize < 1024
+                            ? $folderSize.' B'
+                            : ($folderSize < 1048576
+                                ? round($folderSize/1024,1).' KB'
+                                : round($folderSize/1048576,2).' MB'));
+                @endphp
                 <div class="sm-file-row is-folder" role="row" onclick="window.location.href='{{ route('student.course-materials.index', ['folder_id' => $folder->id]) }}'">
                     <div class="c-name" role="cell">
                         <div class="fb-name">
@@ -421,8 +547,16 @@
                         </div>
                     </div>
                     <div class="c-type" role="cell"><span class="folder-badge"><i class="fas fa-folder"></i> Folder</span></div>
-                    <div class="c-size" role="cell"><span class="cell-muted">—</span></div>
-                    <div class="c-date" role="cell"><span class="cell-muted">—</span></div>
+                    <div class="c-size" role="cell">
+                        @if($folderSize > 0)
+                            <span class="cell-size">{{ $folderSizeLabel }}</span>
+                        @else
+                            <span class="cell-muted">—</span>
+                        @endif
+                    </div>
+                    <div class="c-date" role="cell">
+                        <span class="cell-date">{{ optional($folder->created_at)->format('d M Y') ?? '—' }}</span>
+                    </div>
                     <div class="c-action" role="cell" onclick="event.stopPropagation();">
                         <div class="sm-action-group">
                             <a href="{{ route('student.course-materials.index', ['folder_id' => $folder->id]) }}" class="sm-action-btn open" title="Open"><i class="fas fa-folder-open"></i></a>
