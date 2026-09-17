@@ -28,6 +28,9 @@ class Course extends Model {
     public function materials() {
         return $this->hasMany(CourseMaterial::class);
     }
+    public function folders() {
+        return $this->hasMany(CourseFolder::class);
+    }
     public function semester() {
         return $this->belongsTo(Semester::class);
     }

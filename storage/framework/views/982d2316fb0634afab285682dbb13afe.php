@@ -1,9 +1,8 @@
-@extends('layouts.admin')
-@section('title', 'Course Files - Admin Dashboard')
-@section('page-title', 'Course Materials')
-@section('breadcrumb', 'Course Files')
+<?php $__env->startSection('title', 'Course Files - Admin Dashboard'); ?>
+<?php $__env->startSection('page-title', 'Course Materials'); ?>
+<?php $__env->startSection('breadcrumb', 'Course Files'); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
     /* TomSelect — match admin form controls */
@@ -483,9 +482,9 @@
         }
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div class="heading-group">
         <h2>Course Materials</h2>
@@ -493,193 +492,197 @@
     </div>
     <div class="d-flex flex-wrap align-items-center gap-2" style="margin-right: 8px;">
         <div class="cf-view-switch" role="group" aria-label="View mode">
-            <a href="{{ route('admin.course-files.index') }}"
-               class="{{ $viewMode === 'library' || $viewMode === 'browser' ? 'active' : '' }}"
+            <a href="<?php echo e(route('admin.course-files.index')); ?>"
+               class="<?php echo e($viewMode === 'library' || $viewMode === 'browser' ? 'active' : ''); ?>"
                title="Browse materials course by course">
                 <i class="fas fa-th-large"></i> By Course
             </a>
-            <a href="{{ route('admin.course-files.index', ['view' => 'all']) }}"
-               class="{{ $viewMode === 'all_files' ? 'active' : '' }}"
+            <a href="<?php echo e(route('admin.course-files.index', ['view' => 'all'])); ?>"
+               class="<?php echo e($viewMode === 'all_files' ? 'active' : ''); ?>"
                title="See every uploaded file in one list">
                 <i class="fas fa-list"></i> All Files
             </a>
         </div>
         <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createFolderModal"
-            @if($activeCourse) onclick="prefillFolderCourse({{ $activeCourse->id }})" @endif>
+            <?php if($activeCourse): ?> onclick="prefillFolderCourse(<?php echo e($activeCourse->id); ?>)" <?php endif; ?>>
             <i class="fas fa-folder-plus"></i> New Folder
         </button>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal"
-            @if($activeCourse) onclick="prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }})" @endif>
+            <?php if($activeCourse): ?> onclick="prefillUploadContext(<?php echo e($activeCourse->id); ?>, <?php echo e($activeFolder->id ?? 'null'); ?>)" <?php endif; ?>>
             <i class="fas fa-cloud-upload-alt"></i> Upload Material
         </button>
     </div>
 </div>
 
-{{-- Stats --}}
+
 <div class="stats-grid grid-3">
     <div class="stat-card">
         <div class="stat-icon-wrap blue"><i class="fas fa-file-lines"></i></div>
         <div class="stat-info">
             <div class="stat-label">Total Files</div>
-            <div class="stat-number">{{ $totalFiles }}</div>
-            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> {{ $weeklyFiles }} this week</div>
+            <div class="stat-number"><?php echo e($totalFiles); ?></div>
+            <div class="stat-trend up"><i class="fas fa-arrow-up"></i> <?php echo e($weeklyFiles); ?> this week</div>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon-wrap rose"><i class="fas fa-file-pdf"></i></div>
         <div class="stat-info">
             <div class="stat-label">PDF Documents</div>
-            <div class="stat-number">{{ $pdfCount }}</div>
-            <div class="stat-trend neutral"><i class="fas fa-check"></i> {{ $pdfPercentage }}% of files</div>
+            <div class="stat-number"><?php echo e($pdfCount); ?></div>
+            <div class="stat-trend neutral"><i class="fas fa-check"></i> <?php echo e($pdfPercentage); ?>% of files</div>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon-wrap emerald"><i class="fas fa-hard-drive"></i></div>
         <div class="stat-info">
             <div class="stat-label">Storage Used</div>
-            <div class="stat-number">{{ $storageUsed }}</div>
+            <div class="stat-number"><?php echo e($storageUsed); ?></div>
             <div class="stat-trend neutral"><i class="fas fa-database"></i> of 10 GB</div>
         </div>
     </div>
 </div>
 
 <script>
-    const adminAllFolders = @json($allFolders);
-    const adminCoursesData = @json($coursesForJs);
+    const adminAllFolders = <?php echo json_encode($allFolders, 15, 512) ?>;
+    const adminCoursesData = <?php echo json_encode($coursesForJs, 15, 512) ?>;
 </script>
 
-{{-- ===================== COURSE LIBRARY ===================== --}}
-@if($viewMode === 'library')
+
+<?php if($viewMode === 'library'): ?>
 <div class="data-card">
     <div class="cf-lib-header">
         <div class="cf-lib-title-block">
             <h5 class="card-title mb-0"><i class="fas fa-graduation-cap"></i> Select a Course</h5>
             <p class="card-subtitle mb-0">Open a course to manage its folders and materials</p>
         </div>
-        <form action="{{ route('admin.course-files.index') }}" method="GET" class="cf-filter-bar" id="searchForm">
+        <form action="<?php echo e(route('admin.course-files.index')); ?>" method="GET" class="cf-filter-bar" id="searchForm">
             <select name="department_id" class="cf-dept-select" onchange="this.form.submit()" aria-label="Filter by department">
                 <option value="">All Departments</option>
-                @foreach($departments as $dept)
-                    <option value="{{ $dept->id }}" @selected(request('department_id') == $dept->id)>{{ $dept->code ?? $dept->name }}</option>
-                @endforeach
+                <?php $__currentLoopData = $departments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dept): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($dept->id); ?>" <?php if(request('department_id') == $dept->id): echo 'selected'; endif; ?>><?php echo e($dept->code ?? $dept->name); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search courses, teacher..." value="{{ request('search') }}" style="padding-right: {{ request('search') ? '30px' : '14px' }};">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.course-files.index', array_filter(['department_id' => request('department_id')])) }}'" title="Clear search">
+                <input type="text" name="search" id="searchInput" placeholder="Search courses, teacher..." value="<?php echo e(request('search')); ?>" style="padding-right: <?php echo e(request('search') ? '30px' : '14px'); ?>;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.course-files.index', array_filter(['department_id' => request('department_id')]))); ?>'" title="Clear search">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
-            @if(request('search') || request('department_id'))
-                <a href="{{ route('admin.course-files.index') }}" class="cf-clear-link" title="Reset filters">
+            <?php if(request('search') || request('department_id')): ?>
+                <a href="<?php echo e(route('admin.course-files.index')); ?>" class="cf-clear-link" title="Reset filters">
                     <i class="fas fa-rotate-left"></i> Reset
                 </a>
-            @endif
+            <?php endif; ?>
         </form>
     </div>
 
-    @if($courseLibrary && $courseLibrary->count() > 0)
+    <?php if($courseLibrary && $courseLibrary->count() > 0): ?>
         <div class="course-lib-grid">
-            @foreach($courseLibrary as $course)
-            <a href="{{ route('admin.course-files.index', ['course_id' => $course->id]) }}" class="course-lib-card">
+            <?php $__currentLoopData = $courseLibrary; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <a href="<?php echo e(route('admin.course-files.index', ['course_id' => $course->id])); ?>" class="course-lib-card">
                 <div class="course-lib-top">
                     <div class="course-lib-icon"><i class="fas fa-book-open"></i></div>
-                    <span class="badge dark" style="font-size: 0.7rem;">{{ $course->course_code }}</span>
+                    <span class="badge dark" style="font-size: 0.7rem;"><?php echo e($course->course_code); ?></span>
                 </div>
                 <div>
-                    <h6 class="course-lib-title">{{ $course->title }}</h6>
+                    <h6 class="course-lib-title"><?php echo e($course->title); ?></h6>
                     <div class="course-lib-meta">
-                        @if($course->teacher)
-                            <span><i class="fas fa-chalkboard-teacher"></i> {{ $course->teacher->name }}</span>
-                        @else
+                        <?php if($course->teacher): ?>
+                            <span><i class="fas fa-chalkboard-teacher"></i> <?php echo e($course->teacher->name); ?></span>
+                        <?php else: ?>
                             <span><i class="fas fa-user-slash"></i> No teacher assigned</span>
-                        @endif
-                        @if($course->department)
+                        <?php endif; ?>
+                        <?php if($course->department): ?>
                             <span>·</span>
-                            <span><i class="fas fa-building-columns"></i> {{ $course->department->code ?? $course->department->name }}</span>
-                        @endif
+                            <span><i class="fas fa-building-columns"></i> <?php echo e($course->department->code ?? $course->department->name); ?></span>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="course-lib-stats">
-                    <span class="course-lib-stat"><i class="fas fa-file" style="color:var(--primary);"></i> {{ $course->materials_count }} file{{ $course->materials_count !== 1 ? 's' : '' }}</span>
-                    <span class="course-lib-stat"><i class="fas fa-folder" style="color:#f59e0b;"></i> {{ $course->folders_count }} folder{{ $course->folders_count !== 1 ? 's' : '' }}</span>
+                    <span class="course-lib-stat"><i class="fas fa-file" style="color:var(--primary);"></i> <?php echo e($course->materials_count); ?> file<?php echo e($course->materials_count !== 1 ? 's' : ''); ?></span>
+                    <span class="course-lib-stat"><i class="fas fa-folder" style="color:#f59e0b;"></i> <?php echo e($course->folders_count); ?> folder<?php echo e($course->folders_count !== 1 ? 's' : ''); ?></span>
                     <span class="course-lib-open">Open <i class="fas fa-arrow-right"></i></span>
                 </div>
             </a>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-        @if($courseLibrary->hasPages())
+        <?php if($courseLibrary->hasPages()): ?>
             <div class="px-4 pb-4 border-top pt-3">
-                {{ $courseLibrary->links('pagination::bootstrap-5') }}
+                <?php echo e($courseLibrary->links('pagination::bootstrap-5')); ?>
+
             </div>
-        @endif
-    @else
+        <?php endif; ?>
+    <?php else: ?>
         <div class="text-center py-5 px-3">
             <div class="empty-state">
                 <i class="fas fa-book-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                @if(request('search') || request('department_id'))
+                <?php if(request('search') || request('department_id')): ?>
                     <h6 class="text-heading fw-bold">No courses match your filters</h6>
                     <p class="text-muted small">Try a different search or clear filters.</p>
-                    <a href="{{ route('admin.course-files.index') }}" class="btn btn-sm btn-primary mt-2">Clear Filters</a>
-                @else
+                    <a href="<?php echo e(route('admin.course-files.index')); ?>" class="btn btn-sm btn-primary mt-2">Clear Filters</a>
+                <?php else: ?>
                     <h6 class="text-heading fw-bold">No active courses yet</h6>
                     <p class="text-muted small">Create a course first, then add materials here.</p>
-                    <a href="{{ route('admin.courses.index') }}" class="btn btn-sm btn-primary mt-2">Go to Courses</a>
-                @endif
+                    <a href="<?php echo e(route('admin.courses.index')); ?>" class="btn btn-sm btn-primary mt-2">Go to Courses</a>
+                <?php endif; ?>
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 </div>
-@endif
+<?php endif; ?>
 
-{{-- ===================== COURSE FILE BROWSER ===================== --}}
-@if($viewMode === 'browser' && $activeCourse)
+
+<?php if($viewMode === 'browser' && $activeCourse): ?>
 <div class="data-card">
     <div class="cf-toolbar">
         <div style="min-width: 0;">
             <div class="cf-breadcrumb">
-                <a href="{{ route('admin.course-files.index') }}"><i class="fas fa-th-large"></i> All Courses</a>
+                <a href="<?php echo e(route('admin.course-files.index')); ?>"><i class="fas fa-th-large"></i> All Courses</a>
                 <span class="sep">/</span>
-                @if($activeFolder)
-                    <a href="{{ route('admin.course-files.index', ['course_id' => $activeCourse->id]) }}">{{ $activeCourse->course_code }}</a>
+                <?php if($activeFolder): ?>
+                    <a href="<?php echo e(route('admin.course-files.index', ['course_id' => $activeCourse->id])); ?>"><?php echo e($activeCourse->course_code); ?></a>
                     <span class="sep">/</span>
-                    <span class="current"><i class="fas fa-folder-open" style="color:#f59e0b;"></i> {{ $activeFolder->name }}</span>
-                @else
-                    <span class="current">{{ $activeCourse->course_code }}</span>
-                @endif
+                    <span class="current"><i class="fas fa-folder-open" style="color:#f59e0b;"></i> <?php echo e($activeFolder->name); ?></span>
+                <?php else: ?>
+                    <span class="current"><?php echo e($activeCourse->course_code); ?></span>
+                <?php endif; ?>
             </div>
             <h5 class="card-title mb-0" style="margin-top: 6px;">
-                {{ $activeCourse->title }}
+                <?php echo e($activeCourse->title); ?>
+
             </h5>
             <p class="card-subtitle mb-0" style="margin-top: 2px;">
-                @if($activeCourse->teacher)
-                    <i class="fas fa-chalkboard-teacher"></i> {{ $activeCourse->teacher->name }}
-                @else
+                <?php if($activeCourse->teacher): ?>
+                    <i class="fas fa-chalkboard-teacher"></i> <?php echo e($activeCourse->teacher->name); ?>
+
+                <?php else: ?>
                     Unassigned
-                @endif
-                @if($activeCourse->department)
-                    · {{ $activeCourse->department->name }}
-                @endif
+                <?php endif; ?>
+                <?php if($activeCourse->department): ?>
+                    · <?php echo e($activeCourse->department->name); ?>
+
+                <?php endif; ?>
             </p>
         </div>
-        <form action="{{ route('admin.course-files.index') }}" method="GET" class="d-flex align-items-center gap-2">
-            <input type="hidden" name="course_id" value="{{ $activeCourse->id }}">
-            @if($activeFolder)
-                <input type="hidden" name="folder_id" value="{{ $activeFolder->id }}">
-            @endif
+        <form action="<?php echo e(route('admin.course-files.index')); ?>" method="GET" class="d-flex align-items-center gap-2">
+            <input type="hidden" name="course_id" value="<?php echo e($activeCourse->id); ?>">
+            <?php if($activeFolder): ?>
+                <input type="hidden" name="folder_id" value="<?php echo e($activeFolder->id); ?>">
+            <?php endif; ?>
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" placeholder="Search files here..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
+                <input type="text" name="search" placeholder="Search files here..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
                     <button type="button" class="btn-clear-search"
-                        onclick="window.location.href='{{ route('admin.course-files.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}'"
+                        onclick="window.location.href='<?php echo e(route('admin.course-files.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null]))); ?>'"
                         title="Clear">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" title="Search"><i class="fas fa-search"></i></button>
         </form>
@@ -699,9 +702,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Parent link when inside folder --}}
-                    @if($activeFolder)
-                    <tr style="cursor:pointer;" onclick="window.location.href='{{ route('admin.course-files.index', ['course_id' => $activeCourse->id]) }}'">
+                    
+                    <?php if($activeFolder): ?>
+                    <tr style="cursor:pointer;" onclick="window.location.href='<?php echo e(route('admin.course-files.index', ['course_id' => $activeCourse->id])); ?>'">
                         <td colspan="6">
                             <div class="fb-name-cell">
                                 <div class="fb-ico folder"><i class="fas fa-level-up-alt"></i></div>
@@ -712,42 +715,42 @@
                             </div>
                         </td>
                     </tr>
-                    @endif
+                    <?php endif; ?>
 
-                    {{-- Folders --}}
-                    @foreach($browserFolders as $folder)
+                    
+                    <?php $__currentLoopData = $browserFolders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $folder): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr class="fb-row-folder" style="cursor:pointer;"
-                        onclick="if(!event.target.closest('form,button,a')) window.location.href='{{ route('admin.course-files.index', ['folder_id' => $folder->id]) }}'">
+                        onclick="if(!event.target.closest('form,button,a')) window.location.href='<?php echo e(route('admin.course-files.index', ['folder_id' => $folder->id])); ?>'">
                         <td>
                             <div class="fb-name-cell">
                                 <div class="fb-ico folder"><i class="fas fa-folder"></i></div>
                                 <div>
-                                    <div class="user-name">{{ $folder->name }}</div>
-                                    <div class="user-sub">{{ $folder->materials_count }} file{{ $folder->materials_count !== 1 ? 's' : '' }} · by {{ $folder->creator->name ?? 'Admin' }}</div>
+                                    <div class="user-name"><?php echo e($folder->name); ?></div>
+                                    <div class="user-sub"><?php echo e($folder->materials_count); ?> file<?php echo e($folder->materials_count !== 1 ? 's' : ''); ?> · by <?php echo e($folder->creator->name ?? 'Admin'); ?></div>
                                 </div>
                             </div>
                         </td>
                         <td class="text-center"><span class="folder-badge"><i class="fas fa-folder"></i> Folder</span></td>
-                        <td class="text-center"><span class="user-sub">{{ $folder->creator->name ?? '—' }}</span></td>
+                        <td class="text-center"><span class="user-sub"><?php echo e($folder->creator->name ?? '—'); ?></span></td>
                         <td class="text-center"><span class="user-sub">—</span></td>
-                        <td class="text-center"><span class="user-sub">{{ $folder->updated_at?->diffForHumans() }}</span></td>
+                        <td class="text-center"><span class="user-sub"><?php echo e($folder->updated_at?->diffForHumans()); ?></span></td>
                         <td>
                             <div class="action-group" onclick="event.stopPropagation();">
-                                <a href="{{ route('admin.course-files.index', ['folder_id' => $folder->id]) }}" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);" title="Open">
+                                <a href="<?php echo e(route('admin.course-files.index', ['folder_id' => $folder->id])); ?>" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);" title="Open">
                                     <i class="fas fa-folder-open"></i>
                                 </a>
-                                <form action="{{ route('admin.course-folders.destroy', $folder->id) }}" method="POST" class="m-0 p-0 folder-del-form d-flex align-items-center">
-                                    @csrf @method('DELETE')
+                                <form action="<?php echo e(route('admin.course-folders.destroy', $folder->id)); ?>" method="POST" class="m-0 p-0 folder-del-form d-flex align-items-center">
+                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                     <button type="button" class="action-btn delete folder-delete-btn" title="Delete Folder"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-                    {{-- Files --}}
-                    @forelse($materials as $material)
-                    @php
+                    
+                    <?php $__empty_1 = true; $__currentLoopData = $materials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $material): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <?php
                         $ext = strtolower($material->file_type ?? 'file');
                         $icon = 'fa-file-alt';
                         $icoClass = 'file';
@@ -760,120 +763,122 @@
                         elseif (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'])) { $icon = 'fa-file-image'; $icoClass = 'img'; $badgeClass = 'cyan'; }
                         $size = $material->file_size ?? 0;
                         $sizeLabel = $size < 1024 ? $size . ' B' : ($size < 1048576 ? round($size / 1024, 1) . ' KB' : round($size / 1048576, 2) . ' MB');
-                    @endphp
+                    ?>
                     <tr>
                         <td>
                             <div class="fb-name-cell">
-                                <div class="fb-ico {{ $icoClass }}"><i class="fas {{ $icon }}"></i></div>
+                                <div class="fb-ico <?php echo e($icoClass); ?>"><i class="fas <?php echo e($icon); ?>"></i></div>
                                 <div>
-                                    <div class="user-name">{{ $material->title }}</div>
-                                    <div class="user-sub">Uploaded {{ $material->created_at->diffForHumans() }}</div>
+                                    <div class="user-name"><?php echo e($material->title); ?></div>
+                                    <div class="user-sub">Uploaded <?php echo e($material->created_at->diffForHumans()); ?></div>
                                 </div>
                             </div>
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('admin.course-files.download', $material->id) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-                                <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
+                            <a href="<?php echo e(route('admin.course-files.download', $material->id)); ?>" target="_blank" class="badge <?php echo e($badgeClass); ?>" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                                <i class="fas <?php echo e($icon); ?>"></i> <?php echo e(strtoupper($ext)); ?>
+
                             </a>
                         </td>
                         <td class="text-center">
-                            <div class="user-name" style="font-size:0.82rem;">{{ $material->uploader->name ?? 'Unknown' }}</div>
+                            <div class="user-name" style="font-size:0.82rem;"><?php echo e($material->uploader->name ?? 'Unknown'); ?></div>
                         </td>
-                        <td class="text-center"><span class="user-sub">{{ $sizeLabel }}</span></td>
-                        <td class="text-center"><span class="user-sub">{{ $material->updated_at->format('d M Y') }}</span></td>
+                        <td class="text-center"><span class="user-sub"><?php echo e($sizeLabel); ?></span></td>
+                        <td class="text-center"><span class="user-sub"><?php echo e($material->updated_at->format('d M Y')); ?></span></td>
                         <td>
                             <div class="action-group">
-                                @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp']))
+                                <?php if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'])): ?>
                                 <button type="button" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);"
-                                    onclick="openPreviewModal('{{ route('admin.course-files.preview', $material->id) }}', '{{ addslashes($material->title) }}', '{{ $ext }}')" title="Preview">
+                                    onclick="openPreviewModal('<?php echo e(route('admin.course-files.preview', $material->id)); ?>', '<?php echo e(addslashes($material->title)); ?>', '<?php echo e($ext); ?>')" title="Preview">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                @endif
-                                <a href="{{ route('admin.course-files.download', $material->id) }}" class="action-btn" style="background:#ecfdf5; color:#059669;" title="Download" target="_blank">
+                                <?php endif; ?>
+                                <a href="<?php echo e(route('admin.course-files.download', $material->id)); ?>" class="action-btn" style="background:#ecfdf5; color:#059669;" title="Download" target="_blank">
                                     <i class="fas fa-download"></i>
                                 </a>
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editFileModal"
-                                    data-id="{{ $material->id }}"
-                                    data-course="{{ $material->course_id }}"
-                                    data-title="{{ $material->title }}"
-                                    data-filepath="{{ $material->file_path }}"
-                                    data-fileext="{{ strtoupper($ext) }}"
-                                    data-teacherid="{{ $material->uploaded_by }}"
-                                    data-folderid="{{ $material->folder_id ?? '' }}">
+                                    data-id="<?php echo e($material->id); ?>"
+                                    data-course="<?php echo e($material->course_id); ?>"
+                                    data-title="<?php echo e($material->title); ?>"
+                                    data-filepath="<?php echo e($material->file_path); ?>"
+                                    data-fileext="<?php echo e(strtoupper($ext)); ?>"
+                                    data-teacherid="<?php echo e($material->uploaded_by); ?>"
+                                    data-folderid="<?php echo e($material->folder_id ?? ''); ?>">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <form action="{{ route('admin.course-files.destroy', $material->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                    @csrf @method('DELETE')
+                                <form action="<?php echo e(route('admin.course-files.destroy', $material->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                     <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @empty
-                        @if($browserFolders->isEmpty())
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <?php if($browserFolders->isEmpty()): ?>
                         <tr>
                             <td colspan="6" class="text-center py-5">
                                 <div class="empty-state">
                                     <i class="fas fa-folder-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                                    @if(request('search'))
-                                        <h6 class="text-heading fw-bold">No files match “{{ request('search') }}”</h6>
+                                    <?php if(request('search')): ?>
+                                        <h6 class="text-heading fw-bold">No files match “<?php echo e(request('search')); ?>”</h6>
                                         <p class="text-muted small">Try another keyword in this course.</p>
-                                    @elseif($activeFolder)
+                                    <?php elseif($activeFolder): ?>
                                         <h6 class="text-heading fw-bold">This folder is empty</h6>
                                         <p class="text-muted small">Upload a material into this folder to get started.</p>
                                         <button class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#uploadModal"
-                                            onclick="prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id }})">
+                                            onclick="prefillUploadContext(<?php echo e($activeCourse->id); ?>, <?php echo e($activeFolder->id); ?>)">
                                             <i class="fas fa-cloud-upload-alt"></i> Upload Here
                                         </button>
-                                    @else
+                                    <?php else: ?>
                                         <h6 class="text-heading fw-bold">No materials in this course yet</h6>
                                         <p class="text-muted small">Create a folder or upload files directly to the course root.</p>
                                         <div class="d-flex justify-content-center gap-2 mt-3">
                                             <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#createFolderModal"
-                                                onclick="prefillFolderCourse({{ $activeCourse->id }})">
+                                                onclick="prefillFolderCourse(<?php echo e($activeCourse->id); ?>)">
                                                 <i class="fas fa-folder-plus"></i> New Folder
                                             </button>
                                             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal"
-                                                onclick="prefillUploadContext({{ $activeCourse->id }}, null)">
+                                                onclick="prefillUploadContext(<?php echo e($activeCourse->id); ?>, null)">
                                                 <i class="fas fa-cloud-upload-alt"></i> Upload Material
                                             </button>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
-                        @endif
-                    @endforelse
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
-        @if($materials && $materials->hasPages())
+        <?php if($materials && $materials->hasPages()): ?>
             <div class="mt-3 px-3 pb-3 border-top pt-3">
-                {{ $materials->links('pagination::bootstrap-5') }}
+                <?php echo e($materials->links('pagination::bootstrap-5')); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endif
+<?php endif; ?>
 
-{{-- ===================== ALL FILES (flat list) ===================== --}}
-@if($viewMode === 'all_files')
+
+<?php if($viewMode === 'all_files'): ?>
 <div class="data-card">
     <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div>
             <h5 class="card-title"><i class="fas fa-table-list"></i> All Uploaded Files</h5>
             <p class="card-subtitle">Complete list across every course</p>
         </div>
-        <form action="{{ route('admin.course-files.index') }}" method="GET" class="d-flex align-items-center gap-2">
+        <form action="<?php echo e(route('admin.course-files.index')); ?>" method="GET" class="d-flex align-items-center gap-2">
             <input type="hidden" name="view" value="all">
             <div class="search-box position-relative">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" placeholder="Search any field..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.course-files.index', ['view' => 'all']) }}'" title="Clear">
+                <input type="text" name="search" placeholder="Search any field..." value="<?php echo e(request('search')); ?>" style="padding-right: 30px;">
+                <?php if(request('search')): ?>
+                    <button type="button" class="btn-clear-search" onclick="window.location.href='<?php echo e(route('admin.course-files.index', ['view' => 'all'])); ?>'" title="Clear">
                         <i class="fas fa-times"></i>
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
             <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
         </form>
@@ -892,8 +897,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($materials as $material)
-                    @php
+                    <?php $__empty_1 = true; $__currentLoopData = $materials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $material): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <?php
                         $ext = strtolower($material->file_type ?? 'pdf');
                         $icon = 'fa-file-alt';
                         $badgeClass = 'primary';
@@ -907,66 +912,69 @@
                         $initials = strtoupper(substr($uploaderName, 0, 2));
                         $colors = ['emerald', 'cyan', 'rose', 'blue', 'amber', 'purple', 'indigo'];
                         $colorClass = $colors[strlen($uploaderName) % count($colors)];
-                    @endphp
+                    ?>
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <div class="avatar-sm {{ $colorClass }}">{{ $initials }}</div>
+                                <div class="avatar-sm <?php echo e($colorClass); ?>"><?php echo e($initials); ?></div>
                                 <div>
-                                    <div class="user-name">{{ $uploaderName }}</div>
-                                    <div class="user-sub">{{ $material->uploader->role ?? 'User' }}</div>
+                                    <div class="user-name"><?php echo e($uploaderName); ?></div>
+                                    <div class="user-sub"><?php echo e($material->uploader->role ?? 'User'); ?></div>
                                 </div>
                             </div>
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('admin.course-files.index', ['course_id' => $material->course_id]) }}" class="badge dark" style="text-decoration:none;" title="Open course">
-                                {{ $material->course->course_code ?? 'N/A' }}
+                            <a href="<?php echo e(route('admin.course-files.index', ['course_id' => $material->course_id])); ?>" class="badge dark" style="text-decoration:none;" title="Open course">
+                                <?php echo e($material->course->course_code ?? 'N/A'); ?>
+
                             </a>
                         </td>
                         <td>
-                            <div class="user-name">{{ $material->title }}</div>
-                            <div class="user-sub">Uploaded {{ $material->created_at->diffForHumans() }}</div>
+                            <div class="user-name"><?php echo e($material->title); ?></div>
+                            <div class="user-sub">Uploaded <?php echo e($material->created_at->diffForHumans()); ?></div>
                         </td>
                         <td class="text-center">
-                            @if($material->folder)
-                                <a href="{{ route('admin.course-files.index', ['folder_id' => $material->folder_id]) }}" class="folder-badge" style="text-decoration:none;">
-                                    <i class="fas fa-folder" style="color:#f59e0b; margin-right:4px;"></i>{{ Str::limit($material->folder->name, 14) }}
+                            <?php if($material->folder): ?>
+                                <a href="<?php echo e(route('admin.course-files.index', ['folder_id' => $material->folder_id])); ?>" class="folder-badge" style="text-decoration:none;">
+                                    <i class="fas fa-folder" style="color:#f59e0b; margin-right:4px;"></i><?php echo e(Str::limit($material->folder->name, 14)); ?>
+
                                 </a>
-                            @else
+                            <?php else: ?>
                                 <span style="font-size:0.75rem; color: var(--text-secondary);">— Root —</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('admin.course-files.download', $material->id) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-                                <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
+                            <a href="<?php echo e(route('admin.course-files.download', $material->id)); ?>" target="_blank" class="badge <?php echo e($badgeClass); ?>" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                                <i class="fas <?php echo e($icon); ?>"></i> <?php echo e(strtoupper($ext)); ?>
+
                             </a>
                         </td>
                         <td>
                             <div class="action-group">
-                                @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg']))
+                                <?php if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'])): ?>
                                 <button type="button" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);"
-                                    onclick="openPreviewModal('{{ route('admin.course-files.preview', $material->id) }}', '{{ addslashes($material->title) }}', '{{ $ext }}')" title="Preview">
+                                    onclick="openPreviewModal('<?php echo e(route('admin.course-files.preview', $material->id)); ?>', '<?php echo e(addslashes($material->title)); ?>', '<?php echo e($ext); ?>')" title="Preview">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                @endif
+                                <?php endif; ?>
                                 <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editFileModal"
-                                    data-id="{{ $material->id }}"
-                                    data-course="{{ $material->course_id }}"
-                                    data-title="{{ $material->title }}"
-                                    data-filepath="{{ $material->file_path }}"
-                                    data-fileext="{{ strtoupper($ext) }}"
-                                    data-teacherid="{{ $material->uploaded_by }}"
-                                    data-folderid="{{ $material->folder_id ?? '' }}">
+                                    data-id="<?php echo e($material->id); ?>"
+                                    data-course="<?php echo e($material->course_id); ?>"
+                                    data-title="<?php echo e($material->title); ?>"
+                                    data-filepath="<?php echo e($material->file_path); ?>"
+                                    data-fileext="<?php echo e(strtoupper($ext)); ?>"
+                                    data-teacherid="<?php echo e($material->uploaded_by); ?>"
+                                    data-folderid="<?php echo e($material->folder_id ?? ''); ?>">
                                     <i class="fas fa-pen"></i>
                                 </button>
-                                <form action="{{ route('admin.course-files.destroy', $material->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
-                                    @csrf @method('DELETE')
+                                <form action="<?php echo e(route('admin.course-files.destroy', $material->id)); ?>" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                    <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                     <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr>
                         <td colspan="6" class="text-center py-5">
                             <div class="empty-state">
@@ -976,21 +984,22 @@
                             </div>
                         </td>
                     </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
-        @if($materials && $materials->hasPages())
+        <?php if($materials && $materials->hasPages()): ?>
             <div class="mt-3 px-3 pb-3 border-top pt-3">
-                {{ $materials->links('pagination::bootstrap-5') }}
+                <?php echo e($materials->links('pagination::bootstrap-5')); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endif
-@endsection
+<?php endif; ?>
+<?php $__env->stopSection(); ?>
 
-@push('modals')
+<?php $__env->startPush('modals'); ?>
 <!-- UPLOAD -->
 <div class="modal fade" id="uploadModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -1005,15 +1014,15 @@
                     <div class="step"><span style="display:block;margin-bottom:4px;color:var(--primary);">2</span> Folder (optional)</div>
                     <div class="step"><span style="display:block;margin-bottom:4px;color:var(--primary);">3</span> Title &amp; File</div>
                 </div>
-                <form action="{{ route('admin.course-files.store') }}" method="POST" enctype="multipart/form-data" id="uploadMaterialForm">
-                    @csrf
+                <form action="<?php echo e(route('admin.course-files.store')); ?>" method="POST" enctype="multipart/form-data" id="uploadMaterialForm">
+                    <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label class="form-label">Course <span class="text-danger">*</span></label>
                         <select name="course_id" id="add_course" class="form-select" required placeholder="Select Course">
                             <option value="">Select Course</option>
-                            @foreach($courses as $course)
-                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} — {{ $course->title }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($course->id); ?>" data-teacher="<?php echo e($course->teacher_id); ?>"><?php echo e($course->course_code); ?> — <?php echo e($course->title); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                         <small style="color:var(--text-muted); font-size:0.75rem; margin-top:4px; display:block;">File will be attached to this course only.</small>
                     </div>
@@ -1028,9 +1037,9 @@
                             <label class="form-label">Uploaded By</label>
                             <select name="uploaded_by" id="add_teacher" class="form-select" placeholder="Select Faculty">
                                 <option value="">Auto (course teacher)</option>
-                                @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $teachers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $teacher): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($teacher->id); ?>"><?php echo e($teacher->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                     </div>
@@ -1081,15 +1090,15 @@
                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 18px; line-height: 1.5;">
                     Folders belong to one course. Students and teachers will see them inside that course only.
                 </p>
-                <form action="{{ route('admin.course-folders.store') }}" method="POST">
-                    @csrf
+                <form action="<?php echo e(route('admin.course-folders.store')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label class="form-label">Course <span class="text-danger">*</span></label>
                         <select name="course_id" id="modal_create_course" class="form-select" required placeholder="Select Course">
                             <option value="">Select Course</option>
-                            @foreach($courses as $course)
-                                <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($course->id); ?>"><?php echo e($course->course_code); ?> — <?php echo e($course->title); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -1116,15 +1125,15 @@
             </div>
             <div class="modal-body-content">
                 <form id="editFileForm" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('PUT'); ?>
                     <div class="form-group">
                         <label class="form-label">Course <span class="text-danger">*</span></label>
                         <select name="course_id" id="edit_course_id" class="form-select" required placeholder="Select Course">
                             <option value="">Select Course</option>
-                            @foreach($courses as $course)
-                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} — {{ $course->title }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($course->id); ?>" data-teacher="<?php echo e($course->teacher_id); ?>"><?php echo e($course->course_code); ?> — <?php echo e($course->title); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="form-grid">
@@ -1138,9 +1147,9 @@
                             <label class="form-label">Uploaded By</label>
                             <select name="uploaded_by" id="edit_teacher_id" class="form-select" placeholder="Select Faculty">
                                 <option value="">Select Faculty</option>
-                                @foreach($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = $teachers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $teacher): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($teacher->id); ?>"><?php echo e($teacher->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                     </div>
@@ -1184,9 +1193,9 @@
         </div>
     </div>
 </div>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     function openPreviewModal(url, title, ext) {
         document.getElementById('previewModalLabel').innerHTML = '<i class="fas fa-eye"></i> ' + title;
@@ -1361,7 +1370,7 @@
                 else if (ext === 'ZIP' || ext === 'RAR') iconClass = 'fa-file-archive';
                 document.getElementById('edit_file_icon').className = 'fas ' + iconClass;
 
-                document.getElementById('editFileForm').action = "{{ route('admin.course-files.update', ':id') }}".replace(':id', id);
+                document.getElementById('editFileForm').action = "<?php echo e(route('admin.course-files.update', ':id')); ?>".replace(':id', id);
             });
         });
 
@@ -1438,15 +1447,17 @@
             });
         }
 
-        @if($activeCourse)
+        <?php if($activeCourse): ?>
             // Prefill modals when opened from browser context
             document.getElementById('uploadModal')?.addEventListener('show.bs.modal', function() {
-                prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }});
+                prefillUploadContext(<?php echo e($activeCourse->id); ?>, <?php echo e($activeFolder->id ?? 'null'); ?>);
             });
             document.getElementById('createFolderModal')?.addEventListener('show.bs.modal', function() {
-                prefillFolderCourse({{ $activeCourse->id }});
+                prefillFolderCourse(<?php echo e($activeCourse->id); ?>);
             });
-        @endif
+        <?php endif; ?>
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/admin/course-files.blade.php ENDPATH**/ ?>

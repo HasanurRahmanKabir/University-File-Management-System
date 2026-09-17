@@ -37,7 +37,9 @@ class CourseFolderController extends Controller
             'created_by' => Auth::id(),
         ]);
 
-        return back()->with('success', 'Folder "' . trim($validated['name']) . '" created successfully.');
+        return redirect()
+            ->route('admin.course-files.index', ['course_id' => $validated['course_id']])
+            ->with('success', 'Folder "' . trim($validated['name']) . '" created successfully.');
     }
 
     /**
@@ -46,8 +48,11 @@ class CourseFolderController extends Controller
     public function destroy(CourseFolder $folder)
     {
         $folderName = $folder->name;
+        $courseId = $folder->course_id;
         $folder->delete();
 
-        return back()->with('success', 'Folder "' . $folderName . '" deleted. Files moved to root.');
+        return redirect()
+            ->route('admin.course-files.index', ['course_id' => $courseId])
+            ->with('success', 'Folder "' . $folderName . '" deleted. Files moved to root.');
     }
 }
