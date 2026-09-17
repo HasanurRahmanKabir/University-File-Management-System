@@ -119,15 +119,34 @@
 
     /* Match My Course Info / Announcements table rhythm */
     .tm-files-wrap.t-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    .tm-files-table.t-tbl { min-width:900px; table-layout:fixed; width:100%; }
+    .tm-files-table.t-tbl { min-width:960px; table-layout:fixed; width:100%; border-collapse:collapse; }
+    .tm-files-table.t-tbl th,
+    .tm-files-table.t-tbl td {
+        padding:14px 16px; vertical-align:middle; box-sizing:border-box;
+    }
+    .tm-files-table.t-tbl th:first-child,
+    .tm-files-table.t-tbl td:first-child { padding-left:20px; }
+    .tm-files-table.t-tbl th:last-child,
+    .tm-files-table.t-tbl td:last-child { padding-right:20px; }
+    .tm-files-table .col-name { width:32%; }
+    .tm-files-table .col-type { width:14%; }
+    .tm-files-table .col-privacy { width:16%; }
+    .tm-files-table .col-size { width:14%; }
+    .tm-files-table .col-action { width:24%; }
     .tm-files-table .t-name {
         font-size:0.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;
     }
     .tm-files-table .t-sub {
         white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
+    .tm-files-table .cell-muted {
+        display:inline-block; min-width:2.5rem; text-align:center; color:var(--tx-s); font-weight:500;
+    }
+    .tm-files-table .cell-size {
+        display:inline-block; min-width:4.5rem; text-align:center; font-weight:600; color:var(--tx-h);
+    }
     .tm-files-table .action-group {
-        display:flex; align-items:center; justify-content:flex-end; gap:6px; flex-wrap:nowrap;
+        display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-wrap:nowrap; min-height:32px;
     }
     .tm-files-table .action-group form { display:flex; align-items:center; margin:0; padding:0; }
     .tm-files-table .action-btn {
@@ -146,6 +165,33 @@
     .upload-steps { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
     .upload-steps .step { flex:1; min-width:90px; text-align:center; padding:8px; border-radius:8px; background:var(--bg-muted); border:1px solid var(--bd-lt); font-size:0.72rem; font-weight:700; color:var(--tx-s); }
     .upload-steps .step span { display:block; color:var(--primary); margin-bottom:3px; }
+
+    /* Privacy segmented control — Visible / Only Me */
+    .priv-seg {
+        display:flex; width:100%; border:1px solid var(--bd); border-radius:10px;
+        overflow:hidden; background:#f8fafc;
+    }
+    .priv-seg input[type="radio"] { position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+    .priv-seg label {
+        flex:1; margin:0; padding:11px 12px; text-align:center;
+        font-size:0.8rem; font-weight:700; color:var(--tx-s);
+        cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+        border-right:1px solid var(--bd); background:transparent; transition:all 0.15s ease;
+        user-select:none;
+    }
+    .priv-seg label:last-of-type { border-right:none; }
+    .priv-seg label:hover { color:var(--tx-h); background:#fff; }
+    .priv-seg input[type="radio"]:checked + label {
+        background:var(--primary-light); color:var(--primary);
+        box-shadow:inset 0 0 0 1px rgba(5,150,105,0.25);
+    }
+    .priv-seg input[type="radio"][value="0"]:checked + label {
+        background:#f1f5f9; color:#475569;
+        box-shadow:inset 0 0 0 1px #cbd5e1;
+    }
+    .priv-seg input[type="radio"]:focus-visible + label {
+        outline:2px solid var(--primary); outline-offset:-2px;
+    }
 
     @media (max-width:1100px) {
         .tm-stats { grid-template-columns:1fr; }
@@ -221,7 +267,7 @@
             </div>
             <button type="submit" class="btn-primary" style="height:40px; padding:0 14px;"><i class="fas fa-search"></i> Search</button>
             @if(request('search'))
-                <a href="{{ route('teacher.course-materials.index') }}" class="btn-ghost" style="height:40px; padding:0 12px;">Reset</a>
+                <a href="{{ route('teacher.course-materials.index') }}" class="btn-ghost" style="height:40px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; text-decoration:none; font-weight:700;">Reset</a>
             @endif
         </form>
     </div>
@@ -256,7 +302,7 @@
                 <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-book-open"></i></div>
                 @if(request('search'))
                     <h5 style="color:var(--tx-h); font-weight:600;">No courses match “{{ request('search') }}”</h5>
-                    <a href="{{ route('teacher.course-materials.index') }}" class="btn-primary mt-3" style="padding:9px 18px;">Clear Search</a>
+                    <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">Try another keyword, or use Reset above to clear search.</p>
                 @else
                     <h5 style="color:var(--tx-h); font-weight:600;">No active courses this term</h5>
                     <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">When courses are assigned to you for the running semester, they will appear here.</p>
@@ -298,11 +344,11 @@
             @endif
             <div class="tm-search">
                 <i class="fas fa-search"></i>
-                <input type="text" name="search" placeholder="Search files here..." value="{{ request('search') }}">
+                <input type="text" name="search" placeholder="Search folders & files..." value="{{ request('search') }}">
             </div>
             <button type="submit" class="btn-primary" title="Search"><i class="fas fa-search"></i></button>
             @if(request('search'))
-                <a href="{{ route('teacher.course-materials.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}" class="btn-ghost" style="height:40px; padding:0 12px;">Reset</a>
+                <a href="{{ route('teacher.course-materials.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}" class="btn-ghost" style="height:40px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; text-decoration:none; font-weight:700;">Reset</a>
             @endif
         </form>
     </div>
@@ -310,13 +356,20 @@
     <div class="d-card-body p0">
         <div class="t-wrap tm-files-wrap">
             <table class="t-tbl tm-files-table">
+                <colgroup>
+                    <col class="col-name">
+                    <col class="col-type">
+                    <col class="col-privacy">
+                    <col class="col-size">
+                    <col class="col-action">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th class="text-start" style="width:34%;">Name</th>
-                        <th class="text-center" style="width:16%;">Type</th>
-                        <th class="text-center" style="width:16%;">Privacy</th>
-                        <th class="text-center" style="width:14%;">Size</th>
-                        <th class="text-end" style="width:20%;">Action</th>
+                        <th class="text-start">Name</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center">Privacy</th>
+                        <th class="text-center">Size</th>
+                        <th class="text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -358,15 +411,22 @@
                             </div>
                         </td>
                         <td class="text-center"><span class="folder-badge"><i class="fas fa-folder"></i> Folder</span></td>
-                        <td class="text-center"><span class="t-sub">—</span></td>
-                        <td class="text-center"><span class="t-sub">—</span></td>
+                        <td class="text-center">
+                            @if($folder->is_active)
+                                <span class="badge b-green"><i class="fas fa-globe"></i> Students</span>
+                            @else
+                                <span class="badge b-gray"><i class="fas fa-lock"></i> Only Me</span>
+                            @endif
+                        </td>
+                        <td class="text-center"><span class="cell-muted">—</span></td>
                         <td class="text-end" onclick="event.stopPropagation();">
                             <div class="action-group">
                                 <a href="{{ route('teacher.course-materials.index', ['folder_id' => $folder->id]) }}" class="action-btn open" title="Open"><i class="fas fa-folder-open"></i></a>
-                                <button type="button" class="action-btn js-rename-folder" title="Rename"
+                                <button type="button" class="action-btn js-rename-folder" title="Edit Folder"
                                     data-bs-toggle="modal" data-bs-target="#renameFolderModal"
                                     data-id="{{ $folder->id }}"
-                                    data-folder-name="{{ e($folder->name) }}">
+                                    data-folder-name="{{ e($folder->name) }}"
+                                    data-is-active="{{ $folder->is_active ? 1 : 0 }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <form action="{{ route('teacher.course-folders.destroy', $folder->id) }}" method="POST" class="folder-del-form">
@@ -412,7 +472,7 @@
                                 <span class="badge b-gray"><i class="fas fa-lock"></i> Only Me</span>
                             @endif
                         </td>
-                        <td class="text-center"><span style="font-weight:600;color:var(--tx-h);">{{ $sizeLabel }}</span></td>
+                        <td class="text-center"><span class="cell-size">{{ $sizeLabel }}</span></td>
                         <td class="text-end">
                             <div class="action-group">
                                 @if(in_array($ext, ['pdf','png','jpg','jpeg','gif','webp']))
@@ -443,17 +503,17 @@
                         </td>
                     </tr>
                     @empty
-                        @if(request('search'))
+                        @if(request('search') && $browserFolders->isEmpty())
                         <tr>
                             <td colspan="5">
                                 <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
                                     <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-search"></i></div>
-                                    <h5 style="color:var(--tx-h); font-weight:600;">No files match “{{ request('search') }}”</h5>
-                                    <p style="color:var(--tx-m); font-size:0.9rem;">Folders above are not filtered by search. Try another keyword or clear search.</p>
+                                    <h5 style="color:var(--tx-h); font-weight:600;">No folders or files match “{{ request('search') }}”</h5>
+                                    <p style="color:var(--tx-m); font-size:0.9rem;">Try another keyword or clear search.</p>
                                 </div>
                             </td>
                         </tr>
-                        @elseif($browserFolders->isEmpty())
+                        @elseif(!request('search') && $browserFolders->isEmpty())
                         <tr>
                             <td colspan="5">
                                 <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
@@ -595,9 +655,19 @@
                         <input type="text" class="finput" id="modal_create_parent_label" readonly
                             style="background:#f8fafc; color:var(--tx-s);">
                     </div>
-                    <div class="fg" style="margin-bottom:0;">
+                    <div class="fg">
                         <label class="flabel">Folder Name <span style="color:var(--danger)">*</span></label>
-                        <input type="text" class="finput" name="name" placeholder="e.g. Lecture Notes, Week 1..." required>
+                        <input type="text" class="finput" name="name" placeholder="e.g. Lecture Notes, Week 1..." required maxlength="100">
+                    </div>
+                    <div class="fg" style="margin-bottom:0;">
+                        <label class="flabel">Folder Privacy</label>
+                        <div class="priv-seg">
+                            <input type="radio" name="is_active" value="1" id="folder_pub" checked>
+                            <label for="folder_pub"><i class="fas fa-globe" style="font-size:.72rem;"></i> Visible to students</label>
+                            <input type="radio" name="is_active" value="0" id="folder_me">
+                            <label for="folder_me"><i class="fas fa-lock" style="font-size:.70rem;"></i> Only Me</label>
+                        </div>
+                        <small style="color:var(--tx-m); font-size:0.72rem; margin-top:6px; display:block;">Only Me hides this folder and everything inside it from students.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -611,7 +681,7 @@
     </div>
 </div>
 
-{{-- Rename Folder Modal --}}
+{{-- Edit Folder Modal --}}
 <div class="modal fade" id="renameFolderModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border:none; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.15); overflow:hidden;">
@@ -620,21 +690,31 @@
                 <input type="hidden" name="stay_in_folder" value="0" id="rename_stay_flag">
                 <div class="modal-header" style="background:linear-gradient(135deg,#1e293b 0%,#334155 100%); color:#fff; border-top-left-radius:16px; border-top-right-radius:16px; padding:1.25rem 1.5rem; border-bottom:none;">
                     <h5 class="modal-title" style="font-weight:700; font-size:1.1rem; margin:0; display:flex; align-items:center; gap:8px; color:#fff;">
-                        <i class="fas fa-pen"></i> Rename Folder
+                        <i class="fas fa-pen"></i> Edit Folder
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity:0.9;"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="fg" style="margin-bottom:0;">
+                    <div class="fg">
                         <label class="flabel">Folder Name <span style="color:var(--danger)">*</span></label>
                         <input type="text" class="finput" name="name" id="rename_folder_name" required maxlength="100">
+                    </div>
+                    <div class="fg" style="margin-bottom:0;">
+                        <label class="flabel">Folder Privacy</label>
+                        <div class="priv-seg">
+                            <input type="radio" name="is_active" value="1" id="rename_folder_pub">
+                            <label for="rename_folder_pub"><i class="fas fa-globe" style="font-size:.72rem;"></i> Visible to students</label>
+                            <input type="radio" name="is_active" value="0" id="rename_folder_me">
+                            <label for="rename_folder_me"><i class="fas fa-lock" style="font-size:.70rem;"></i> Only Me</label>
+                        </div>
+                        <small style="color:var(--tx-m); font-size:0.72rem; margin-top:6px; display:block;">Only Me hides this folder and everything inside it from students.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal"
                         style="padding:10px 24px; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
                         onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
-                    <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Name</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Changes</button>
                 </div>
             </form>
         </div>
@@ -832,6 +912,10 @@
                 if (parentLabel) parentLabel.value = '';
                 if (hint) hint.textContent = 'Folders belong to one course. You can create nested folders inside another folder.';
             }
+
+            const pub = document.getElementById('folder_pub');
+            const me = document.getElementById('folder_me');
+            if (pub && me) { pub.checked = true; me.checked = false; }
         }, 150);
     }
 </script>
@@ -871,6 +955,13 @@
                 if (form && nameInput && renameBtn.dataset.id) {
                     form.action = TM_FOLDER_BASE + '/' + renameBtn.dataset.id;
                     nameInput.value = renameBtn.dataset.folderName || '';
+                    const isActive = String(renameBtn.dataset.isActive ?? '1') === '1';
+                    const pub = document.getElementById('rename_folder_pub');
+                    const me = document.getElementById('rename_folder_me');
+                    if (pub && me) {
+                        pub.checked = isActive;
+                        me.checked = !isActive;
+                    }
                 }
             }
         });
@@ -905,6 +996,13 @@
                     if (form && nameInput) {
                         form.action = TM_FOLDER_BASE + '/' + btn.dataset.id;
                         nameInput.value = btn.dataset.folderName || '';
+                        const isActive = String(btn.dataset.isActive ?? '1') === '1';
+                        const pub = document.getElementById('rename_folder_pub');
+                        const me = document.getElementById('rename_folder_me');
+                        if (pub && me) {
+                            pub.checked = isActive;
+                            me.checked = !isActive;
+                        }
                     }
                 }
             });

@@ -1,274 +1,489 @@
 ﻿@extends('layouts.student')
 
-@section('title', 'Course Materials - StudentHub OBE')
+@section('title', 'Course Materials — StudentHub OBE')
 @section('page-title', 'Course Materials')
 @section('breadcrumb', 'Course Materials')
 
 @push('styles')
 <style>
-    .cm-course-block {
-        background: var(--bg-card, #ffffff);
-        border: 1px solid var(--border-light, #e2e8f0);
-        border-radius: 14px;
-        overflow: hidden;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-        animation: fadeInUp 0.4s ease both;
+    .sm-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:18px; }
+    .sm-stat {
+        background:var(--bg-card); border:1px solid var(--bd); border-radius:var(--r-lg);
+        padding:16px 18px; display:flex; align-items:center; gap:14px; box-shadow:var(--sh-sm);
+        backdrop-filter:blur(8px);
     }
-    @keyframes fadeInUp {
-        from { opacity:0; transform:translateY(16px); }
-        to   { opacity:1; transform:translateY(0); }
+    .sm-stat-ico {
+        width:42px; height:42px; border-radius:10px; display:flex; align-items:center;
+        justify-content:center; font-size:1.05rem; flex-shrink:0;
     }
-    .cm-course-header {
-        display: flex; align-items: center; justify-content: space-between;
-        gap: 12px; padding: 18px 24px;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border-bottom: 1px solid var(--border-light, #e2e8f0);
-        flex-wrap: wrap;
+    .sm-stat-ico.blue { background:var(--primary-light); color:var(--primary); }
+    .sm-stat-ico.green { background:#e6f9ed; color:#00c950; }
+    .sm-stat-ico.amber { background:#fff5e6; color:#ff9900; }
+    .sm-stat-label { font-size:0.72rem; font-weight:600; color:var(--tx-s); text-transform:uppercase; letter-spacing:0.04em; }
+    .sm-stat-num { font-size:1.35rem; font-weight:800; color:var(--tx-h); line-height:1.2; }
+
+    .sm-course-grid {
+        display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; padding:4px 2px 8px;
     }
-    .cm-course-header-left { display:flex; align-items:center; gap:14px; min-width:0; }
-    .cm-course-ico {
-        width: 46px; height: 46px; border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.3rem; flex-shrink: 0;
+    @media (max-width:1200px) { .sm-course-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:640px) {
+        .sm-stats { grid-template-columns:1fr; }
+        .sm-course-grid { grid-template-columns:1fr; }
+        .sm-toolbar { flex-direction:column; align-items:stretch; }
+        .sm-search { width:100%; }
     }
-    .cm-course-code { font-size: 1rem; font-weight: 800; color: var(--text-heading, #1e293b); }
-    .cm-course-title { font-size: 0.82rem; color: var(--text-secondary, #64748b); font-weight: 500; margin-top:2px; }
-    .cm-stats-row {
-        display: flex; gap: 8px; flex-wrap: wrap;
-        padding: 12px 24px;
-        border-bottom: 1px solid var(--border-light, #e2e8f0);
-        background: var(--bg-muted, #f8fafc);
+
+    .sm-course-card {
+        background:#fff; border:1px solid var(--bd); border-radius:var(--r-lg); padding:18px;
+        text-decoration:none !important; color:inherit; display:flex; flex-direction:column; gap:12px;
+        position:relative; overflow:hidden; cursor:pointer;
+        box-shadow:var(--sh-sm); transition:border-color var(--base) var(--ease), box-shadow var(--base) var(--ease), transform var(--base) var(--ease);
     }
-    .cm-stat-pill {
-        display: inline-flex; align-items: center; gap: 5px;
-        font-size: 0.72rem; font-weight: 700;
-        padding: 4px 10px; border-radius: 20px;
-        background: var(--bg-card, #fff);
-        border: 1px solid var(--border-light, #e2e8f0);
-        color: var(--text-secondary, #64748b);
+    .sm-course-card::before {
+        content:''; position:absolute; top:0; left:0; right:0; height:3px;
+        background:linear-gradient(90deg, var(--primary), #60a5fa);
     }
-    .cm-stat-pill i { font-size: 0.65rem; }
-    .cm-folder-section { border-bottom: 1px solid var(--border-light, #e2e8f0); }
-    .cm-folder-section:last-child { border-bottom: none; }
-    .cm-folder-toggle {
-        display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        width: 100%; padding: 14px 24px;
-        background: transparent; border: none; cursor: pointer;
-        text-align: left; transition: background 0.2s ease;
-        flex-wrap: wrap;
+    .sm-course-card:hover {
+        border-color:#93c5fd; transform:translateY(-3px);
+        box-shadow:0 8px 24px rgba(0,102,255,0.12), 0 4px 10px rgba(15,23,42,0.06);
     }
-    .cm-folder-toggle:hover { background: var(--bg-muted, #f8fafc); }
-    .cm-folder-toggle-left { display: flex; align-items: center; gap: 10px; }
-    .cm-folder-ico-wrap {
-        width: 36px; height: 36px; border-radius: 9px;
-        display: flex; align-items: center; justify-content: center;
-        background: #fffbeb; color: #f59e0b; font-size: 1rem; flex-shrink: 0;
+    .sm-course-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .sm-course-ico {
+        width:40px; height:40px; border-radius:10px; background:var(--primary-light); color:var(--primary);
+        display:flex; align-items:center; justify-content:center;
     }
-    .cm-folder-ico-wrap.root { background: #eff6ff; color: #3b82f6; }
-    .cm-folder-label { font-size: 0.88rem; font-weight: 700; color: var(--text-heading, #1e293b); }
-    .cm-folder-count { font-size: 0.72rem; color: var(--text-secondary, #64748b); font-weight: 500; margin-top: 1px; }
-    .cm-folder-chevron {
-        font-size: 0.72rem; color: var(--text-secondary, #64748b);
-        transition: transform 0.25s ease; flex-shrink: 0;
+    .sm-course-title {
+        font-size:0.92rem; font-weight:700; color:var(--tx-h); margin:0 0 4px; line-height:1.35;
+        display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
     }
-    .cm-folder-toggle[aria-expanded="false"] .cm-folder-chevron { transform: rotate(-90deg); }
-    .cm-file-table-wrap { overflow-x: auto; }
-    .cm-file-table { width: 100%; min-width: 520px; border-collapse: collapse; }
-    .cm-file-table thead tr th {
-        padding: 9px 20px; font-size: 0.7rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.07em;
-        color: var(--text-secondary, #64748b);
-        background: var(--bg-muted, #f8fafc);
-        border-bottom: 1px solid var(--border-light, #e2e8f0);
-        white-space: nowrap;
+    .sm-course-meta { font-size:0.75rem; color:var(--tx-s); }
+    .sm-course-stats {
+        display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+        padding-top:12px; border-top:1px solid var(--bd-lt); margin-top:auto;
     }
-    .cm-file-table tbody tr { transition: background 0.15s; }
-    .cm-file-table tbody tr:hover { background: #f8fafc; }
-    .cm-file-table tbody tr:not(:last-child) { border-bottom: 1px solid var(--border-light, #e2e8f0); }
-    .cm-file-table td { padding: 12px 20px; vertical-align: middle; font-size: 0.85rem; color: var(--text-body, #334155); }
-    .cm-file-chip {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 4px 10px; border-radius: 6px;
-        font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+    .sm-chip {
+        display:inline-flex; align-items:center; gap:5px; font-size:0.72rem; font-weight:600;
+        color:var(--tx-s); background:var(--bg-muted); border:1px solid var(--bd-lt);
+        border-radius:6px; padding:4px 9px;
     }
-    .cm-file-title { font-weight: 600; color: var(--text-heading, #1e293b); line-height: 1.3; word-break: break-word; }
-    .cm-file-size  { font-size: 0.72rem; color: var(--text-secondary, #64748b); margin-top: 2px; }
-    .cm-action-group { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: nowrap; }
-    .cm-btn {
-        display: inline-flex; align-items: center; gap: 5px;
-        padding: 6px 13px; border-radius: 7px; font-size: 0.75rem; font-weight: 600;
-        cursor: pointer; text-decoration: none; border: none; transition: all 0.18s ease;
-        white-space: nowrap;
+    .sm-open {
+        margin-left:auto; font-size:0.72rem; font-weight:700; color:var(--primary);
+        background:var(--primary-light); border-radius:6px; padding:4px 10px;
+        display:inline-flex; align-items:center; gap:5px;
     }
-    .cm-btn-view     { background: #eff6ff; color: #2563eb; }
-    .cm-btn-view:hover { background: #2563eb; color: #fff; }
-    .cm-btn-download { background: #f0fdf4; color: #059669; }
-    .cm-btn-download:hover { background: #059669; color: #fff; }
-    .cm-folder-empty {
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 30px 20px; gap: 8px;
-        color: var(--text-secondary, #64748b); font-size: 0.83rem;
+    .sm-course-card:hover .sm-open { background:var(--primary); color:#fff; }
+
+    .sm-toolbar {
+        display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+        gap:12px; padding:16px 20px; border-bottom:1px solid var(--bd); background:#fff;
     }
-    .cm-folder-empty i { font-size: 2rem; color: #cbd5e1; }
-    .cm-no-data {
-        text-align: center; padding: 60px 20px;
-        background: var(--bg-card, #fff);
-        border: 1px solid var(--border-light, #e2e8f0);
-        border-radius: 14px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    .sm-toolbar form { display:flex; align-items:center; gap:8px; margin:0; flex-wrap:wrap; }
+    .sm-search { position:relative; width:220px; }
+    .sm-search i {
+        position:absolute; left:11px; top:50%; transform:translateY(-50%);
+        color:var(--tx-m); font-size:0.78rem; pointer-events:none;
     }
-    .cm-no-data i { font-size: 4rem; color: #e2e8f0; display:block; margin-bottom: 16px; }
-    .cm-no-data h5 { font-weight: 700; color: var(--text-heading, #1e293b); margin-bottom: 6px; }
-    .cm-no-data p  { color: var(--text-secondary, #64748b); font-size: 0.9rem; max-width: 380px; margin: 0 auto; }
-    @media (max-width: 640px) {
-        .cm-course-header { padding: 14px 16px; }
-        .cm-stats-row     { padding: 10px 16px; }
-        .cm-folder-toggle { padding: 12px 16px; }
-        .cm-file-table td, .cm-file-table thead tr th { padding: 10px 12px; }
-        .cm-btn { padding: 5px 9px; font-size: 0.7rem; }
+    .sm-search input {
+        width:100%; height:40px; padding:0 12px 0 34px; border:1px solid var(--bd);
+        border-radius:8px; background:var(--bg-muted); font-size:0.82rem; color:var(--tx-b);
+        outline:none; box-sizing:border-box;
+    }
+    .sm-search input:focus {
+        border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); background:#fff;
+    }
+
+    .sm-breadcrumb {
+        display:flex; align-items:center; flex-wrap:wrap; gap:6px;
+        font-size:0.8rem; font-weight:600; color:var(--tx-s); margin-bottom:4px;
+    }
+    .sm-breadcrumb a { color:var(--tx-s); text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+    .sm-breadcrumb a:hover { color:var(--primary); }
+    .sm-breadcrumb .sep { color:var(--bd); font-weight:400; }
+    .sm-breadcrumb .current { color:var(--tx-h); }
+
+    .sm-files-wrap {
+        overflow-x:auto; -webkit-overflow-scrolling:touch;
+    }
+    /* Equal-gap file browser grid (Drive / OneDrive style) */
+    .sm-file-list { min-width:760px; width:100%; }
+    .sm-file-row {
+        display:grid;
+        grid-template-columns: minmax(0, 1.35fr) repeat(4, minmax(0, 1fr));
+        column-gap:20px;
+        align-items:center;
+        padding:14px 20px;
+        border-bottom:1px solid var(--bd-lt);
+        box-sizing:border-box;
+        transition:background var(--fast, 0.15s);
+    }
+    .sm-file-row:last-child { border-bottom:none; }
+    .sm-file-row.is-head {
+        padding:12px 20px;
+        background:rgba(247,248,249,0.7);
+        border-bottom:2px solid var(--bd-lt);
+    }
+    .sm-file-row.is-head span {
+        font-size:0.68rem; font-weight:700; color:var(--tx-s);
+        text-transform:uppercase; letter-spacing:1px;
+    }
+    .sm-file-row:not(.is-head):hover { background:rgba(0,102,255,0.03); }
+    .sm-file-row.is-folder { cursor:pointer; }
+    .sm-file-row .c-name { min-width:0; }
+    .sm-file-row .c-type,
+    .sm-file-row .c-size,
+    .sm-file-row .c-date,
+    .sm-file-row .c-action {
+        display:flex; align-items:center; justify-content:center; min-width:0;
+    }
+    .sm-file-row.is-head .c-name { justify-content:flex-start; text-align:left; }
+    .sm-file-row .c-action { justify-content:flex-end; }
+    .sm-file-row.is-head .c-action { justify-content:flex-end; }
+    .sm-file-list .t-name {
+        font-size:0.85rem; font-weight:600; color:var(--tx-h);
+        white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;
+    }
+    .sm-file-list .t-sub {
+        white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        color:var(--tx-s); font-size:0.75rem;
+    }
+    .sm-file-list .cell-muted { color:var(--tx-s); font-weight:500; }
+    .sm-file-list .cell-size { font-weight:600; color:var(--tx-h); font-size:0.82rem; }
+    .sm-file-list .cell-date { color:var(--tx-s); font-size:0.78rem; font-weight:500; }
+    .sm-file-empty { padding:48px 20px; text-align:center; }
+    .fb-name { display:flex; align-items:center; gap:12px; min-width:0; }
+    .fb-name .fb-text { min-width:0; flex:1; overflow:hidden; }
+    .fb-ico {
+        width:36px; height:36px; border-radius:8px; display:flex; align-items:center;
+        justify-content:center; flex-shrink:0; font-size:0.95rem;
+    }
+    .fb-ico.folder { background:#fffbeb; color:#f59e0b; }
+    .fb-ico.file { background:var(--primary-light); color:var(--primary); }
+    .fb-ico.pdf { background:#fef2f2; color:#ef4444; }
+    .fb-ico.doc { background:#eff6ff; color:#3b82f6; }
+    .fb-ico.ppt { background:#fffbeb; color:#d97706; }
+    .fb-ico.zip { background:#f8fafc; color:#64748b; }
+    .fb-ico.img { background:#ecfeff; color:#06b6d4; }
+    .folder-badge {
+        display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+        background:#fffbeb; color:#92400e; border:1px solid #fde68a;
+        border-radius:6px; padding:3px 9px; font-size:0.68rem; font-weight:700;
+    }
+    .type-badge {
+        display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+        border-radius:6px; padding:3px 9px; font-size:0.68rem; font-weight:700;
+    }
+    .sm-action-group {
+        display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-wrap:nowrap;
+        min-height:32px;
+    }
+    .sm-action-btn {
+        width:32px; height:32px; min-width:32px; border-radius:6px;
+        border:1px solid #cbd5e1; background:#f8fafc; color:#64748b;
+        display:inline-flex; align-items:center; justify-content:center;
+        font-size:0.82rem; line-height:1; cursor:pointer; transition:all 0.2s;
+        text-decoration:none; box-sizing:border-box; padding:0;
+    }
+    .sm-action-btn:hover { background:#eff6ff; color:var(--primary); border-color:#93c5fd; }
+    .sm-action-btn.open { background:var(--primary-light); color:var(--primary); border-color:#93c5fd; }
+    .sm-action-btn.open:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
+    .sm-action-btn.dl { color:#059669; }
+    .sm-action-btn.dl:hover { background:#ecfdf5; color:#059669; border-color:#6ee7b7; }
+
+    .sm-lib-search { display:flex; align-items:center; gap:8px; margin:0; flex-wrap:wrap; }
+    .sm-lib-search .btn-primary,
+    .sm-lib-search .btn-ghost,
+    .sm-toolbar .btn-primary,
+    .sm-toolbar .btn-ghost {
+        height:40px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center;
+        box-sizing:border-box; font-size:0.82rem; font-weight:700; border-radius:8px; text-decoration:none;
+    }
+    .sm-lib-search .btn-ghost,
+    .sm-toolbar .btn-ghost {
+        background:#fff; color:var(--tx-s); border:1.5px solid var(--bd);
+    }
+    .sm-lib-search .btn-ghost:hover,
+    .sm-toolbar .btn-ghost:hover {
+        background:var(--bg-muted); color:var(--tx-h); border-color:#94a3b8;
     }
 </style>
 @endpush
 
 @section('content')
 
-@forelse($courses as $index => $course)
-@php
-    $delay    = 0.05 * ($index + 1);
-    $palettes = [
-        ['bg'=>'#eff6ff','color'=>'#2563eb'],
-        ['bg'=>'#f0fdf4','color'=>'#059669'],
-        ['bg'=>'#fdf4ff','color'=>'#9333ea'],
-        ['bg'=>'#fff7ed','color'=>'#ea580c'],
-        ['bg'=>'#f0fdfa','color'=>'#0d9488'],
-    ];
-    $p = $palettes[$index % count($palettes)];
-    $byFolder  = $course->materials->whereNotNull('folder_id')->groupBy('folder_id');
-    $rootFiles = $course->materials->whereNull('folder_id');
-    $totalFiles = $course->materials->count();
-@endphp
-
-<div class="cm-course-block" style="animation-delay:{{ $delay }}s;">
-
-    {{-- Course Header --}}
-    <div class="cm-course-header">
-        <div class="cm-course-header-left">
-            <div class="cm-course-ico" style="background:{{ $p['bg'] }}; color:{{ $p['color'] }};">
-                <i class="fas fa-book-open"></i>
-            </div>
-            <div>
-                <div class="cm-course-code">{{ $course->course_code ?? 'Course' }}</div>
-                <div class="cm-course-title">{{ $course->title ?? 'No Title' }}</div>
-            </div>
-        </div>
-        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-            <span style="background:{{ $p['bg'] }}; color:{{ $p['color'] }}; border-radius:20px; padding:5px 12px; font-size:0.72rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
-                <i class="fas fa-file-alt" style="font-size:.6rem;"></i> {{ $totalFiles }} File{{ $totalFiles !== 1 ? 's' : '' }}
-            </span>
-            <span style="background:#f0fdf4; color:#059669; border-radius:20px; padding:5px 12px; font-size:0.72rem; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
-                <i class="fas fa-folder" style="font-size:.6rem;"></i> {{ $byFolder->count() }} Folder{{ $byFolder->count() !== 1 ? 's' : '' }}
-            </span>
+<div class="sm-stats">
+    <div class="sm-stat">
+        <div class="sm-stat-ico blue"><i class="fas fa-book-open"></i></div>
+        <div>
+            <div class="sm-stat-label">My Courses</div>
+            <div class="sm-stat-num">{{ $courses->count() }}</div>
         </div>
     </div>
-
-    @if($totalFiles === 0)
-    <div class="cm-folder-empty">
-        <i class="fas fa-folder-open"></i>
-        <span>No materials uploaded for this course yet.</span>
-    </div>
-    @else
-
-    {{-- Stats Pills --}}
-    @php
-        $pdfCount   = $course->materials->filter(fn($m) => strtolower($m->file_type) === 'pdf')->count();
-        $docCount   = $course->materials->filter(fn($m) => in_array(strtolower($m->file_type), ['doc','docx']))->count();
-        $pptCount   = $course->materials->filter(fn($m) => in_array(strtolower($m->file_type), ['ppt','pptx']))->count();
-        $otherCount = $totalFiles - $pdfCount - $docCount - $pptCount;
-    @endphp
-    <div class="cm-stats-row">
-        @if($pdfCount > 0)
-        <span class="cm-stat-pill" style="color:#dc2626; border-color:#fee2e2; background:#fef2f2;">
-            <i class="fas fa-file-pdf"></i> {{ $pdfCount }} PDF
-        </span>
-        @endif
-        @if($docCount > 0)
-        <span class="cm-stat-pill" style="color:#2563eb; border-color:#dbeafe; background:#eff6ff;">
-            <i class="fas fa-file-word"></i> {{ $docCount }} DOCX
-        </span>
-        @endif
-        @if($pptCount > 0)
-        <span class="cm-stat-pill" style="color:#d97706; border-color:#fef3c7; background:#fffbeb;">
-            <i class="fas fa-file-powerpoint"></i> {{ $pptCount }} PPTX
-        </span>
-        @endif
-        @if($otherCount > 0)
-        <span class="cm-stat-pill">
-            <i class="fas fa-file"></i> {{ $otherCount }} Other
-        </span>
-        @endif
-    </div>
-
-    {{-- Named Folder Sections --}}
-    @foreach($byFolder as $folderId => $folderFiles)
-    @php $folderName = optional($folderFiles->first()->folder)->name ?? 'Folder'; @endphp
-    <div class="cm-folder-section">
-        <button class="cm-folder-toggle"
-                type="button"
-                aria-expanded="true"
-                aria-controls="folder-{{ $course->id }}-{{ $folderId }}"
-                onclick="toggleFolder(this)">
-            <div class="cm-folder-toggle-left">
-                <div class="cm-folder-ico-wrap"><i class="fas fa-folder"></i></div>
-                <div>
-                    <div class="cm-folder-label">{{ $folderName }}</div>
-                    <div class="cm-folder-count">{{ $folderFiles->count() }} file{{ $folderFiles->count() !== 1 ? 's' : '' }}</div>
-                </div>
-            </div>
-            <i class="fas fa-chevron-down cm-folder-chevron"></i>
-        </button>
-        <div id="folder-{{ $course->id }}-{{ $folderId }}" class="cm-file-table-wrap">
-            @include('student.course-materials._file_table', ['files' => $folderFiles])
+    <div class="sm-stat">
+        <div class="sm-stat-ico green"><i class="fas fa-file-lines"></i></div>
+        <div>
+            <div class="sm-stat-label">Available Files</div>
+            <div class="sm-stat-num">{{ $totalFiles }}</div>
         </div>
     </div>
-    @endforeach
-
-    {{-- Uncategorised / Root Files --}}
-    @if($rootFiles->count() > 0)
-    <div class="cm-folder-section">
-        <button class="cm-folder-toggle"
-                type="button"
-                aria-expanded="true"
-                aria-controls="root-{{ $course->id }}"
-                onclick="toggleFolder(this)">
-            <div class="cm-folder-toggle-left">
-                <div class="cm-folder-ico-wrap root"><i class="fas fa-inbox"></i></div>
-                <div>
-                    <div class="cm-folder-label">Uncategorised Files</div>
-                    <div class="cm-folder-count">{{ $rootFiles->count() }} file{{ $rootFiles->count() !== 1 ? 's' : '' }} &mdash; not placed in any folder</div>
-                </div>
-            </div>
-            <i class="fas fa-chevron-down cm-folder-chevron"></i>
-        </button>
-        <div id="root-{{ $course->id }}" class="cm-file-table-wrap">
-            @include('student.course-materials._file_table', ['files' => $rootFiles])
+    <div class="sm-stat">
+        <div class="sm-stat-ico amber"><i class="fas fa-folder"></i></div>
+        <div>
+            <div class="sm-stat-label">Folders</div>
+            <div class="sm-stat-num">{{ $folderCount }}</div>
         </div>
     </div>
-    @endif
-
-    @endif {{-- end totalFiles > 0 --}}
 </div>
-@empty
-<div class="cm-no-data">
-    <i class="fas fa-box-open"></i>
-    <h5>No Courses Enrolled</h5>
-    <p>You are not enrolled in any courses, so there are no materials to display. Please contact your department if this is a mistake.</p>
-</div>
-@endforelse
 
-@if($courses->hasPages())
-<div class="mt-4">
-    {{ $courses->links('pagination::bootstrap-5') }}
+{{-- ===================== COURSE LIBRARY ===================== --}}
+@if(($viewMode ?? 'library') === 'library')
+<div class="d-card" style="animation-delay:.05s">
+    <div class="d-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <div class="d-card-title m-0">
+                <div class="d-card-ico" style="background:var(--primary-light);color:var(--primary);"><i class="fas fa-graduation-cap"></i></div>
+                Select a Course
+            </div>
+            <p style="font-size:0.78rem; color:var(--tx-s); margin:4px 0 0 42px;">Open a course to browse folders and download materials from your teachers</p>
+        </div>
+        <form action="{{ route('student.course-materials.index') }}" method="GET" class="sm-lib-search">
+            <div class="sm-search">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="Search courses..." value="{{ request('search') }}">
+            </div>
+            <button type="submit" class="btn-primary" style="height:40px; padding:0 14px;"><i class="fas fa-search"></i> Search</button>
+            @if(request('search'))
+                <a href="{{ route('student.course-materials.index') }}" class="btn-ghost">Reset</a>
+            @endif
+        </form>
+    </div>
+    <div class="d-card-body">
+        @if($courseLibrary && $courseLibrary->count() > 0)
+            <div class="sm-course-grid">
+                @foreach($courseLibrary as $course)
+                <a href="{{ route('student.course-materials.index', ['course_id' => $course->id]) }}" class="sm-course-card">
+                    <div class="sm-course-top">
+                        <div class="sm-course-ico"><i class="fas fa-book-open"></i></div>
+                        <span class="badge b-gray" style="font-size:0.7rem;">{{ $course->course_code }}</span>
+                    </div>
+                    <div>
+                        <h6 class="sm-course-title">{{ $course->title }}</h6>
+                        <div class="sm-course-meta">{{ optional($course->teacher)->name ?? 'Instructor' }}</div>
+                    </div>
+                    <div class="sm-course-stats">
+                        <span class="sm-chip"><i class="fas fa-file" style="color:var(--primary);"></i> {{ $course->public_files_count }} file{{ $course->public_files_count !== 1 ? 's' : '' }}</span>
+                        <span class="sm-chip"><i class="fas fa-folder" style="color:#f59e0b;"></i> {{ $course->folders_count }} folder{{ $course->folders_count !== 1 ? 's' : '' }}</span>
+                        <span class="sm-open">Open <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+            @if($courseLibrary->hasPages())
+                <div style="padding-top:14px; border-top:1px solid var(--bd-lt); margin-top:8px;">
+                    {{ $courseLibrary->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
+        @else
+            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
+                <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-book-open"></i></div>
+                @if(request('search'))
+                    <h5 style="color:var(--tx-h); font-weight:600;">No courses match “{{ request('search') }}”</h5>
+                    <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">Try another keyword, or use Reset above to clear search.</p>
+                @else
+                    <h5 style="color:var(--tx-h); font-weight:600;">No courses enrolled</h5>
+                    <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">When you are enrolled in active courses, their materials will appear here.</p>
+                @endif
+            </div>
+        @endif
+    </div>
+</div>
+@endif
+
+{{-- ===================== COURSE FILE BROWSER ===================== --}}
+@if(($viewMode ?? '') === 'browser' && $activeCourse)
+<div class="d-card" style="animation-delay:.05s">
+    <div class="sm-toolbar">
+        <div style="min-width:0;">
+            <div class="sm-breadcrumb">
+                <a href="{{ route('student.course-materials.index') }}"><i class="fas fa-th-large"></i> All Courses</a>
+                <span class="sep">/</span>
+                @if($activeFolder)
+                    <a href="{{ route('student.course-materials.index', ['course_id' => $activeCourse->id]) }}">{{ $activeCourse->course_code }}</a>
+                    @foreach(($folderBreadcrumbs ?? collect()) as $crumb)
+                        <span class="sep">/</span>
+                        @if($loop->last)
+                            <span class="current"><i class="fas fa-folder-open" style="color:#f59e0b;"></i> {{ $crumb->name }}</span>
+                        @else
+                            <a href="{{ route('student.course-materials.index', ['folder_id' => $crumb->id]) }}">{{ $crumb->name }}</a>
+                        @endif
+                    @endforeach
+                @else
+                    <span class="current">{{ $activeCourse->course_code }}</span>
+                @endif
+            </div>
+            <h5 style="font-weight:700; color:var(--tx-h); margin:4px 0 0; font-size:1.05rem;">{{ $activeCourse->title }}</h5>
+        </div>
+        <form action="{{ route('student.course-materials.index') }}" method="GET" style="display:flex; align-items:center; gap:8px; margin:0; flex-wrap:wrap;">
+            <input type="hidden" name="course_id" value="{{ $activeCourse->id }}">
+            @if($activeFolder)
+                <input type="hidden" name="folder_id" value="{{ $activeFolder->id }}">
+            @endif
+            <div class="sm-search">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="Search folders & files..." value="{{ request('search') }}">
+            </div>
+            <button type="submit" class="btn-primary" title="Search" style="height:40px; padding:0 14px;"><i class="fas fa-search"></i></button>
+            @if(request('search'))
+                <a href="{{ route('student.course-materials.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}" class="btn-ghost">Reset</a>
+            @endif
+        </form>
+    </div>
+
+    <div class="d-card-body p0">
+        <div class="sm-files-wrap">
+            <div class="sm-file-list" role="table" aria-label="Course materials">
+                <div class="sm-file-row is-head" role="row">
+                    <span class="c-name" role="columnheader">Name</span>
+                    <span class="c-type" role="columnheader">Type</span>
+                    <span class="c-size" role="columnheader">Size</span>
+                    <span class="c-date" role="columnheader">Uploaded</span>
+                    <span class="c-action" role="columnheader">Action</span>
+                </div>
+
+                @if($activeFolder)
+                @php
+                    $backUrl = $activeFolder->parent_id
+                        ? route('student.course-materials.index', ['folder_id' => $activeFolder->parent_id])
+                        : route('student.course-materials.index', ['course_id' => $activeCourse->id]);
+                    $backLabel = $activeFolder->parent_id ? '.. (Back to parent folder)' : '.. (Back to course root)';
+                    $backSub = $activeFolder->parent_id ? 'Return to parent folder' : 'Return to folders & root files';
+                @endphp
+                <div class="sm-file-row is-folder" role="row" onclick="window.location.href='{{ $backUrl }}'">
+                    <div class="c-name" role="cell">
+                        <div class="fb-name">
+                            <div class="fb-ico folder"><i class="fas fa-level-up-alt"></i></div>
+                            <div class="fb-text">
+                                <div class="t-name">{{ $backLabel }}</div>
+                                <div class="t-sub">{{ $backSub }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="c-type" role="cell"></div>
+                    <div class="c-size" role="cell"></div>
+                    <div class="c-date" role="cell"></div>
+                    <div class="c-action" role="cell"></div>
+                </div>
+                @endif
+
+                @foreach($browserFolders as $folder)
+                <div class="sm-file-row is-folder" role="row" onclick="window.location.href='{{ route('student.course-materials.index', ['folder_id' => $folder->id]) }}'">
+                    <div class="c-name" role="cell">
+                        <div class="fb-name">
+                            <div class="fb-ico folder"><i class="fas fa-folder"></i></div>
+                            <div class="fb-text">
+                                <div class="t-name" title="{{ $folder->name }}">{{ $folder->name }}</div>
+                                <div class="t-sub">
+                                    {{ $folder->public_files_count }} file{{ $folder->public_files_count !== 1 ? 's' : '' }}
+                                    @if(($folder->children_count ?? 0) > 0)
+                                        · {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="c-type" role="cell"><span class="folder-badge"><i class="fas fa-folder"></i> Folder</span></div>
+                    <div class="c-size" role="cell"><span class="cell-muted">—</span></div>
+                    <div class="c-date" role="cell"><span class="cell-muted">—</span></div>
+                    <div class="c-action" role="cell" onclick="event.stopPropagation();">
+                        <div class="sm-action-group">
+                            <a href="{{ route('student.course-materials.index', ['folder_id' => $folder->id]) }}" class="sm-action-btn open" title="Open"><i class="fas fa-folder-open"></i></a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+                @forelse($materials as $material)
+                @php
+                    $ext = strtolower($material->file_type ?? 'file');
+                    $ico = 'fa-file-alt'; $icoClass = 'file';
+                    if ($ext === 'pdf') { $ico = 'fa-file-pdf'; $icoClass = 'pdf'; }
+                    elseif (in_array($ext, ['doc','docx'])) { $ico = 'fa-file-word'; $icoClass = 'doc'; }
+                    elseif (in_array($ext, ['ppt','pptx'])) { $ico = 'fa-file-powerpoint'; $icoClass = 'ppt'; }
+                    elseif (in_array($ext, ['zip','rar','7z'])) { $ico = 'fa-file-archive'; $icoClass = 'zip'; }
+                    elseif (in_array($ext, ['jpg','jpeg','png','gif','webp'])) { $ico = 'fa-file-image'; $icoClass = 'img'; }
+                    $size = $material->file_size ?? 0;
+                    $sizeLabel = $size < 1024 ? $size.' B' : ($size < 1048576 ? round($size/1024,1).' KB' : round($size/1048576,2).' MB');
+                    $previewable = in_array($ext, ['pdf','png','jpg','jpeg','gif','webp'], true);
+                    $typeColors = [
+                        'pdf' => ['#fef2f2','#dc2626'],
+                        'doc' => ['#eff6ff','#2563eb'],
+                        'docx' => ['#eff6ff','#2563eb'],
+                        'ppt' => ['#fffbeb','#d97706'],
+                        'pptx' => ['#fffbeb','#d97706'],
+                        'zip' => ['#faf5ff','#7c3aed'],
+                        'png' => ['#ecfeff','#0891b2'],
+                        'jpg' => ['#ecfeff','#0891b2'],
+                        'jpeg' => ['#ecfeff','#0891b2'],
+                    ];
+                    $tc = $typeColors[$ext] ?? ['#f1f5f9','#475569'];
+                @endphp
+                <div class="sm-file-row" role="row">
+                    <div class="c-name" role="cell">
+                        <div class="fb-name">
+                            <div class="fb-ico {{ $icoClass }}"><i class="fas {{ $ico }}"></i></div>
+                            <div class="fb-text">
+                                <div class="t-name" title="{{ $material->title }}">{{ $material->title }}</div>
+                                <div class="t-sub">Uploaded {{ $material->created_at->diffForHumans() }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="c-type" role="cell">
+                        <span class="type-badge" style="background:{{ $tc[0] }}; color:{{ $tc[1] }};">{{ strtoupper($ext) }}</span>
+                    </div>
+                    <div class="c-size" role="cell"><span class="cell-size">{{ $sizeLabel }}</span></div>
+                    <div class="c-date" role="cell"><span class="cell-date">{{ $material->created_at->format('d M Y') }}</span></div>
+                    <div class="c-action" role="cell">
+                        <div class="sm-action-group">
+                            @if($previewable)
+                            <button type="button" class="sm-action-btn open js-preview-material" title="Preview"
+                                data-url="{{ route('student.course-materials.preview', $material->id) }}"
+                                data-title="{{ e($material->title) }}"
+                                data-ext="{{ $ext }}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            @endif
+                            <a href="{{ route('student.course-materials.download', $material->id) }}" class="sm-action-btn dl" title="Download">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                    @if(request('search') && $browserFolders->isEmpty())
+                    <div class="sm-file-empty">
+                        <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-search"></i></div>
+                        <h5 style="color:var(--tx-h); font-weight:600;">No folders or files match “{{ request('search') }}”</h5>
+                        <p style="color:var(--tx-m); font-size:0.9rem; margin:0;">Try another keyword or clear search.</p>
+                    </div>
+                    @elseif(!request('search') && $browserFolders->isEmpty())
+                    <div class="sm-file-empty">
+                        <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-folder-open"></i></div>
+                        <h5 style="color:var(--tx-h); font-weight:600;">
+                            {{ $activeFolder ? 'This folder is empty' : 'No materials in this course yet' }}
+                        </h5>
+                        <p style="color:var(--tx-m); font-size:0.9rem; margin:0;">
+                            {{ $activeFolder ? 'Your teacher has not added files here yet.' : 'When your teacher uploads files, they will appear here.' }}
+                        </p>
+                    </div>
+                    @endif
+                @endforelse
+            </div>
+        </div>
+        @if($materials && $materials->hasPages())
+            <div style="padding:12px 16px; border-top:1px solid var(--bd-lt);">
+                {{ $materials->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
+    </div>
 </div>
 @endif
 
@@ -277,19 +492,21 @@
 @push('modals')
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="previewModalLabel">File Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content" style="border:none; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="background:linear-gradient(135deg,var(--primary,#0066ff) 0%,#2563eb 100%); color:#fff; border:none; padding:1.25rem 1.5rem;">
+                <h5 class="modal-title" id="previewModalLabel" style="font-weight:700; margin:0; display:flex; align-items:center; gap:8px; color:#fff;">
+                    <i class="fas fa-eye"></i> File Preview
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity:0.9;"></button>
             </div>
-            <div class="modal-body p-0" style="height: 80vh; background-color: #f8f9fa; position: relative;">
-                <div id="iframeLoader" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;">
-                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <div class="modal-body p-0" style="height:80vh; background:#f8f9fa; position:relative;">
+                <div id="iframeLoader" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1;">
+                    <div class="spinner-border text-primary" role="status" style="width:3rem; height:3rem;">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <iframe id="previewIframe" src="" style="width: 100%; height: 100%; border: none; position: relative; z-index: 2; background: transparent;"></iframe>
-                <img id="previewImage" src="" style="width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 2; display: none; margin: auto;">
+                <iframe id="previewIframe" src="" style="width:100%; height:100%; border:none; position:relative; z-index:2;"></iframe>
+                <img id="previewImage" src="" alt="Preview" style="width:100%; height:100%; object-fit:contain; position:relative; z-index:2; display:none; margin:auto;">
             </div>
         </div>
     </div>
@@ -298,66 +515,41 @@
 
 @push('scripts')
 <script>
-    function toggleFolder(btn) {
-        const targetId   = btn.getAttribute('aria-controls');
-        const target     = document.getElementById(targetId);
-        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-        if (isExpanded) {
-            target.style.overflow   = 'hidden';
-            target.style.maxHeight  = target.scrollHeight + 'px';
-            requestAnimationFrame(() => {
-                target.style.transition = 'max-height 0.28s ease, opacity 0.28s ease';
-                target.style.maxHeight  = '0';
-                target.style.opacity    = '0';
-            });
-            btn.setAttribute('aria-expanded', 'false');
-        } else {
-            target.style.maxHeight  = '0';
-            target.style.opacity    = '0';
-            target.style.overflow   = 'hidden';
-            target.style.transition = 'max-height 0.28s ease, opacity 0.28s ease';
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    target.style.maxHeight = target.scrollHeight + 'px';
-                    target.style.opacity   = '1';
-                });
-            });
-            target.addEventListener('transitionend', function h() {
-                target.style.overflow  = '';
-                target.style.maxHeight = '';
-                target.removeEventListener('transitionend', h);
-            });
-            btn.setAttribute('aria-expanded', 'true');
-        }
-    }
-
     function openPreviewModal(url, title, ext) {
+        const modalEl = document.getElementById('previewModal');
+        if (!modalEl) return;
         document.getElementById('previewModalLabel').innerText = title || 'File Preview';
-        document.getElementById('iframeLoader').style.display  = 'block';
+        document.getElementById('iframeLoader').style.display = 'block';
         const isImage = ['png','jpg','jpeg','gif','webp'].includes(ext ? ext.toLowerCase() : '');
-        const iframe  = document.getElementById('previewIframe');
-        const img     = document.getElementById('previewImage');
+        const iframe = document.getElementById('previewIframe');
+        const img = document.getElementById('previewImage');
         if (isImage) {
             iframe.style.display = 'none'; iframe.src = '';
-            img.style.display    = 'block'; img.src   = url;
-            img.onload = () => document.getElementById('iframeLoader').style.display = 'none';
+            img.style.display = 'block'; img.src = url;
+            img.onload = function() { document.getElementById('iframeLoader').style.display = 'none'; };
         } else {
             img.style.display = 'none'; img.src = '';
             iframe.style.display = 'block'; iframe.src = url;
+            iframe.onload = function() { document.getElementById('iframeLoader').style.display = 'none'; };
         }
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('previewModal')).show();
+        bootstrap.Modal.getOrCreateInstance(modalEl).show();
     }
 
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.js-preview-material');
-        if (!btn) return;
-        openPreviewModal(btn.dataset.url, btn.dataset.title, btn.dataset.ext);
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.js-preview-material');
+            if (!btn) return;
+            openPreviewModal(btn.dataset.url, btn.dataset.title, btn.dataset.ext);
+        });
 
-    document.getElementById('previewModal').addEventListener('hidden.bs.modal', function() {
-        document.getElementById('previewIframe').src = '';
-        document.getElementById('previewImage').src  = '';
-        document.getElementById('iframeLoader').style.display = 'none';
+        const previewModal = document.getElementById('previewModal');
+        if (previewModal) {
+            previewModal.addEventListener('hidden.bs.modal', function() {
+                document.getElementById('previewIframe').src = '';
+                document.getElementById('previewImage').src = '';
+                document.getElementById('iframeLoader').style.display = 'none';
+            });
+        }
     });
 </script>
 @endpush

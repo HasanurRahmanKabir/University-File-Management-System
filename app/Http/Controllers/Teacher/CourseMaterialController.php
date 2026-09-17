@@ -116,11 +116,9 @@ class CourseMaterialController extends Controller
             $viewMode = 'browser';
 
             $parentScope = $activeFolder ? $activeFolder->id : null;
-            $browserFolders = CourseFolder::where('course_id', $activeCourse->id)
+            $foldersQuery = CourseFolder::where('course_id', $activeCourse->id)
                 ->where('parent_id', $parentScope)
-                ->withCount(['materials', 'children'])
-                ->orderBy('name')
-                ->get();
+                ->withCount(['materials', 'children']);
 
             $materialsQuery = CourseMaterial::with(['course', 'folder'])
                 ->where('course_id', $activeCourse->id);
@@ -133,11 +131,14 @@ class CourseMaterialController extends Controller
 
             if ($request->filled('search')) {
                 $search = $request->search;
+                $foldersQuery->where('name', 'like', "%{$search}%");
                 $materialsQuery->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
                         ->orWhere('file_type', 'like', "%{$search}%");
                 });
             }
+
+            $browserFolders = $foldersQuery->orderBy('name')->get();
 
             $materials = $materialsQuery->latest()->paginate(20)->appends($request->all());
         } else {

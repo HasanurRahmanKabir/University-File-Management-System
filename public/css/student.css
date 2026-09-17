@@ -700,14 +700,15 @@ button { font-family: inherit; cursor: pointer; }
 }
 .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 1px 2px rgba(255,255,255,0.3) inset, 0 6px 16px rgba(0,102,255,0.4); filter: brightness(1.1); }
 .btn-ghost {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
     padding: 8px 14px; border-radius: var(--r-md);
     color: var(--tx-s); font-size: .8rem; font-weight: 600;
-    border: 1px solid transparent; background: transparent;
+    border: 1px solid var(--bd); background: #fff;
     transition: all var(--fast); cursor: pointer;
-    letter-spacing: -.1px;
+    letter-spacing: -.1px; text-decoration: none;
+    box-sizing: border-box;
 }
-.btn-ghost:hover { background: #fff; color: var(--tx-h); border-color: var(--bd); box-shadow: var(--sh-xs); }
+.btn-ghost:hover { background: var(--bg-muted); color: var(--tx-h); border-color: #94a3b8; box-shadow: var(--sh-xs); }
 .btn-ico {
     width: 34px; height: 34px; border-radius: var(--r-md);
     display: inline-flex; align-items: center; justify-content: center;

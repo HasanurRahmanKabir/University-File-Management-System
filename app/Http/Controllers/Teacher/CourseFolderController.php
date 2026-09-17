@@ -19,6 +19,7 @@ class CourseFolderController extends Controller
             'course_id' => 'required|exists:courses,id',
             'parent_id' => 'nullable|exists:course_folders,id',
             'name'      => 'required|string|max:100',
+            'is_active' => 'required|boolean',
         ]);
 
         $course = Course::findOrFail($validated['course_id']);
@@ -47,6 +48,7 @@ class CourseFolderController extends Controller
             'course_id'  => $validated['course_id'],
             'parent_id'  => $parentId,
             'name'       => trim($validated['name']),
+            'is_active'  => (bool) $validated['is_active'],
             'created_by' => Auth::id(),
         ]);
 
@@ -60,16 +62,17 @@ class CourseFolderController extends Controller
     }
 
     /**
-     * Rename a folder.
+     * Rename / update privacy for a folder.
      */
     public function update(Request $request, CourseFolder $folder)
     {
         if ($folder->course->teacher_id !== Auth::id()) {
-            abort(403, 'You are not authorized to rename this folder.');
+            abort(403, 'You are not authorized to update this folder.');
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
+            'name'      => 'required|string|max:100',
+            'is_active' => 'required|boolean',
         ]);
 
         $name = trim($validated['name']);
@@ -83,9 +86,11 @@ class CourseFolderController extends Controller
             return back()->with('error', 'A folder with this name already exists here.');
         }
 
-        $folder->update(['name' => $name]);
+        $folder->update([
+            'name'      => $name,
+            'is_active' => (bool) $validated['is_active'],
+        ]);
 
-        // Stay in current listing: parent (or course root) unless explicitly staying inside
         if ($request->boolean('stay_in_folder')) {
             $redirect = ['folder_id' => $folder->id];
         } else {
@@ -96,7 +101,7 @@ class CourseFolderController extends Controller
 
         return redirect()
             ->route('teacher.course-materials.index', $redirect)
-            ->with('success', 'Folder renamed to "' . $name . '".');
+            ->with('success', 'Folder updated successfully.');
     }
 
     /**
