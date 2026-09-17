@@ -20,8 +20,8 @@
             elseif (in_array($ext, ['xls','xlsx','csv'])) { $icon = 'fa-file-excel';      $chipBg = '#f0fdf4'; $chipColor = '#059669'; }
             elseif (in_array($ext, ['ppt','pptx']))       { $icon = 'fa-file-powerpoint'; $chipBg = '#fffbeb'; $chipColor = '#d97706'; }
             elseif (in_array($ext, ['zip','rar','7z']))   { $icon = 'fa-file-archive';    $chipBg = '#fdf4ff'; $chipColor = '#9333ea'; }
-            elseif (in_array($ext, ['jpg','jpeg','png','gif','svg'])) { $icon = 'fa-file-image'; $chipBg = '#f0fdfa'; $chipColor = '#0d9488'; }
-            $previewable = in_array($ext, ['pdf','png','jpg','jpeg','gif','svg']);
+            elseif (in_array($ext, ['jpg','jpeg','png','gif','webp'])) { $icon = 'fa-file-image'; $chipBg = '#f0fdfa'; $chipColor = '#0d9488'; }
+            $previewable = in_array($ext, ['pdf','png','jpg','jpeg','gif','webp']);
         @endphp
         <tr>
             <td>
@@ -39,8 +39,10 @@
             <td>
                 <div class="cm-action-group">
                     @if($previewable)
-                    <button type="button" class="cm-btn cm-btn-view"
-                        onclick="openPreviewModal('{{ route('student.course-materials.preview', $material->id) }}', '{{ addslashes($material->title) }}', '{{ $ext }}')">
+                    <button type="button" class="cm-btn cm-btn-view js-preview-material"
+                        data-url="{{ route('student.course-materials.preview', $material->id) }}"
+                        data-title="{{ $material->title }}"
+                        data-ext="{{ $ext }}">
                         <i class="fas fa-eye"></i> <span class="d-none d-sm-inline">Preview</span>
                     </button>
                     @endif

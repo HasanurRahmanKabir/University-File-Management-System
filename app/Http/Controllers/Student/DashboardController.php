@@ -18,8 +18,10 @@ class DashboardController extends Controller
         // Fetch the student's courses
         $myCourses = Course::with(['teacher', 'semester'])->whereIn('id', $enrolledIds)->get();
         
-        // Count materials uploaded only for this student's enrolled courses
-        $materialsCount = CourseMaterial::whereIn('course_id', $enrolledIds)->count();
+        // Count only public materials (Only Me stays hidden from students)
+        $materialsCount = CourseMaterial::whereIn('course_id', $enrolledIds)
+            ->where('is_active', true)
+            ->count();
 
         // Since there is no assignments logic in the database yet, this defaults to 0
         $assignmentsCount = 0;

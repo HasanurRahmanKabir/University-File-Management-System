@@ -86,7 +86,7 @@ use App\Http\Controllers\Teacher\ProfileController as TeacherProfileController;
 Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('dashboard');
     Route::resource('courses', TeacherCourseController::class)->except(['create', 'edit']);
-    Route::resource('course-materials', TeacherCourseMaterialController::class);
+    Route::resource('course-materials', TeacherCourseMaterialController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/course-materials/{material}/download', [TeacherCourseMaterialController::class, 'download'])->name('course-materials.download');
     Route::get('/course-materials/{material}/preview', [TeacherCourseMaterialController::class, 'preview'])->name('course-materials.preview');
     Route::get('categories', [TeacherCategoryController::class, 'index'])->name('categories.index');
@@ -100,6 +100,7 @@ Route::middleware(['web', 'auth', 'is_teacher'])->prefix('teacher')->name('teach
     Route::resource('announcements', TeacherAnnouncementController::class)->except(['create', 'edit', 'show']);
     // Course Folders
     Route::post('/course-folders', [TeacherCourseFolderController::class, 'store'])->name('course-folders.store');
+    Route::put('/course-folders/{folder}', [TeacherCourseFolderController::class, 'update'])->name('course-folders.update');
     Route::delete('/course-folders/{folder}', [TeacherCourseFolderController::class, 'destroy'])->name('course-folders.destroy');
 });
 

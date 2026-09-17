@@ -58,9 +58,14 @@ class CourseFolder extends Model
 
     /**
      * Total file count inside this folder (direct children only).
+     * Prefer withCount('materials') when present to avoid N+1 queries.
      */
     public function getMaterialsCountAttribute(): int
     {
-        return $this->materials()->count();
+        if (array_key_exists('materials_count', $this->attributes)) {
+            return (int) $this->attributes['materials_count'];
+        }
+
+        return (int) $this->materials()->count();
     }
 }

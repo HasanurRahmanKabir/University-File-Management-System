@@ -569,7 +569,7 @@
                 @if(request('search'))
                     <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.course-files.index', array_filter(['department_id' => request('department_id')])) }}'" title="Clear search">
                         <i class="fas fa-times"></i>
-                    </button>
+        </button>
                 @endif
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
@@ -589,7 +589,7 @@
                     <div class="course-lib-icon"><i class="fas fa-book-open"></i></div>
                     <span class="badge dark" style="font-size: 0.7rem;">{{ $course->course_code }}</span>
                 </div>
-                <div>
+            <div>
                     <h6 class="course-lib-title">{{ $course->title }}</h6>
                     <div class="course-lib-meta">
                         @if($course->teacher)
@@ -610,13 +610,13 @@
                 </div>
             </a>
             @endforeach
-        </div>
+                    </div>
         @if($courseLibrary->hasPages())
             <div class="px-4 pb-4 border-top pt-3">
                 {{ $courseLibrary->links('pagination::bootstrap-5') }}
             </div>
         @endif
-    @else
+                @else
         <div class="text-center py-5 px-3">
             <div class="empty-state">
                 <i class="fas fa-book-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
@@ -668,12 +668,12 @@
         <form action="{{ route('admin.course-files.index') }}" method="GET" class="d-flex align-items-center gap-2">
             <input type="hidden" name="course_id" value="{{ $activeCourse->id }}">
             @if($activeFolder)
-                <input type="hidden" name="folder_id" value="{{ $activeFolder->id }}">
-            @endif
-            <div class="search-box position-relative">
-                <i class="fas fa-search search-icon"></i>
+                    <input type="hidden" name="folder_id" value="{{ $activeFolder->id }}">
+                @endif
+                <div class="search-box position-relative">
+                    <i class="fas fa-search search-icon"></i>
                 <input type="text" name="search" placeholder="Search files here..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
+                    @if(request('search'))
                     <button type="button" class="btn-clear-search"
                         onclick="window.location.href='{{ route('admin.course-files.index', array_filter(['course_id' => $activeCourse->id, 'folder_id' => $activeFolder->id ?? null])) }}'"
                         title="Clear">
@@ -871,28 +871,28 @@
                 <input type="text" name="search" placeholder="Search any field..." value="{{ request('search') }}" style="padding-right: 30px;">
                 @if(request('search'))
                     <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.course-files.index', ['view' => 'all']) }}'" title="Clear">
-                        <i class="fas fa-times"></i>
-                    </button>
-                @endif
-            </div>
-            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
-        </form>
-    </div>
-    <div class="card-body">
-        <div class="table-wrap table-responsive">
-            <table class="premium-table w-100">
-                <thead>
-                    <tr>
-                        <th>Teacher</th>
-                        <th class="text-center">Course</th>
-                        <th>Title</th>
-                        <th class="text-center">Folder</th>
-                        <th class="text-center">File</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($materials as $material)
+                            <i class="fas fa-times"></i>
+                        </button>
+                    @endif
+                </div>
+                <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
+            </form>
+        </div>
+        <div class="card-body">
+            <div class="table-wrap table-responsive">
+                <table class="premium-table w-100">
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th class="text-center">Course</th>
+                            <th>Title</th>
+                            <th class="text-center">Folder</th>
+                            <th class="text-center">File</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($materials as $material)
                     @php
                         $ext = strtolower($material->file_type ?? 'pdf');
                         $icon = 'fa-file-alt';
@@ -903,91 +903,91 @@
                         elseif (in_array($ext, ['ppt', 'pptx'])) { $icon = 'fa-file-powerpoint'; $badgeClass = 'rose'; }
                         elseif (in_array($ext, ['zip', 'rar', '7z'])) { $icon = 'fa-file-archive'; $badgeClass = 'warning'; }
                         elseif (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) { $icon = 'fa-file-image'; $badgeClass = 'cyan'; }
-                        $uploaderName = $material->uploader->name ?? 'Unknown';
-                        $initials = strtoupper(substr($uploaderName, 0, 2));
-                        $colors = ['emerald', 'cyan', 'rose', 'blue', 'amber', 'purple', 'indigo'];
-                        $colorClass = $colors[strlen($uploaderName) % count($colors)];
-                    @endphp
+                                        $uploaderName = $material->uploader->name ?? 'Unknown';
+                                        $initials = strtoupper(substr($uploaderName, 0, 2));
+                                        $colors = ['emerald', 'cyan', 'rose', 'blue', 'amber', 'purple', 'indigo'];
+                                        $colorClass = $colors[strlen($uploaderName) % count($colors)];
+                                    @endphp
                     <tr>
                         <td>
                             <div class="user-cell">
-                                <div class="avatar-sm {{ $colorClass }}">{{ $initials }}</div>
-                                <div>
-                                    <div class="user-name">{{ $uploaderName }}</div>
-                                    <div class="user-sub">{{ $material->uploader->role ?? 'User' }}</div>
+                                    <div class="avatar-sm {{ $colorClass }}">{{ $initials }}</div>
+                                    <div>
+                                        <div class="user-name">{{ $uploaderName }}</div>
+                                        <div class="user-sub">{{ $material->uploader->role ?? 'User' }}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
                         <td class="text-center">
                             <a href="{{ route('admin.course-files.index', ['course_id' => $material->course_id]) }}" class="badge dark" style="text-decoration:none;" title="Open course">
                                 {{ $material->course->course_code ?? 'N/A' }}
                             </a>
                         </td>
-                        <td>
-                            <div class="user-name">{{ $material->title }}</div>
-                            <div class="user-sub">Uploaded {{ $material->created_at->diffForHumans() }}</div>
-                        </td>
-                        <td class="text-center">
-                            @if($material->folder)
+                            <td>
+                                <div class="user-name">{{ $material->title }}</div>
+                                <div class="user-sub">Uploaded {{ $material->created_at->diffForHumans() }}</div>
+                            </td>
+                            <td class="text-center">
+                                @if($material->folder)
                                 <a href="{{ route('admin.course-files.index', ['folder_id' => $material->folder_id]) }}" class="folder-badge" style="text-decoration:none;">
                                     <i class="fas fa-folder" style="color:#f59e0b; margin-right:4px;"></i>{{ Str::limit($material->folder->name, 14) }}
                                 </a>
-                            @else
-                                <span style="font-size:0.75rem; color: var(--text-secondary);">— Root —</span>
-                            @endif
-                        </td>
-                        <td class="text-center">
+                                @else
+                                    <span style="font-size:0.75rem; color: var(--text-secondary);">— Root —</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
                             <a href="{{ route('admin.course-files.download', $material->id) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-                                <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
-                            </a>
-                        </td>
-                        <td>
-                            <div class="action-group">
-                                @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg']))
+                                    <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
+                                </a>
+                            </td>
+                            <td>
+                                <div class="action-group">
+                                    @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg']))
                                 <button type="button" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);"
                                     onclick="openPreviewModal('{{ route('admin.course-files.preview', $material->id) }}', '{{ addslashes($material->title) }}', '{{ $ext }}')" title="Preview">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                @endif
-                                <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editFileModal"
-                                    data-id="{{ $material->id }}"
-                                    data-course="{{ $material->course_id }}"
-                                    data-title="{{ $material->title }}"
-                                    data-filepath="{{ $material->file_path }}"
-                                    data-fileext="{{ strtoupper($ext) }}"
-                                    data-teacherid="{{ $material->uploaded_by }}"
-                                    data-folderid="{{ $material->folder_id ?? '' }}">
-                                    <i class="fas fa-pen"></i>
-                                </button>
-                                <form action="{{ route('admin.course-files.destroy', $material->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    @endif
+                                    <button class="action-btn edit edit-btn" data-bs-toggle="modal" data-bs-target="#editFileModal"
+                                        data-id="{{ $material->id }}"
+                                        data-course="{{ $material->course_id }}"
+                                        data-title="{{ $material->title }}"
+                                        data-filepath="{{ $material->file_path }}"
+                                        data-fileext="{{ strtoupper($ext) }}"
+                                        data-teacherid="{{ $material->uploaded_by }}"
+                                        data-folderid="{{ $material->folder_id ?? '' }}">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                    <form action="{{ route('admin.course-files.destroy', $material->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center">
                                     @csrf @method('DELETE')
-                                    <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center py-5">
-                            <div class="empty-state">
-                                <i class="fas fa-folder-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                                <h6 class="text-heading fw-bold">No Course Files found</h6>
-                                <p class="text-muted small">Upload your first material to get started.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        @if($materials && $materials->hasPages())
-            <div class="mt-3 px-3 pb-3 border-top pt-3">
-                {{ $materials->links('pagination::bootstrap-5') }}
+                                        <button type="button" class="action-btn delete delete-btn"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="empty-state">
+                                    <i class="fas fa-folder-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                                    <h6 class="text-heading fw-bold">No Course Files found</h6>
+                                    <p class="text-muted small">Upload your first material to get started.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+        @if($materials && $materials->hasPages())
+                <div class="mt-3 px-3 pb-3 border-top pt-3">
+                    {{ $materials->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
+        </div>
+        </div>
         @endif
-    </div>
-</div>
-@endif
 @endsection
 
 @push('modals')
@@ -1007,24 +1007,24 @@
                 </div>
                 <form action="{{ route('admin.course-files.store') }}" method="POST" enctype="multipart/form-data" id="uploadMaterialForm">
                     @csrf
-                    <div class="form-group">
+                        <div class="form-group">
                         <label class="form-label">Course <span class="text-danger">*</span></label>
-                        <select name="course_id" id="add_course" class="form-select" required placeholder="Select Course">
-                            <option value="">Select Course</option>
-                            @foreach($courses as $course)
+                            <select name="course_id" id="add_course" class="form-select" required placeholder="Select Course">
+                                <option value="">Select Course</option>
+                                @foreach($courses as $course)
                                 <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} — {{ $course->title }}</option>
-                            @endforeach
-                        </select>
-                        <small style="color:var(--text-muted); font-size:0.75rem; margin-top:4px; display:block;">File will be attached to this course only.</small>
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Folder <small style="color:var(--text-secondary); font-weight:400;">(Optional)</small></label>
-                            <select name="folder_id" id="add_folder_id" class="form-input" style="padding: 9px 13px; border-radius: var(--radius-md);">
-                                <option value="">Root (No Folder)</option>
+                                @endforeach
                             </select>
+                        <small style="color:var(--text-muted); font-size:0.75rem; margin-top:4px; display:block;">File will be attached to this course only.</small>
                         </div>
-                        <div class="form-group">
+                    <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Folder <small style="color:var(--text-secondary); font-weight:400;">(Optional)</small></label>
+                        <select name="folder_id" id="add_folder_id" class="form-input" style="padding: 9px 13px; border-radius: var(--radius-md);">
+                                <option value="">Root (No Folder)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                             <label class="form-label">Uploaded By</label>
                             <select name="uploaded_by" id="add_teacher" class="form-select" placeholder="Select Faculty">
                                 <option value="">Auto (course teacher)</option>
@@ -1076,31 +1076,31 @@
             <div class="modal-head gradient">
                 <h5 class="modal-title"><i class="fas fa-folder-plus"></i> Create New Folder</h5>
                 <button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button>
-            </div>
+                        </div>
             <div class="modal-body-content">
                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 18px; line-height: 1.5;">
                     Folders belong to one course. Students and teachers will see them inside that course only.
                 </p>
-                <form action="{{ route('admin.course-folders.store') }}" method="POST">
-                    @csrf
+                    <form action="{{ route('admin.course-folders.store') }}" method="POST">
+                        @csrf
                     <div class="form-group">
                         <label class="form-label">Course <span class="text-danger">*</span></label>
                         <select name="course_id" id="modal_create_course" class="form-select" required placeholder="Select Course">
                             <option value="">Select Course</option>
-                            @foreach($courses as $course)
-                                <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                                @foreach($courses as $course)
+                                    <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     <div class="form-group">
                         <label class="form-label">Folder Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-input" placeholder="e.g. Lecture Notes, Week 1, Assignments..." required>
-                    </div>
+                        </div>
                     <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
                         <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155;" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" style="padding:10px 32px;"><i class="fas fa-folder-plus"></i> Create Folder</button>
-                    </div>
-                </form>
+                        </div>
+                    </form>
             </div>
         </div>
     </div>
@@ -1118,23 +1118,23 @@
                 <form id="editFileForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    <div class="form-group">
-                        <label class="form-label">Course <span class="text-danger">*</span></label>
-                        <select name="course_id" id="edit_course_id" class="form-select" required placeholder="Select Course">
-                            <option value="">Select Course</option>
-                            @foreach($courses as $course)
-                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} — {{ $course->title }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-grid">
                         <div class="form-group">
-                            <label class="form-label">Folder <small style="color:var(--text-secondary); font-weight:400;">(Optional)</small></label>
-                            <select name="folder_id" id="edit_folder_id" class="form-input" style="padding: 9px 13px; border-radius: var(--radius-md);">
-                                <option value="">Root (No Folder)</option>
+                        <label class="form-label">Course <span class="text-danger">*</span></label>
+                            <select name="course_id" id="edit_course_id" class="form-select" required placeholder="Select Course">
+                                <option value="">Select Course</option>
+                                @foreach($courses as $course)
+                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} — {{ $course->title }}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                    <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Folder <small style="color:var(--text-secondary); font-weight:400;">(Optional)</small></label>
+                        <select name="folder_id" id="edit_folder_id" class="form-input" style="padding: 9px 13px; border-radius: var(--radius-md);">
+                                <option value="">Root (No Folder)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                             <label class="form-label">Uploaded By</label>
                             <select name="uploaded_by" id="edit_teacher_id" class="form-select" placeholder="Select Faculty">
                                 <option value="">Select Faculty</option>
@@ -1215,7 +1215,7 @@
     function loadAdminFolders(courseId, selectId, selectedFolderId) {
         const select = document.getElementById(selectId);
         if (!select) return;
-
+        
         const ts = select.tomselect;
         if (ts) {
             ts.clearOptions();

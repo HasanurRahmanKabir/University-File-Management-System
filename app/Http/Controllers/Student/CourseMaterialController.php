@@ -36,6 +36,11 @@ class CourseMaterialController extends Controller
             abort(403, 'Unauthorized access. You are not enrolled in this course.');
         }
 
+        // Privacy: "Only Me" materials are hidden from students
+        if (!$material->is_active) {
+            abort(403, 'This material is private and not available for download.');
+        }
+
         if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
             abort(404, 'File not found on the server.');
         }
@@ -54,11 +59,24 @@ class CourseMaterialController extends Controller
             abort(403, 'Unauthorized access. You are not enrolled in this course.');
         }
 
+        // Privacy: "Only Me" materials are hidden from students
+        if (!$material->is_active) {
+            abort(403, 'This material is private and not available for preview.');
+        }
+
         if (!$material->file_path || !\Illuminate\Support\Facades\Storage::disk('local')->exists($material->file_path)) {
             abort(404, 'File not found on the server.');
         }
+
+        // Block scriptable formats (e.g. SVG) from inline preview — XSS risk
+        $ext = strtolower($material->file_type ?? pathinfo($material->file_path, PATHINFO_EXTENSION));
+        if (in_array($ext, ['svg', 'html', 'htm', 'xml', 'js'], true)) {
+            abort(403, 'This file type cannot be previewed inline for security reasons. Please download it instead.');
+        }
         
         // Return file inline instead of forcing download
-        return response()->file(storage_path('app/' . $material->file_path));
+        return response()->file(storage_path('app/' . $material->file_path), [
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 }

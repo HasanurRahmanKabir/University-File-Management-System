@@ -332,9 +332,9 @@
     }
 
     function openPreviewModal(url, title, ext) {
-        document.getElementById('previewModalLabel').innerText = title;
+        document.getElementById('previewModalLabel').innerText = title || 'File Preview';
         document.getElementById('iframeLoader').style.display  = 'block';
-        const isImage = ['png','jpg','jpeg','gif','svg'].includes(ext ? ext.toLowerCase() : '');
+        const isImage = ['png','jpg','jpeg','gif','webp'].includes(ext ? ext.toLowerCase() : '');
         const iframe  = document.getElementById('previewIframe');
         const img     = document.getElementById('previewImage');
         if (isImage) {
@@ -347,6 +347,12 @@
         }
         bootstrap.Modal.getOrCreateInstance(document.getElementById('previewModal')).show();
     }
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.js-preview-material');
+        if (!btn) return;
+        openPreviewModal(btn.dataset.url, btn.dataset.title, btn.dataset.ext);
+    });
 
     document.getElementById('previewModal').addEventListener('hidden.bs.modal', function() {
         document.getElementById('previewIframe').src = '';
