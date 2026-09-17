@@ -80,8 +80,8 @@
     });
 </script>
 @include('partials.sweetalert')
-@stack('scripts')
 @stack('modals')
+@stack('scripts')
 
 </body>
 </html>

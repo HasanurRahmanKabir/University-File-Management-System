@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <meta name="description" content="{{ $globalSettings['seo_meta_description'] ?? 'Student Dashboard — University OBE File Management System' }}">
-    <title>@yield('page-title', 'Student') — {{ $globalSettings['student_tab_title'] ?? 'Student Dashboard - OBE System' }}</title>
-    @if(isset($globalSettings['student_favicon']) && $globalSettings['student_favicon'])
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $globalSettings['student_favicon']) }}">
-    @endif
+    <meta name="description" content="<?php echo e($globalSettings['seo_meta_description'] ?? 'Teacher Dashboard — University OBE File Management System'); ?>">
+    <title><?php echo $__env->yieldContent('page-title', 'Teacher'); ?> — <?php echo e($globalSettings['teacher_tab_title'] ?? 'Teacher Dashboard - OBE System'); ?></title>
+    <?php if(isset($globalSettings['teacher_favicon']) && $globalSettings['teacher_favicon']): ?>
+        <link rel="icon" type="image/x-icon" href="<?php echo e(asset('storage/' . $globalSettings['teacher_favicon'])); ?>">
+    <?php endif; ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/student.css') }}">
-    @stack('styles')
+    <link rel="stylesheet" href="<?php echo e(asset('css/teacher.css')); ?>">
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body>
 
 <div class="sb-overlay" id="overlay"></div>
 
 <!-- SIDEBAR -->
-@include('layouts.partials.student-sidebar')
+<?php echo $__env->make('layouts.partials.teacher-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 <!-- MAIN -->
 <div class="main">
     
     <!-- TOPBAR -->
-    @include('layouts.partials.student-topbar')
+    <?php echo $__env->make('layouts.partials.teacher-topbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <!-- PAGE CONTENT -->
     <main class="page-content">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
     <!-- FOOTER -->
-    @include('layouts.partials.footer')
+    <?php echo $__env->make('layouts.partials.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 </div>
 
@@ -47,7 +47,7 @@
         
         if(sidebar) {
             // Restore state for desktop
-            if(localStorage.getItem('sidebar-collapsed-student') === 'true' && window.innerWidth > 992) {
+            if(localStorage.getItem('sidebar-collapsed-teacher') === 'true' && window.innerWidth > 992) {
                 sidebar.classList.add('collapsed');
             }
 
@@ -58,7 +58,7 @@
                         if(overlay) overlay.classList.remove('show');
                     } else {
                         sidebar.classList.toggle('collapsed');
-                        localStorage.setItem('sidebar-collapsed-student', sidebar.classList.contains('collapsed'));
+                        localStorage.setItem('sidebar-collapsed-teacher', sidebar.classList.contains('collapsed'));
                     }
                 };
             }
@@ -79,9 +79,10 @@
         }
     });
 </script>
-@include('partials.sweetalert')
-@stack('modals')
-@stack('scripts')
+<?php echo $__env->make('partials.sweetalert', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php echo $__env->yieldPushContent('modals'); ?>
+<?php echo $__env->yieldPushContent('scripts'); ?>
 
 </body>
 </html>
+<?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/layouts/teacher.blade.php ENDPATH**/ ?>
