@@ -79,7 +79,7 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl" style="width: 100%; min-width: 700px; text-align: center; border-collapse: collapse;">
+            <table class="t-tbl" style="width: 100%; min-width: 640px; text-align: center; border-collapse: collapse;">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 20%; min-width: 140px;">Course Code</th>

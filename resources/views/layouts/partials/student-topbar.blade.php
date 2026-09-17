@@ -1,7 +1,9 @@
 <header class="topbar">
-    <div style="display: flex; align-items: center; gap: 12px;">
-        <button class="sb-desktop-toggler d-lg-none" id="mobileToggleBtn" style="background: transparent; border: none; font-size: 1.25rem; color: var(--tx-m); padding: 0; display: none; align-items: center; justify-content: center;"><i class="fas fa-bars"></i></button>
-        <div class="tb-left" style="margin: 0; padding: 0;">
+    <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+        <button type="button" class="tb-mobile-toggle" id="mobileToggleBtn" aria-label="Open menu">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+        <div class="tb-left" style="margin: 0; padding: 0; min-width: 0;">
             <div class="tb-title">@yield('page-title', 'Dashboard')</div>
             <div class="tb-breadcrumb">
                 <span><a href="{{ route('student.dashboard') }}">Home</a></span>
@@ -11,7 +13,7 @@
         </div>
     </div>
     <div class="tb-right">
-        <div class="tb-user-info d-none d-sm-block" style="text-align:right; display: flex; flex-direction: column; justify-content: center;">
+        <div class="tb-user-info d-none d-sm-flex" style="text-align:right; flex-direction: column; justify-content: center;">
             <div class="tb-uname">{{ Auth::user()->name ?? 'Student' }}</div>
             <div class="tb-urole">Student</div>
         </div>

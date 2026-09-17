@@ -112,11 +112,17 @@ button{font-family:inherit;cursor:pointer;}
 .sidebar{
     position:fixed;top:0;left:0;bottom:0;
     width:var(--sb-width);
+    height:100%;
+    height:100dvh;
+    max-height:100dvh;
     background:var(--sb-bg);
     display:flex;flex-direction:column;
-    z-index:1040;
+    z-index:1050;
     transition:left var(--slow) var(--ease);
     border-right:1px solid var(--sb-border);
+    margin:0;
+    border-radius:0;
+    overflow:hidden;
 }
 /* Subtle top emerald glow */
 .sidebar::before{
@@ -243,7 +249,7 @@ button{font-family:inherit;cursor:pointer;}
 
 .sb-overlay{
     display:none;position:fixed;inset:0;
-    background:rgba(0,0,0,0.5);z-index:1049;
+    background:rgba(0,0,0,0.5);z-index:1040;
     backdrop-filter:blur(3px);
 }
 .sb-overlay.show{display:block;animation:fadeIn .2s var(--ease);}
@@ -677,12 +683,19 @@ button{font-family:inherit;cursor:pointer;}
 @media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
 
 @media(max-width:992px){
-    .sidebar{left:calc(-1 * var(--sb-width));}
+    .sidebar{
+        left:calc(-1 * var(--sb-width));
+        top:0;bottom:0;
+        height:100%;height:100dvh;max-height:100dvh;
+        width:min(var(--sb-width),86vw);
+        margin:0;border-radius:0;transform:none;
+    }
     .sidebar.show{left:0;}
     .main{margin-left:0!important;}
     .topbar{padding-left:28px;}
     .page-content{padding:20px 18px 0;}
     .page-footer{padding:16px 18px;}
+    body.sb-open{overflow:hidden;touch-action:none;}
 }
 
 @media(max-width:768px){

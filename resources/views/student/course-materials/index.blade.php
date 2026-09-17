@@ -26,11 +26,16 @@
         display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; padding:4px 2px 8px;
     }
     @media (max-width:1200px) { .sm-course-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:992px) {
+        .sm-stats { grid-template-columns:1fr; }
+    }
     @media (max-width:640px) {
         .sm-stats { grid-template-columns:1fr; }
         .sm-course-grid { grid-template-columns:1fr; }
         .sm-toolbar { flex-direction:column; align-items:stretch; }
         .sm-search { width:100%; }
+        .sm-toolbar form { width:100%; }
+        .sm-toolbar form .sm-search { flex:1; min-width:0; width:auto; }
     }
 
     .sm-course-card {

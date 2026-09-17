@@ -51,11 +51,16 @@
                 sidebar.classList.add('collapsed');
             }
 
+            const syncBodyLock = () => {
+                document.body.classList.toggle('sb-open', sidebar.classList.contains('show'));
+            };
+
             if(desktopToggleBtn) {
                 desktopToggleBtn.onclick = () => {
                     if (window.innerWidth <= 992) {
                         sidebar.classList.remove('show');
                         if(overlay) overlay.classList.remove('show');
+                        syncBodyLock();
                     } else {
                         sidebar.classList.toggle('collapsed');
                         localStorage.setItem('sidebar-collapsed-student', sidebar.classList.contains('collapsed'));
@@ -67,15 +72,25 @@
                 mobileToggleBtn.onclick = () => {
                     sidebar.classList.toggle('show');
                     if(overlay) overlay.classList.toggle('show');
+                    syncBodyLock();
                 };
             }
             
             if(overlay) {
                 overlay.onclick = () => { 
                     sidebar.classList.remove('show'); 
-                    overlay.classList.remove('show'); 
+                    overlay.classList.remove('show');
+                    syncBodyLock();
                 };
             }
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 992) {
+                    sidebar.classList.remove('show');
+                    if(overlay) overlay.classList.remove('show');
+                    document.body.classList.remove('sb-open');
+                }
+            });
         }
     });
 </script>
