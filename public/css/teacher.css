@@ -755,3 +755,86 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
     color: var(--tx-s);
     width: 100%;
 }
+
+/* ============================================================
+   BACK TO TOP BUTTON (Circular Progress)
+   ============================================================ */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+.scroll-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.scroll-top-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.08);
+}
+.scroll-top-btn:active {
+    transform: translateY(0);
+}
+.scroll-top-icon {
+    position: relative;
+    z-index: 2;
+    color: var(--primary);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+.scroll-top-btn:hover .scroll-top-icon {
+    transform: translateY(-2px);
+}
+.progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+}
+.progress-ring__bg {
+    stroke: var(--primary-light);
+    transition: stroke 0.3s;
+}
+.progress-ring__circle {
+    transition: stroke-dashoffset 0.1s linear;
+    transform-origin: 50% 50%;
+    stroke-linecap: round;
+}
+@media (max-width: 768px) {
+    .scroll-top-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
+    }
+    .scroll-top-icon {
+        font-size: 1rem;
+    }
+    .progress-ring {
+        width: 42px;
+        height: 42px;
+    }
+    .progress-ring circle {
+        r: 19;
+        cx: 21;
+        cy: 21;
+    }
+}
