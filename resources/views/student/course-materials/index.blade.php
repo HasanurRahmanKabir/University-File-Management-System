@@ -82,40 +82,6 @@
         }
         .d-card-header .d-card-title + p,
         .d-card-header p { margin-left:0 !important; }
-
-        /* Phone file browser: fit screen — no 760px clip */
-        .d-card { max-width:100%; overflow:hidden; }
-        .sm-files-wrap {
-            overflow-x:visible;
-            max-width:100%;
-        }
-        .sm-file-list {
-            width:100%;
-            min-width:0;
-        }
-        .sm-file-row {
-            min-width:0;
-            width:100%;
-            grid-template-columns: minmax(0, 1fr) auto auto;
-            column-gap:10px;
-            padding:12px;
-        }
-        .sm-file-row .c-size,
-        .sm-file-row .c-date {
-            display:none !important;
-        }
-        .sm-file-list .t-name,
-        .sm-file-list .t-sub {
-            white-space:normal;
-            overflow:visible;
-            word-break:break-word;
-        }
-        .sm-file-empty {
-            padding:36px 16px;
-            width:100%;
-            box-sizing:border-box;
-        }
-        .sm-action-group { gap:6px; }
     }
     @media (max-width:320px) {
         .sm-toolbar { padding:10px; gap:10px; }
@@ -307,6 +273,40 @@
     .sm-action-btn.open:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
     .sm-action-btn.dl { color:#059669; }
     .sm-action-btn.dl:hover { background:#ecfdf5; color:#059669; border-color:#6ee7b7; }
+
+    /* Phone: same 5 columns + same 20px gaps as PC; scroll sideways; nothing after Action */
+    @media (max-width: 640px) {
+        .sm-files-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            max-width: 100%;
+        }
+        .sm-file-list {
+            width: max-content;
+            min-width: 760px;
+        }
+        .sm-file-row {
+            width: 760px;
+            min-width: 760px;
+            max-width: 760px;
+            grid-template-columns: minmax(200px, 1.5fr) minmax(110px, 0.75fr) minmax(100px, 0.65fr) minmax(120px, 0.75fr) minmax(110px, 0.7fr);
+            column-gap: 20px;
+            padding: 14px 20px;
+        }
+        .sm-file-list .t-name,
+        .sm-file-list .t-sub,
+        .sm-file-list .cell-size,
+        .sm-file-list .cell-date {
+            white-space: nowrap;
+            overflow: visible;
+            word-break: normal;
+        }
+        .sm-file-empty {
+            padding: 36px 16px;
+            width: 760px;
+            box-sizing: border-box;
+        }
+    }
 
     .sm-lib-search { display:flex; align-items:center; gap:8px; margin:0; flex-wrap:wrap; }
     .sm-lib-search .btn-primary,
