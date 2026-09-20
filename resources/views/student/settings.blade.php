@@ -62,8 +62,7 @@
                     <div class="col-md-12">
                         <label style="display: block; font-size: 0.8rem; color: var(--tx-m); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Upload New Picture</label>
                         <div style="position: relative;">
-                            <input type="file" name="profile_image" class="form-control" accept="image/*"
-                                   style="border-radius: var(--r-sm); border: 1px solid var(--bd-lt); padding: 10px 15px; font-size: 0.95rem; color: var(--tx-h); background: #f8fafc; transition: all 0.2s; width: 100%;">
+                            <input type="file" name="profile_image" class="form-control responsive-file-input" accept="image/*">
                         </div>
                         <small style="color: var(--tx-s); font-size: 0.75rem; margin-top: 6px; display: block;"><i class="fas fa-info-circle"></i> Recommended size: 200x200px. Max size: 2MB. Formats: JPG, PNG, GIF.</small>
                     </div>
@@ -164,6 +163,36 @@
         outline: none !important;
     }
     
+    /* Responsive File Input Styling */
+    .responsive-file-input {
+        border-radius: var(--r-sm); 
+        border: 1px solid var(--bd-lt); 
+        padding: 10px 15px; 
+        font-size: 0.95rem; 
+        color: var(--tx-h); 
+        background: #f8fafc; 
+        transition: all 0.2s; 
+        width: 100%;
+        cursor: pointer;
+    }
+    .responsive-file-input::file-selector-button {
+        padding: 6px 12px;
+        margin-right: 12px;
+        margin-left: 0;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        border-radius: 4px;
+        color: #475569;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .responsive-file-input::file-selector-button:hover {
+        background: #f1f5f9;
+        color: var(--tx-h);
+    }
+    
     .settings-footer {
         padding: 24px 30px;
         background: rgba(248,250,252,0.8);
@@ -251,6 +280,16 @@
         }
         .hide-mobile {
             display: none !important;
+        }
+        .responsive-file-input {
+            padding: 8px 10px !important;
+            font-size: 0.85rem !important;
+        }
+        .responsive-file-input::file-selector-button {
+            padding: 4px 8px;
+            margin-right: 8px;
+            margin-left: 0;
+            font-size: 0.8rem;
         }
         .settings-footer {
             flex-direction: column-reverse;
