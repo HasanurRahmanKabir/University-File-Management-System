@@ -414,7 +414,7 @@ button { font-family: inherit; cursor: pointer; }
    PAGE CONTENT
    ============================================================ */
 .page-content {
-    padding: 32px 32px 16px;
+    padding: 32px 32px 32px;
     flex: 1;
     animation: fadeUp .4s var(--ease) both;
 }
@@ -807,7 +807,7 @@ button { font-family: inherit; cursor: pointer; }
     }
     .sidebar.show { left: 0; }
     .main { margin-left: 0; }
-    .page-content { padding: 24px 20px 12px; }
+    .page-content { padding: 24px 20px 24px; }
     .topbar { padding: 0 16px 0 16px; }
     /* 3 cards → avoid orphan 2-col layout on tablet */
     .stats-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -852,9 +852,9 @@ button { font-family: inherit; cursor: pointer; }
     .d-card-header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
     .d-card-body { padding: 20px; }
     .d-card-body.p0 { padding: 0; }
-    .page-content { padding: 18px 14px 10px; }
+    .page-content { padding: 18px 14px 24px; }
     .tb-title { max-width: 48vw; font-size: 0.98rem; }
-    .global-footer { padding: 16px 14px !important; }
+    .global-footer { padding: 20px 14px !important; }
     .global-footer span { font-size: 0.75rem !important; line-height: 1.4; display: block; }
 }
 @media (max-width: 400px) {
@@ -878,7 +878,7 @@ button { font-family: inherit; cursor: pointer; }
     .d-card-body { padding: 14px; }
     .d-card-body.p0 { padding: 0; }
     .btn-view-all { width: 100%; text-align: center; justify-content: center; }
-    .page-content { padding: 14px 10px 8px; }
+    .page-content { padding: 14px 10px 24px; }
     .topbar { height: auto; min-height: 56px; padding: 8px 6px; flex-wrap: nowrap; gap: 6px; }
     .tb-title { font-size: 0.82rem; line-height: 1.3; max-width: 38vw; }
     .tb-breadcrumb { display: none; }
@@ -890,7 +890,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /* Ultra-narrow phones / fold cover (~280px and below) */
 @media (max-width: 280px) {
-    .page-content { padding: 12px 8px 8px; }
+    .page-content { padding: 12px 8px 24px; }
     .hero-banner { padding: 12px 10px; border-radius: 12px; }
     .hero-greeting { font-size: 0.95rem; }
     .hero-eyebrow { padding: 4px 10px; font-size: 0.6rem; }

@@ -4,6 +4,36 @@
 @section('page-title', 'Category List')
 @section('breadcrumb', 'Category List')
 
+@push('styles')
+<style>
+    /* Phone only: full cell text + same column rhythm, swipe instead of "..." */
+    @media (max-width: 992px) {
+        .cat-course-tbl {
+            width: max-content !important;
+            min-width: 640px !important;
+            table-layout: auto;
+        }
+        .cat-course-tbl th,
+        .cat-course-tbl td {
+            max-width: none !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            white-space: nowrap !important;
+            width: auto !important;
+        }
+        .cat-course-tbl .t-name,
+        .cat-course-tbl .t-code,
+        .cat-course-tbl .badge {
+            white-space: nowrap !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            max-width: none !important;
+        }
+        .t-wrap { max-width: 100%; }
+    }
+</style>
+@endpush
+
 @section('content')
 
 @forelse($categories as $index => $category)
@@ -27,7 +57,7 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl" style="width: 100%; min-width: 600px; text-align: center; border-collapse: collapse;">
+            <table class="t-tbl cat-course-tbl" style="width: 100%; min-width: 600px; text-align: center; border-collapse: collapse;">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 10%; min-width: 80px;">#</th>
