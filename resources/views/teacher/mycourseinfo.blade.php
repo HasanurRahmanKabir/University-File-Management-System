@@ -17,7 +17,7 @@
 
     /* Ensure TomSelect perfectly matches the standard form-select design */
     .ts-wrapper.custom-ts { display: block !important; width: 100% !important; padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; margin: 0; }
-    .ts-wrapper.custom-ts .ts-control { border: 1px solid #dee2e6 !important; border-radius: 0.375rem !important; background-color: #fff !important; color: #212529 !important; font-size: 1rem !important; padding: 0.5rem 0.75rem !important; min-height: 48px !important; box-shadow: none !important; display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
+    .ts-wrapper.custom-ts .ts-control { border: 1px solid #dee2e6 !important; border-radius: 0.375rem !important; background-color: #fff !important; color: #212529 !important; font-size: 1rem !important; padding: 0.5rem 2.5rem 0.5rem 0.75rem !important; min-height: 48px !important; box-shadow: none !important; display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
     .ts-wrapper.custom-ts.focus .ts-control { border-color: #86b7fe !important; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important; outline: 0 !important; }
     /* TomSelect Placeholders */
     .ts-dropdown { border: 1px solid #dee2e6 !important; border-radius: 0.375rem !important; background-color: #fff !important; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important; z-index: 9999 !important; }
@@ -84,7 +84,7 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl">
+            <table class="t-tbl dash-course-tbl">
                 <thead>
                     <tr>
                         <th class="text-start" style="width: 15%; min-width: 90px;">Course Code</th>
@@ -176,7 +176,7 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl">
+            <table class="t-tbl dash-course-tbl">
                 <thead>
                     <tr>
                         <th class="text-start" style="width: 20%; min-width: 90px;">Course Code</th>
@@ -319,9 +319,9 @@
                 </select>
             </div>
         </div>
-        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+        <div class="d-flex flex-column-reverse flex-sm-row align-items-center justify-content-sm-end gap-3 gap-sm-2 mt-4 pt-3 border-top">
             <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal" style="padding: 10px 24px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
-            <button type="submit" class="btn btn-primary fw-bold" style="padding: 10px 32px; border-radius: 8px; box-shadow: 0 4px 10px rgba(59,130,246,0.3);">Add Course</button>
+            <button type="submit" class="btn btn-primary fw-bold" style="padding: 10px 32px; border-radius: 8px; border: 1px solid transparent; box-shadow: 0 4px 10px rgba(59,130,246,0.3);">Add Course</button>
         </div>
     </form>
             </div>
@@ -427,9 +427,9 @@
                 </select>
             </div>
         </div>
-        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+        <div class="d-flex flex-column-reverse flex-sm-row align-items-center justify-content-sm-end gap-3 gap-sm-2 mt-4 pt-3 border-top">
             <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal" style="padding: 10px 24px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
-            <button type="submit" class="btn btn-primary fw-bold" style="background: #1e293b; border: none; padding: 10px 32px; border-radius: 8px; box-shadow: 0 4px 10px rgba(30,41,59,0.3);">Update Course</button>
+            <button type="submit" class="btn btn-primary fw-bold" style="background: #1e293b; border: 1px solid transparent; padding: 10px 32px; border-radius: 8px; box-shadow: 0 4px 10px rgba(30,41,59,0.3);">Update Course</button>
         </div>
     </form>
             </div>

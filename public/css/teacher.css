@@ -849,4 +849,9 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
         table-layout: auto !important;
         min-width: 600px;
     }
+    .page-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px;
+    }
 }
