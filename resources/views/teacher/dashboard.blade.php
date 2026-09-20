@@ -59,7 +59,7 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl" style="table-layout: fixed; width: 100%;">
+            <table class="t-tbl dash-course-tbl">
                 <thead>
                     <tr>
                         <th style="width: 20%;">Course Code</th>

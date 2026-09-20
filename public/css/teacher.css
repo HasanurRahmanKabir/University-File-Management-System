@@ -705,6 +705,7 @@ button{font-family:inherit;cursor:pointer;}
     .hero-banner{padding:20px 18px;}
     .hero-greeting{font-size:1.2rem;}
     .page-footer{padding:14px 14px;flex-direction:column;align-items:flex-start;gap:8px;}
+    .tb-breadcrumb{display:none;}
 }
 
 @media(max-width:640px){
@@ -727,7 +728,6 @@ button{font-family:inherit;cursor:pointer;}
     .topbar{height:auto;min-height:52px;padding-top:8px;padding-bottom:8px;padding-left:12px;padding-right:12px;flex-wrap:nowrap;gap:8px;align-items:center;}
     .topbar > div:first-child{flex:1;min-width:0;}
     .tb-right{flex-shrink:0;}
-    .tb-breadcrumb{flex-wrap:wrap;gap:2px 5px;}
 }
 
 @media(max-width:320px){
@@ -762,7 +762,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 .scroll-top-btn {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    right: 15px;
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -821,7 +821,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 @media (max-width: 768px) {
     .scroll-top-btn {
         bottom: 20px;
-        right: 20px;
+        right: 10px;
         width: 42px;
         height: 42px;
     }
@@ -836,5 +836,17 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
         r: 19;
         cx: 21;
         cy: 21;
+    }
+}
+
+/* Dashboard Course Table Responsive Layout */
+.dash-course-tbl {
+    table-layout: fixed;
+    width: 100%;
+}
+@media (max-width: 768px) {
+    .dash-course-tbl {
+        table-layout: auto !important;
+        min-width: 600px;
     }
 }
