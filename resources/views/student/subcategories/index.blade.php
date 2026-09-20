@@ -4,6 +4,40 @@
 @section('page-title', 'Subcategory List')
 @section('breadcrumb', 'Subcategory List')
 
+@push('styles')
+<style>
+    /* Phone only: full cell text + swipe instead of "..." — PC styles unchanged */
+    @media (max-width: 992px) {
+        .subcat-course-tbl {
+            width: max-content !important;
+            min-width: 720px !important;
+            table-layout: auto;
+        }
+        .subcat-course-tbl th,
+        .subcat-course-tbl td {
+            max-width: none !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            white-space: nowrap !important;
+            width: auto !important;
+        }
+        .subcat-course-tbl .t-name,
+        .subcat-course-tbl .t-code,
+        .subcat-course-tbl .t-desc,
+        .subcat-course-tbl .badge {
+            white-space: nowrap !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            max-width: none !important;
+        }
+        .subcat-course-tbl .t-desc-pc { display: none !important; }
+        .subcat-course-tbl .t-desc-phone { display: inline !important; }
+        .t-wrap { max-width: 100%; }
+    }
+    .subcat-course-tbl .t-desc-phone { display: none; }
+</style>
+@endpush
+
 @section('content')
 
 @forelse($subcategories as $index => $subcategory)
@@ -26,7 +60,7 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl" style="width: 100%; min-width: 600px; text-align: center; border-collapse: collapse;">
+            <table class="t-tbl subcat-course-tbl" style="width: 100%; min-width: 600px; text-align: center; border-collapse: collapse;">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 10%; min-width: 80px;">#</th>
@@ -49,7 +83,8 @@
                             <span class="t-name" title="{{ $course->title }}">{{ $course->title }}</span>
                         </td>
                         <td style="text-align: center; color:var(--tx-s); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $course->description }}">
-                            <span class="t-desc">{{ \Illuminate\Support\Str::limit($course->description ?? 'No description available', 40) }}</span>
+                            <span class="t-desc t-desc-pc">{{ \Illuminate\Support\Str::limit($course->description ?? 'No description available', 40) }}</span>
+                            <span class="t-desc t-desc-phone">{{ $course->description ?: 'No description available' }}</span>
                         </td>
                         <td style="text-align: center; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span>

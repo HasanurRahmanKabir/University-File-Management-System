@@ -12,7 +12,7 @@
 <div class="d-card" style="animation-delay:.05s; max-width: 900px; margin: 0 auto 30px;">
     <!-- Cover Background -->
     <div style="height: 120px; background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(59,130,246,0.15)); position: relative; border-bottom: 1px solid var(--bd-lt);">
-        <div style="position: absolute; right: 20px; top: 20px;">
+        <div class="account-settings-wrapper">
             <a href="{{ route('student.settings') }}" class="btn-primary" style="padding: 8px 16px; font-size: 0.8rem; box-shadow: var(--sh-sm);"><i class="fas fa-cog"></i> Account Settings</a>
         </div>
     </div>
@@ -130,7 +130,21 @@
         padding-top: 10px;
     }
     
+    .account-settings-wrapper {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        z-index: 20;
+    }
+    
     @media (max-width: 576px) {
+        .account-settings-wrapper {
+            right: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 15px;
+            width: max-content;
+        }
         .profile-hdr-wrapper {
             padding: 0 15px 20px;
         }
