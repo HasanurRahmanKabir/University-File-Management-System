@@ -74,7 +74,7 @@
                         @foreach($announcements as $ann)
                         <tr style="border-bottom: 1px solid #f1f5f9;">
                             <td class="text-start" style="padding: 15px 20px;">
-                                <span class="badge b-blue" style="font-size:0.78rem;padding:5px 10px;">
+                                <span class="badge b-blue" style="font-size:0.78rem; padding:5px 10px; display: inline-block; max-width: 100%; white-space: normal; word-break: break-word; text-align: left; line-height: 1.4;">
                                     {{ optional($ann->course)->course_code ?? 'N/A' }}
                                 </span>
                             </td>
