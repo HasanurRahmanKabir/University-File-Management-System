@@ -124,7 +124,8 @@
                         <div style="position: relative;">
                             <i class="fas fa-lock" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--tx-s);"></i>
                             <input type="password" name="current_password" class="form-control" placeholder="Enter current password to make changes" 
-                                   style="border-radius: var(--r-sm); border: 1px solid var(--bd-lt); padding: 12px 15px 12px 42px; font-size: 0.95rem; color: var(--tx-h); background: #f8fafc; transition: all 0.2s;">
+                                   style="border-radius: var(--r-sm); border: 1px solid var(--bd-lt); padding: 12px 45px 12px 42px; font-size: 0.95rem; color: var(--tx-h); background: #f8fafc; transition: all 0.2s;">
+                            <i class="fas fa-eye toggle-password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--tx-m); padding: 5px; z-index: 10;"></i>
                         </div>
                         <small style="color: var(--tx-s); font-size: 0.75rem; margin-top: 6px; display: block;"><i class="fas fa-info-circle"></i> Leave blank if you don't want to change your password.</small>
                     </div>
@@ -133,7 +134,8 @@
                         <div style="position: relative;">
                             <i class="fas fa-key" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--tx-s);"></i>
                             <input type="password" name="password" class="form-control" placeholder="Enter new password" 
-                                   style="border-radius: var(--r-sm); border: 1px solid var(--bd-lt); padding: 12px 15px 12px 42px; font-size: 0.95rem; color: var(--tx-h); background: #f8fafc; transition: all 0.2s;">
+                                   style="border-radius: var(--r-sm); border: 1px solid var(--bd-lt); padding: 12px 45px 12px 42px; font-size: 0.95rem; color: var(--tx-h); background: #f8fafc; transition: all 0.2s;">
+                            <i class="fas fa-eye toggle-password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--tx-m); padding: 5px; z-index: 10;"></i>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -141,7 +143,8 @@
                         <div style="position: relative;">
                             <i class="fas fa-check-double" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--tx-s);"></i>
                             <input type="password" name="password_confirmation" class="form-control" placeholder="Re-type new password" 
-                                   style="border-radius: var(--r-sm); border: 1px solid var(--bd-lt); padding: 12px 15px 12px 42px; font-size: 0.95rem; color: var(--tx-h); background: #f8fafc; transition: all 0.2s;">
+                                   style="border-radius: var(--r-sm); border: 1px solid var(--bd-lt); padding: 12px 45px 12px 42px; font-size: 0.95rem; color: var(--tx-h); background: #f8fafc; transition: all 0.2s;">
+                            <i class="fas fa-eye toggle-password" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--tx-m); padding: 5px; z-index: 10;"></i>
                         </div>
                     </div>
                 </div>
@@ -262,4 +265,28 @@
         }
     }
 </style>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePasswords = document.querySelectorAll('.toggle-password');
+        togglePasswords.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                if (input && input.tagName === 'INPUT') {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.classList.remove('fa-eye');
+                        this.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        this.classList.remove('fa-eye-slash');
+                        this.classList.add('fa-eye');
+                    }
+                }
+            });
+        });
+    });
+</script>
+@endpush
 @endsection
