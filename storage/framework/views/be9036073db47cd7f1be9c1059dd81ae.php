@@ -1,9 +1,7 @@
-@extends('layouts.teacher')
+<?php $__env->startSection('title', 'My Profile — TeacherHub OBE'); ?>
+<?php $__env->startSection('page_title', 'My Profile'); ?>
 
-@section('title', 'My Profile — TeacherHub OBE')
-@section('page_title', 'My Profile')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="p-hero">
     <div><div class="p-hero-h">My Profile</div><div class="p-hero-sub">View your account details and information</div></div>
 </div>
@@ -12,31 +10,32 @@
     <!-- Cover Background -->
     <div style="height: 120px; background: linear-gradient(135deg, rgba(5,150,105,0.1), rgba(16,185,129,0.15)); position: relative; border-bottom: 1px solid var(--bd-lt);">
         <div class="settings-btn-wrap" style="position: absolute; right: 20px; top: 20px;">
-            <a href="{{ route('teacher.settings') }}" class="btn-primary" style="padding: 8px 16px; font-size: 0.8rem; box-shadow: var(--sh-sm); white-space: nowrap;"><i class="fas fa-cog"></i> Account Settings</a>
+            <a href="<?php echo e(route('teacher.settings')); ?>" class="btn-primary" style="padding: 8px 16px; font-size: 0.8rem; box-shadow: var(--sh-sm); white-space: nowrap;"><i class="fas fa-cog"></i> Account Settings</a>
         </div>
     </div>
     
     <div class="profile-hdr-wrapper">
-        @php
+        <?php
             $name = $user->name ?? 'Teacher';
             $words = array_filter(explode(' ', trim($name)));
             $initials = strtoupper(substr(array_shift($words), 0, 1));
             if (!empty($words)) {
                 $initials .= strtoupper(substr(array_shift($words), 0, 1));
             }
-        @endphp
+        ?>
         <div class="profile-hdr-flex">
             <div class="profile-avatar-circle" style="overflow: hidden;">
-                @if($user->profile_image)
-                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-                @else
-                    {{ $initials }}
-                @endif
+                <?php if($user->profile_image): ?>
+                    <img src="<?php echo e(asset('storage/' . $user->profile_image)); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                <?php else: ?>
+                    <?php echo e($initials); ?>
+
+                <?php endif; ?>
             </div>
             <div class="profile-name-block">
-                <h3 style="margin: 0 0 6px; color: var(--tx-h); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px;">{{ $user->name }}</h3>
+                <h3 style="margin: 0 0 6px; color: var(--tx-h); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px;"><?php echo e($user->name); ?></h3>
                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: inherit;">
-                    <span style="color: var(--tx-m); font-size: 0.95rem; font-weight: 500;"><i class="fas fa-briefcase" style="margin-right: 5px; opacity: 0.7;"></i>{{ $user->designation ?? 'Teacher' }}</span>
+                    <span style="color: var(--tx-m); font-size: 0.95rem; font-weight: 500;"><i class="fas fa-briefcase" style="margin-right: 5px; opacity: 0.7;"></i><?php echo e($user->designation ?? 'Teacher'); ?></span>
                     <span style="color: var(--bd); font-size: 0.8rem;" class="hide-mobile">|</span>
                     <span class="badge b-green" style="padding: 4px 10px; font-size: 0.7rem;"><i class="fas fa-check-circle" style="margin-right: 4px;"></i>Active Account</span>
                 </div>
@@ -57,7 +56,7 @@
                 </div>
                 <div style="overflow: hidden;">
                     <div style="font-size: 0.7rem; color: var(--tx-m); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 3px;">Email Address</div>
-                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; word-break: break-word;">{{ $user->email }}</div>
+                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; word-break: break-word;"><?php echo e($user->email); ?></div>
                 </div>
             </div>
             <!-- Info Card 2 -->
@@ -67,7 +66,7 @@
                 </div>
                 <div style="overflow: hidden;">
                     <div style="font-size: 0.7rem; color: var(--tx-m); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 3px;">Contact Number</div>
-                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; word-break: break-word;">{{ $user->contact_number ?? 'Not provided' }}</div>
+                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; word-break: break-word;"><?php echo e($user->contact_number ?? 'Not provided'); ?></div>
                 </div>
             </div>
             <!-- Info Card 3 -->
@@ -77,7 +76,7 @@
                 </div>
                 <div style="overflow: hidden;">
                     <div style="font-size: 0.7rem; color: var(--tx-m); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 3px;">Faculty / Department</div>
-                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; word-break: break-word;">{{ $user->department ? $user->department->name : 'N/A' }}</div>
+                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; word-break: break-word;"><?php echo e($user->department ? $user->department->name : 'N/A'); ?></div>
                 </div>
             </div>
             <!-- Info Card 4 -->
@@ -87,7 +86,7 @@
                 </div>
                 <div style="overflow: hidden;">
                     <div style="font-size: 0.7rem; color: var(--tx-m); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 3px;">System Role</div>
-                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; text-transform: capitalize; word-break: break-word;">{{ $user->role ?? 'Teacher' }}</div>
+                    <div style="font-size: 0.9rem; color: var(--tx-h); font-weight: 600; text-transform: capitalize; word-break: break-word;"><?php echo e($user->role ?? 'Teacher'); ?></div>
                 </div>
             </div>
         </div>
@@ -157,4 +156,6 @@
         }
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.teacher', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Hasanur Rahman Kabir\Documents\University File Management System\University-File-Management-System\resources\views/teacher/profile.blade.php ENDPATH**/ ?>
