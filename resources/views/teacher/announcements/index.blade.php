@@ -24,6 +24,10 @@
     .ann-card { border-radius: 12px; border: 1px solid var(--bd-dark, #e2e8f0); background: var(--card-bg, #fff); transition: transform 0.25s ease, box-shadow 0.25s ease; height: 100%; display: flex; flex-direction: column; }
     .ann-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.09) !important; }
     .ann-badge { font-size: 0.72rem; padding: 0.35em 0.75em; border-radius: 20px; font-weight: 600; }
+    @media (max-width: 700px) {
+        .page-header { flex-direction: column !important; align-items: stretch !important; gap: 12px; }
+        .page-header .btn { width: 100%; justify-content: center; }
+    }
 </style>
 @endpush
 
