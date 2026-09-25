@@ -32,7 +32,7 @@
     </div>
     <div class="d-card-body p0">
         <div class="t-wrap">
-            <table class="t-tbl">
+            <table class="t-tbl" style="min-width: 800px;">
                 <thead>
                     <tr>
                         <th class="text-start" style="width: 25%; min-width: 90px;">Course Code</th>
