@@ -214,12 +214,12 @@
                             <input type="file" name="attachment" id="attachment" class="form-control form-control-lg fs-6">
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <div class="d-flex flex-column-reverse flex-sm-row align-items-center justify-content-sm-end gap-2 mt-4 pt-3 border-top">
                         <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal"
-                            style="padding:10px 24px;border-radius:8px;border:1px solid #cbd5e1;background:#ffffff;color:#475569;box-shadow:0 1px 2px rgba(0,0,0,0.05);transition:all 0.2s;"
+                            style="width: 200px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
                             onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
                         <button type="submit" id="submitBtn" class="btn btn-primary fw-bold"
-                            style="padding:10px 32px;border-radius:8px;box-shadow:0 4px 10px rgba(59,130,246,0.3);">
+                            style="width: 200px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; box-shadow:0 4px 10px rgba(59,130,246,0.3); border:1px solid transparent;">
                             <span id="submitBtnText">Save Announcement</span>
                         </button>
                     </div>
