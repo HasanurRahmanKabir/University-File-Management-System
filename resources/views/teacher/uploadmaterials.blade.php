@@ -620,11 +620,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex flex-column-reverse flex-sm-row align-items-center justify-content-sm-end gap-2">
                     <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal"
-                        style="padding:10px 24px; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
+                        style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
                         onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
-                    <button type="submit" class="btn-primary"><i class="fas fa-upload"></i> Confirm Upload</button>
+                    <button type="submit" class="btn-primary" style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid transparent;"><i class="fas fa-upload" style="margin-right: 6px;"></i> Confirm Upload</button>
                 </div>
             </form>
         </div>
@@ -675,11 +675,11 @@
                         <small style="color:var(--tx-m); font-size:0.72rem; margin-top:6px; display:block;">Only Me hides this folder and everything inside it from students.</small>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex flex-column-reverse flex-sm-row align-items-center justify-content-sm-end gap-2">
                     <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal"
-                        style="padding:10px 24px; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
+                        style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
                         onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
-                    <button type="submit" class="btn-primary"><i class="fas fa-folder-plus"></i> Create Folder</button>
+                    <button type="submit" class="btn-primary" style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid transparent;"><i class="fas fa-folder-plus" style="margin-right: 6px;"></i> Create Folder</button>
                 </div>
             </form>
         </div>
@@ -715,11 +715,11 @@
                         <small style="color:var(--tx-m); font-size:0.72rem; margin-top:6px; display:block;">Only Me hides this folder and everything inside it from students.</small>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex flex-column-reverse flex-sm-row align-items-center justify-content-sm-end gap-2">
                     <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal"
-                        style="padding:10px 24px; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
+                        style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
                         onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
-                    <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Changes</button>
+                    <button type="submit" class="btn-primary" style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid transparent;"><i class="fas fa-check" style="margin-right: 6px;"></i> Save Changes</button>
                 </div>
             </form>
         </div>
@@ -776,11 +776,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-flex flex-column-reverse flex-sm-row align-items-center justify-content-sm-end gap-2">
                     <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal"
-                        style="padding:10px 24px; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
+                        style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid #cbd5e1; background:#ffffff; color:#475569; box-shadow:0 1px 2px rgba(0,0,0,0.05); transition:all 0.2s;"
                         onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#ffffff'">Cancel</button>
-                    <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Save Changes</button>
+                    <button type="submit" class="btn-primary" style="width: 170px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius:8px; border:1px solid transparent;"><i class="fas fa-check" style="margin-right: 6px;"></i> Save Changes</button>
                 </div>
             </form>
         </div>
