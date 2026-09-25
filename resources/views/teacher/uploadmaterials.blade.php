@@ -198,8 +198,11 @@
     }
     @media (max-width:700px) {
         .tm-toolbar { flex-direction:column; align-items:stretch; }
-        .tm-toolbar form, .tm-lib-actions { width:100%; }
-        .tm-search { width:100%; flex:1; }
+        .tm-toolbar form { width:100%; flex-wrap: wrap; }
+        .tm-search { flex:1; min-width:140px; order: 1; }
+        .tm-toolbar form button[type="submit"] { order: 2; }
+        .tm-toolbar form .btn-ghost { flex: 1 1 40%; order: 3; justify-content: center; margin-top: 4px; white-space: nowrap; }
+        .tm-lib-actions { width:100%; }
         .page-header { flex-direction:column !important; align-items:stretch !important; gap:12px; }
         .tm-lib-actions .btn-primary, .tm-lib-actions .btn-ghost { flex:1; }
     }
