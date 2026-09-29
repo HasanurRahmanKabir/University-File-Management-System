@@ -272,7 +272,7 @@
         .progress-ring__bg { stroke: rgba(13,110,253,0.2); transition: stroke 0.3s; }
         .progress-ring__circle { transition: stroke-dashoffset 0.1s linear; transform-origin: 50% 50%; stroke-linecap: round; }
         @media (max-width: 768px) {
-            .scroll-top-btn { bottom: 20px; right: 20px; width: 42px; height: 42px; }
+            .scroll-top-btn { bottom: 20px; right: 10px; width: 42px; height: 42px; }
             .scroll-top-icon { font-size: 1rem; }
             .progress-ring { width: 42px; height: 42px; }
         }
@@ -280,7 +280,7 @@
 
     <!-- BACK TO TOP BUTTON -->
     <div class="scroll-top-btn" id="scrollTopBtn">
-        <svg class="progress-ring" width="48" height="48">
+        <svg class="progress-ring" viewBox="0 0 48 48" style="width: 100%; height: 100%;">
             <circle class="progress-ring__bg" stroke-width="3" fill="transparent" r="22" cx="24" cy="24"/>
             <circle class="progress-ring__circle" stroke="var(--primary)" stroke-width="3" fill="transparent" r="22" cx="24" cy="24"/>
         </svg>
