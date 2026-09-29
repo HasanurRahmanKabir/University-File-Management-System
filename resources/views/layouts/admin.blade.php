@@ -260,6 +260,78 @@
         @include('layouts.partials.footer')
     </div>
 
+    <style>
+        /* BACK TO TOP BUTTON (Circular Progress) */
+        .scroll-top-btn { position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; border-radius: 50%; background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 999; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; }
+        .scroll-top-btn.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-top-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(13,110,253,0.2), 0 0 0 1px rgba(13,110,253,0.1); }
+        .scroll-top-btn:active { transform: translateY(0); }
+        .scroll-top-icon { position: relative; z-index: 2; color: var(--primary); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; }
+        .scroll-top-btn:hover .scroll-top-icon { transform: translateY(-2px); }
+        .progress-ring { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+        .progress-ring__bg { stroke: rgba(13,110,253,0.2); transition: stroke 0.3s; }
+        .progress-ring__circle { transition: stroke-dashoffset 0.1s linear; transform-origin: 50% 50%; stroke-linecap: round; }
+        @media (max-width: 768px) {
+            .scroll-top-btn { bottom: 20px; right: 20px; width: 42px; height: 42px; }
+            .scroll-top-icon { font-size: 1rem; }
+            .progress-ring { width: 42px; height: 42px; }
+        }
+    </style>
+
+    <!-- BACK TO TOP BUTTON -->
+    <div class="scroll-top-btn" id="scrollTopBtn">
+        <svg class="progress-ring" width="48" height="48">
+            <circle class="progress-ring__bg" stroke-width="3" fill="transparent" r="22" cx="24" cy="24"/>
+            <circle class="progress-ring__circle" stroke="var(--primary)" stroke-width="3" fill="transparent" r="22" cx="24" cy="24"/>
+        </svg>
+        <div class="scroll-top-icon">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollBtn = document.getElementById('scrollTopBtn');
+            const circle = document.querySelector('.progress-ring__circle');
+            
+            if (scrollBtn && circle) {
+                const radius = circle.r.baseVal.value;
+                const circumference = radius * 2 * Math.PI;
+                
+                circle.style.strokeDasharray = `${circumference} ${circumference}`;
+                circle.style.strokeDashoffset = circumference;
+                
+                const updateProgress = () => {
+                    const scrollTop = window.scrollY;
+                    const docHeight = Math.max(
+                        document.body.scrollHeight, document.documentElement.scrollHeight,
+                        document.body.offsetHeight, document.documentElement.offsetHeight,
+                        document.body.clientHeight, document.documentElement.clientHeight
+                    ) - window.innerHeight;
+                    
+                    if (scrollTop > 150) {
+                        scrollBtn.classList.add('show');
+                    } else {
+                        scrollBtn.classList.remove('show');
+                    }
+                    
+                    if (docHeight > 0) {
+                        const scrollPercent = scrollTop / docHeight;
+                        const offset = circumference - (scrollPercent * circumference);
+                        circle.style.strokeDashoffset = offset;
+                    }
+                };
+
+                window.addEventListener('scroll', updateProgress, { passive: true });
+                updateProgress();
+
+                scrollBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+
     @stack('modals')
 
     <script>
