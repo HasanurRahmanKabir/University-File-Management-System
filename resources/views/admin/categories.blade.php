@@ -37,6 +37,34 @@
     </div>
 </div>
 
+    <!-- Stats Row -->
+    <div class="stats-grid grid-3">
+        <div class="stat-card {{ !request()->has('status') || request('status') == '' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.categories.index') }}'" style="cursor: pointer;" title="View All Categories">
+            <div class="stat-icon-wrap blue"><i class="fas fa-tags"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Total Categories</div>
+                <div class="stat-number">{{ $totalCategories ?? 0 }}</div>
+                <div class="stat-trend up"><i class="fas fa-list"></i> Core Topics</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'active' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.categories.index', ['status' => 'active']) }}'" style="cursor: pointer;" title="Active Categories">
+            <div class="stat-icon-wrap emerald"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Active Categories</div>
+                <div class="stat-number">{{ $activeCategories ?? 0 }}</div>
+                <div class="stat-trend neutral"><i class="fas fa-check"></i> In Use</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'inactive' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.categories.index', ['status' => 'inactive']) }}'" style="cursor: pointer;" title="Inactive Categories">
+            <div class="stat-icon-wrap amber"><i class="fas fa-ban"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Inactive</div>
+                <div class="stat-number">{{ $inactiveCategories ?? 0 }}</div>
+                <div class="stat-trend down"><i class="fas fa-clock"></i> Hidden / Archived</div>
+            </div>
+        </div>
+    </div>
+
 <div class="data-card">
     <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div>
@@ -44,16 +72,29 @@
             <p class="card-subtitle">Main academic subject categories</p>
         </div>
         <form action="{{ route('admin.categories.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
-            <div class="search-box position-relative">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search category..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.categories.index') }}'" title="Clear Search">
-                        <i class="fas fa-times"></i>
-                    </button>
-                @endif
+            @if(request()->has('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+
+            <select name="department_filter" class="form-select m-0" style="width: auto; min-width: 150px; height: 38px;" onchange="this.form.submit()">
+                <option value="">All Departments</option>
+                @foreach($departments as $dept)
+                    <option value="{{ $dept->id }}" {{ request('department_filter') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
+                @endforeach
+            </select>
+
+            <div class="search-box position-relative m-0" style="height: 38px;">
+                <i class="fas fa-search search-icon" style="top: 50%; transform: translateY(-50%);"></i>
+                <input type="text" name="search" id="searchInput" placeholder="Search category..." value="{{ request('search') }}" style="height: 100%; border-radius: var(--radius-md); padding-right: 30px;">
             </div>
-            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
+            
+            <button type="submit" class="btn btn-primary m-0" style="padding: 0 16px; font-weight: 500; height: 38px; display: flex; align-items: center;">Search</button>
+
+            @if(request('search') || request('department_filter'))
+                <a href="{{ route('admin.categories.index', request()->has('status') ? ['status' => request('status')] : []) }}" class="btn-reset-filter m-0" title="Clear Filters">
+                    <i class="fas fa-rotate-left"></i> Reset
+                </a>
+            @endif
         </form>
     </div>
     <div class="card-body">

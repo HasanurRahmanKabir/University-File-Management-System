@@ -19,18 +19,30 @@ class CategoryController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%");
-                  
-                if (str_contains('active', $search)) {
-                    $q->orWhere('is_active', true);
-                } elseif (str_contains('inactive', $search)) {
-                    $q->orWhere('is_active', false);
-                }
             });
         }
 
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status == 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        if ($request->has('department_filter') && $request->department_filter != '') {
+            $query->where('department_id', $request->department_filter);
+        }
+
         $categories = $query->latest()->paginate(10)->appends($request->all());
-        $departments = Department::all();
-        return view('admin.categories', compact('categories', 'departments'));
+        
+        $totalCategories = Category::count();
+        $activeCategories = Category::where('is_active', true)->count();
+        $inactiveCategories = $totalCategories - $activeCategories;
+        
+        $departments = Department::orderBy('name')->get();
+        
+        return view('admin.categories', compact('categories', 'departments', 'totalCategories', 'activeCategories', 'inactiveCategories'));
     }
 
     public function store(Request $request)
