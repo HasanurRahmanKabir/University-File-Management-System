@@ -67,4 +67,14 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Settings updated successfully.');
     }
+
+    public function clearCache()
+    {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+            return redirect()->back()->with('success', 'System cache cleared successfully. Everything is fully optimized.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to clear cache: ' . $e->getMessage());
+        }
+    }
 }

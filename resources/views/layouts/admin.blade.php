@@ -138,6 +138,14 @@
                     </span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" onclick="document.getElementById('clearCacheForm').submit();">
+                        <i class="fas fa-broom" title="Clear Cache"></i> <span class="nav-text">Clear Cache</span>
+                    </a>
+                    <form id="clearCacheForm" action="{{ route('admin.clear-cache') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
             </ul>
         </nav>
 

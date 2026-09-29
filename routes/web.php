@@ -78,6 +78,9 @@ Route::middleware(['web', 'auth', 'is_admin'])->prefix('admin')->name('admin.')-
     // System Settings
     Route::get('/system-settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('system-settings');
     Route::post('/system-settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('system-settings.update');
+    
+    // Clear Cache
+    Route::post('/clear-cache', [\App\Http\Controllers\Admin\SettingController::class, 'clearCache'])->name('clear-cache');
 
 });
 use App\Http\Controllers\Teacher\CategoryController as TeacherCategoryController;
