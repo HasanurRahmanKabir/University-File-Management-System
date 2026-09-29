@@ -119,11 +119,11 @@
                             @endif
                         </td>
                         <td class="col-action">
-                            <form action="{{ route('admin.announcements.destroy', $announcement->id) }}" method="POST" class="d-inline delete-form">
+                            <form action="{{ route('admin.announcements.destroy', $announcement->id) }}" method="POST" class="m-0 p-0 delete-form d-flex align-items-center justify-content-end">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-sm btn-icon btn-danger delete-btn" title="Delete Announcement">
-                                    <i class="fas fa-trash-alt"></i>
+                                <button type="button" class="action-btn delete delete-btn" title="Delete Announcement">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </form>
                         </td>
