@@ -34,7 +34,7 @@
 
             <!-- Stats -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" onclick="window.location.href='{{ route('admin.student-info.index') }}'" style="cursor: pointer;" title="View all Students">
                     <div class="stat-icon-wrap blue"><i class="fas fa-user-graduate"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Total Students</div>
@@ -42,7 +42,7 @@
                         <div class="stat-trend {{ $trends['students'] >= 0 ? 'up' : 'down' }}"><i class="fas fa-arrow-{{ $trends['students'] >= 0 ? 'up' : 'down' }}"></i> {{ abs($trends['students']) }}% from last month</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="window.location.href='{{ route('admin.teacher-info.index') }}'" style="cursor: pointer;" title="View all Faculty Members">
                     <div class="stat-icon-wrap purple"><i class="fas fa-chalkboard-teacher"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Faculty Members</div>
@@ -50,7 +50,7 @@
                         <div class="stat-trend {{ $trends['teachers'] >= 0 ? 'up' : 'down' }}"><i class="fas fa-arrow-{{ $trends['teachers'] >= 0 ? 'up' : 'down' }}"></i> {{ abs($trends['teachers']) }}% from last month</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="window.location.href='{{ route('admin.courses.index') }}'" style="cursor: pointer;" title="View all Courses">
                     <div class="stat-icon-wrap emerald"><i class="fas fa-book-open"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Active Courses</div>
@@ -58,7 +58,7 @@
                         <div class="stat-trend {{ $trends['courses'] >= 0 ? 'up' : 'down' }}"><i class="fas fa-arrow-{{ $trends['courses'] >= 0 ? 'up' : 'down' }}"></i> {{ abs($trends['courses']) }}% from last month</div>
                     </div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="window.location.href='{{ route('admin.course-files.index') }}'" style="cursor: pointer;" title="View all Course Files">
                     <div class="stat-icon-wrap amber"><i class="fas fa-folder-open"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Course Files</div>
