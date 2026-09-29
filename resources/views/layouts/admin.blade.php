@@ -599,5 +599,32 @@
             });
         };
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('mousedown', function(e) {
+                if (e.target.classList && e.target.classList.contains('form-select')) {
+                    e.target.classList.toggle('arrow-up');
+                }
+            });
+            document.body.addEventListener('change', function(e) {
+                if (e.target.classList && e.target.classList.contains('form-select')) {
+                    e.target.classList.remove('arrow-up');
+                }
+            });
+            document.body.addEventListener('blur', function(e) {
+                if (e.target.classList && e.target.classList.contains('form-select')) {
+                    e.target.classList.remove('arrow-up');
+                }
+            }, true);
+            // Click outside to close
+            document.addEventListener('click', function(e) {
+                if (!e.target.classList || !e.target.classList.contains('form-select')) {
+                    document.querySelectorAll('.form-select.arrow-up').forEach(function(el) {
+                        el.classList.remove('arrow-up');
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

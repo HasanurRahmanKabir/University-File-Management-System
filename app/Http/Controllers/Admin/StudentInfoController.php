@@ -44,8 +44,25 @@ class StudentInfoController extends Controller
             });
         }
         
+        if ($request->has('status') && in_array($request->status, ['active', 'inactive'])) {
+            $query->where('is_active', $request->status === 'active' ? 1 : 0);
+        }
+        
+        if ($request->has('department_id') && $request->department_id != '') {
+            $query->where('department_id', $request->department_id);
+        }
+        
+        if ($request->has('semester') && $request->semester != '') {
+            $query->where('semester', $request->semester);
+        }
+        
         $users = $query->latest()->paginate(15);
-        $users->appends(['search' => $request->search]);
+        $users->appends([
+            'search' => $request->search, 
+            'status' => $request->status,
+            'department_id' => $request->department_id,
+            'semester' => $request->semester
+        ]);
         
         $courses = \App\Models\Course::where('is_active', true)->orderBy('course_code')->get();
         $semesters = \App\Models\Semester::where('is_active', true)->latest()->get();
