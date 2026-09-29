@@ -9,20 +9,61 @@
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeacherModal"><i class="fas fa-user-plus"></i> Add Teacher</button>
 </div>
 
+    <!-- Stats Row -->
+    <div class="stats-grid grid-3">
+        <div class="stat-card {{ !request()->has('status') || request('status') == '' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.teacher-info.index') }}'" style="cursor: pointer;" title="View All Faculty">
+            <div class="stat-icon-wrap blue"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Total Faculty</div>
+                <div class="stat-number">{{ $totalTeachers ?? 0 }}</div>
+                <div class="stat-trend up"><i class="fas fa-users"></i> Registered</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'active' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.teacher-info.index', ['status' => 'active']) }}'" style="cursor: pointer;" title="View Active Faculty">
+            <div class="stat-icon-wrap emerald"><i class="fas fa-user-check"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Active Faculty</div>
+                <div class="stat-number">{{ $activeTeachers ?? 0 }}</div>
+                <div class="stat-trend neutral"><i class="fas fa-check"></i> Active</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'inactive' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.teacher-info.index', ['status' => 'inactive']) }}'" style="cursor: pointer;" title="View Inactive Faculty">
+            <div class="stat-icon-wrap amber"><i class="fas fa-user-times"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Inactive</div>
+                <div class="stat-number">{{ $inactiveTeachers ?? 0 }}</div>
+                <div class="stat-trend down"><i class="fas fa-clock"></i> Pending/Inactive</div>
+            </div>
+        </div>
+    </div>
+
 <div class="data-card">
     <div class="card-header">
         <div><h5 class="card-title"><i class="fas fa-chalkboard-teacher"></i> Faculty List</h5><p class="card-subtitle">All registered teachers with department info</p></div>
-        <form action="{{ route('admin.teacher-info.index') }}" method="GET" class="d-flex align-items-center gap-2" id="searchForm">
-            <div class="search-box position-relative">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.teacher-info.index') }}'" title="Clear Search">
-                        <i class="fas fa-times"></i>
-                    </button>
-                @endif
+        <form action="{{ route('admin.teacher-info.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-wrap" id="searchForm">
+            @if(request()->has('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+
+            <select name="department_id" class="form-select m-0" style="width: auto; min-width: 150px; height: 38px;" onchange="this.form.submit()">
+                <option value="">All Departments</option>
+                @foreach($departments as $dept)
+                    <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>{{ $dept->name }}</option>
+                @endforeach
+            </select>
+
+            <div class="search-box position-relative m-0" style="height: 38px;">
+                <i class="fas fa-search search-icon" style="top: 50%; transform: translateY(-50%);"></i>
+                <input type="text" name="search" id="searchInput" placeholder="Search any field..." value="{{ request('search') }}" style="height: 100%; border-radius: var(--radius-md); padding-right: 30px;">
             </div>
-            <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-weight: 500;">Search</button>
+            
+            <button type="submit" class="btn btn-primary m-0" style="padding: 0 16px; font-weight: 500; height: 38px; display: flex; align-items: center;">Search</button>
+
+            @if(request('search') || request('department_id'))
+                <a href="{{ route('admin.teacher-info.index', request()->has('status') ? ['status' => request('status')] : []) }}" class="btn-reset-filter m-0" title="Clear Filters">
+                    <i class="fas fa-rotate-left"></i> Reset
+                </a>
+            @endif
         </form>
     </div>
     <div class="card-body"><div class="table-wrap">

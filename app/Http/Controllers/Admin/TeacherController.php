@@ -26,15 +26,36 @@ class TeacherController extends Controller
                   ->orWhere('designation', 'like', "%{$search}%")
                   ->orWhereHas('department', function($q2) use ($search) {
                       $q2->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('courses', function($q3) use ($search) {
+                      $q3->where('course_code', 'like', "%{$search}%")
+                         ->orWhere('title', 'like', "%{$search}%");
                   });
             });
+        }
+        
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status == 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        if ($request->has('department_id') && $request->department_id != '') {
+            $query->where('department_id', $request->department_id);
         }
         
         $users = $query->latest()->paginate(15)->appends($request->all());
         $departments = Department::orderBy('name')->get();
         $courses = Course::orderBy('course_code')->get();
         
-        return view('admin.teachers', compact('users', 'departments', 'courses'));
+        // Calculate Stats for KPI Cards
+        $totalTeachers = User::where('role', 'teacher')->count();
+        $activeTeachers = User::where('role', 'teacher')->where('is_active', true)->count();
+        $inactiveTeachers = $totalTeachers - $activeTeachers;
+        
+        return view('admin.teachers', compact('users', 'departments', 'courses', 'totalTeachers', 'activeTeachers', 'inactiveTeachers'));
     }
 
 
