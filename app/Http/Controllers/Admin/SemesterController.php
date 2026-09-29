@@ -17,18 +17,32 @@ class SemesterController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('year', 'like', "%{$search}%");
-
-                if (strtolower(trim($search)) === 'active') {
-                    $q->orWhere('is_active', true);
-                } elseif (strtolower(trim($search)) === 'inactive') {
-                    $q->orWhere('is_active', false);
-                }
             });
         }
 
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status == 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        if ($request->has('year_filter') && $request->year_filter != '') {
+            $query->where('year', $request->year_filter);
+        }
+
         $semesters = $query->latest()->paginate(15)->appends($request->all());
+        
+        $totalSemesters = Semester::count();
+        $activeSemesters = Semester::where('is_active', true)->count();
+        $inactiveSemesters = $totalSemesters - $activeSemesters;
+        
+        $years = Semester::distinct('year')->orderBy('year', 'desc')->pluck('year');
+
         $departments = \App\Models\Department::all();
-        return view('admin.semesters', compact('semesters', 'departments'));
+        
+        return view('admin.semesters', compact('semesters', 'departments', 'totalSemesters', 'activeSemesters', 'inactiveSemesters', 'years'));
     }
 
     public function store(Request $request)
