@@ -79,30 +79,16 @@
             <span class="nav-group-label nav-text">Academics</span>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="{{ route('admin.semesters.index') }}" class="nav-link {{ request()->routeIs('admin.semesters.*') ? 'active' : '' }}">
-                        <i class="fas fa-calendar-alt" title="Semesters
-                    "></i> <span class="nav-text">Semesters
-                    </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
-                        <i class="fas fa-book-open" title="Courses
-                    "></i> <span class="nav-text">Courses
-                    </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.course-files.index') }}" class="nav-link {{ request()->routeIs('admin.course-files.*') ? 'active' : '' }}">
-                        <i class="fas fa-file-alt" title="Course Files
-                    "></i> <span class="nav-text">Course Files
-                    </span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ Route::has('admin.departments.index') ? route('admin.departments.index') : '#' }}" class="nav-link {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">
                         <i class="fas fa-building-columns" title="Departments
                     "></i> <span class="nav-text">Departments
+                    </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.semesters.index') }}" class="nav-link {{ request()->routeIs('admin.semesters.*') ? 'active' : '' }}">
+                        <i class="fas fa-calendar-alt" title="Semesters
+                    "></i> <span class="nav-text">Semesters
                     </span>
                     </a>
                 </li>
@@ -117,6 +103,20 @@
                     <a href="{{ route('admin.subcategories.index') }}" class="nav-link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }}">
                         <i class="fas fa-layer-group" title="Subcategories
                     "></i> <span class="nav-text">Subcategories
+                    </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.courses.index') }}" class="nav-link {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
+                        <i class="fas fa-book-open" title="Courses
+                    "></i> <span class="nav-text">Courses
+                    </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.course-files.index') }}" class="nav-link {{ request()->routeIs('admin.course-files.*') ? 'active' : '' }}">
+                        <i class="fas fa-file-alt" title="Course Files
+                    "></i> <span class="nav-text">Course Files
                     </span>
                     </a>
                 </li>
