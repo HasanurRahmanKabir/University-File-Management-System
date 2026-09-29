@@ -46,12 +46,66 @@
     </div>
 </div>
 
+    <!-- Stats Row -->
+    <!-- Stats Row -->
+    <div class="stats-grid grid-3">
+        <div class="stat-card {{ !request()->has('status') || request('status') == '' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.announcements.index') }}'" style="cursor: pointer;" title="View All Announcements">
+            <div class="stat-icon-wrap blue"><i class="fas fa-broadcast-tower"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Total Announcements</div>
+                <div class="stat-number">{{ $totalAnnouncements ?? 0 }}</div>
+                <div class="stat-trend neutral"><i class="fas fa-list"></i> All Notices</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'Assignment' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.announcements.index', ['status' => 'Assignment']) }}'" style="cursor: pointer;" title="Assignments">
+            <div class="stat-icon-wrap emerald"><i class="fas fa-tasks"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Assignments</div>
+                <div class="stat-number">{{ $assignmentCount ?? 0 }}</div>
+                <div class="stat-trend up"><i class="fas fa-file-alt"></i> Tasks</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'Exam' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.announcements.index', ['status' => 'Exam']) }}'" style="cursor: pointer;" title="Exams & Tests">
+            <div class="stat-icon-wrap amber"><i class="fas fa-user-edit"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Exams & Tests</div>
+                <div class="stat-number">{{ $examCtCount ?? 0 }}</div>
+                <div class="stat-trend down"><i class="fas fa-clock"></i> Assessments</div>
+            </div>
+        </div>
+    </div>
+
 <div class="data-card">
     <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div>
             <h5 class="card-title"><i class="fas fa-broadcast-tower text-primary"></i> All Announcements</h5>
             <p class="card-subtitle">Showing all recent teacher announcements</p>
         </div>
+        <form action="{{ route('admin.announcements.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
+            @if(request()->has('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+
+            <select name="type_filter" class="form-select m-0" style="width: auto; min-width: 150px; height: 38px;" onchange="this.form.submit()">
+                <option value="">All Types</option>
+                @foreach($types as $type)
+                    <option value="{{ $type }}" {{ request('type_filter') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                @endforeach
+            </select>
+
+            <div class="search-box position-relative m-0" style="height: 38px; flex-grow: 1;">
+                <i class="fas fa-search search-icon" style="top: 50%; transform: translateY(-50%);"></i>
+                <input type="text" name="search" id="searchInput" placeholder="Search announcements..." value="{{ request('search') }}" style="height: 100%; border-radius: var(--radius-md); padding-right: 30px; width: 100%;">
+            </div>
+            
+            <button type="submit" class="btn btn-primary m-0" style="padding: 0 16px; font-weight: 500; height: 38px; display: flex; align-items: center;">Search</button>
+
+            @if(request('search') || request('type_filter'))
+                <a href="{{ route('admin.announcements.index', request()->has('status') ? ['status' => request('status')] : []) }}" class="btn-reset-filter m-0" title="Clear Filters">
+                    <i class="fas fa-rotate-left"></i> Reset
+                </a>
+            @endif
+        </form>
     </div>
     <div class="card-body p-0">
         <div class="table-wrap table-responsive">
