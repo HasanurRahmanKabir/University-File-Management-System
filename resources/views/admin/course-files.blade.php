@@ -556,25 +556,23 @@
             <h5 class="card-title mb-0"><i class="fas fa-graduation-cap"></i> Select a Course</h5>
             <p class="card-subtitle mb-0">Open a course to manage its folders and materials</p>
         </div>
-        <form action="{{ route('admin.course-files.index') }}" method="GET" class="cf-filter-bar" id="searchForm">
-            <select name="department_id" class="cf-dept-select" onchange="this.form.submit()" aria-label="Filter by department">
+        <form action="{{ route('admin.course-files.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
+            <select name="department_id" class="form-select m-0" style="width: auto; min-width: 150px; height: 38px;" onchange="this.form.submit()" aria-label="Filter by department">
                 <option value="">All Departments</option>
                 @foreach($departments as $dept)
                     <option value="{{ $dept->id }}" @selected(request('department_id') == $dept->id)>{{ $dept->code ?? $dept->name }}</option>
                 @endforeach
             </select>
-            <div class="search-box position-relative">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search courses, teacher..." value="{{ request('search') }}" style="padding-right: {{ request('search') ? '30px' : '14px' }};">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.course-files.index', array_filter(['department_id' => request('department_id')])) }}'" title="Clear search">
-                        <i class="fas fa-times"></i>
-        </button>
-                @endif
+            
+            <div class="search-box position-relative m-0" style="height: 38px; flex-grow: 1;">
+                <i class="fas fa-search search-icon" style="top: 50%; transform: translateY(-50%);"></i>
+                <input type="text" name="search" id="searchInput" placeholder="Search courses, teacher..." value="{{ request('search') }}" style="height: 100%; border-radius: var(--radius-md); padding-right: 30px; width: 100%;">
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+            
+            <button type="submit" class="btn btn-primary m-0" style="padding: 0 16px; font-weight: 500; height: 38px; display: flex; align-items: center;">Search</button>
+            
             @if(request('search') || request('department_id'))
-                <a href="{{ route('admin.course-files.index') }}" class="cf-clear-link" title="Reset filters">
+                <a href="{{ route('admin.course-files.index') }}" class="btn-reset-filter m-0" title="Clear Filters">
                     <i class="fas fa-rotate-left"></i> Reset
                 </a>
             @endif
