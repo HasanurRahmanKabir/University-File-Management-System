@@ -21,17 +21,29 @@ class AdminController extends Controller
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhere('contact_number', 'like', "%{$search}%");
-                  
-                if (strtolower(trim($search)) === 'active') {
-                    $q->orWhere('is_active', true);
-                } elseif (strtolower(trim($search)) === 'inactive') {
-                    $q->orWhere('is_active', false);
-                }
             });
         }
         
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status == 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        if ($request->has('role_filter') && $request->role_filter != '') {
+            $query->where('role', $request->role_filter);
+        }
+        
         $users = $query->latest()->paginate(15)->appends($request->all());
-        return view('admin.admins', compact('users'));
+
+        // KPI calculations
+        $totalAdmins = User::whereIn('role', ['admin', 'super_admin'])->count();
+        $activeAdmins = User::whereIn('role', ['admin', 'super_admin'])->where('is_active', true)->count();
+        $inactiveAdmins = $totalAdmins - $activeAdmins;
+
+        return view('admin.admins', compact('users', 'totalAdmins', 'activeAdmins', 'inactiveAdmins'));
     }
 
     public function store(Request $request)
