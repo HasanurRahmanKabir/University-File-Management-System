@@ -22,18 +22,30 @@ class SubcategoryController extends Controller
                   ->orWhereHas('department', function($dq) use ($search) {
                       $dq->where('name', 'like', "%{$search}%");
                   });
-                  
-                if (str_contains('active', $search)) {
-                    $q->orWhere('is_active', true);
-                } elseif (str_contains('inactive', $search)) {
-                    $q->orWhere('is_active', false);
-                }
             });
         }
 
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status == 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        if ($request->has('department_filter') && $request->department_filter != '') {
+            $query->where('department_id', $request->department_filter);
+        }
+
         $subcategories = $query->latest()->paginate(10)->appends($request->all());
-        $departments = \App\Models\Department::all();
-        return view('admin.subcategories', compact('subcategories', 'departments'));
+        
+        $totalSubcategories = Subcategory::count();
+        $activeSubcategories = Subcategory::where('is_active', true)->count();
+        $inactiveSubcategories = $totalSubcategories - $activeSubcategories;
+        
+        $departments = \App\Models\Department::orderBy('name')->get();
+        
+        return view('admin.subcategories', compact('subcategories', 'departments', 'totalSubcategories', 'activeSubcategories', 'inactiveSubcategories'));
     }
 
     public function store(Request $request)
