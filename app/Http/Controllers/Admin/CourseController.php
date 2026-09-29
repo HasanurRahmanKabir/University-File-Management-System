@@ -24,21 +24,32 @@ class CourseController extends Controller
                   ->orWhereHas('department', function($q) use ($search) {
                       $q->where('name', 'like', "%{$search}%");
                   });
-                  
-                if (strtolower($search) === 'active') {
-                    $q->orWhere('is_active', 1);
-                } elseif (strtolower($search) === 'inactive') {
-                    $q->orWhere('is_active', 0);
-                }
             });
         }
 
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'active') {
+                $query->where('is_active', 1);
+            } elseif ($request->status == 'inactive') {
+                $query->where('is_active', 0);
+            }
+        }
+
+        if ($request->has('department_filter') && $request->department_filter != '') {
+            $query->where('department_id', $request->department_filter);
+        }
+
         $courses = $query->latest()->paginate(10)->appends($request->all());
-        $departments = Department::all();
+        
+        $totalCourses = Course::count();
+        $activeCourses = Course::where('is_active', 1)->count();
+        $inactiveCourses = $totalCourses - $activeCourses;
+        
+        $departments = Department::orderBy('name')->get();
         $categories = \App\Models\Category::where('is_active', true)->get();
         $subcategories = \App\Models\Subcategory::where('is_active', true)->get();
         
-        return view('admin.courses', compact('courses', 'departments', 'categories', 'subcategories'));
+        return view('admin.courses', compact('courses', 'departments', 'categories', 'subcategories', 'totalCourses', 'activeCourses', 'inactiveCourses'));
     }
 
     public function store(Request $request)
