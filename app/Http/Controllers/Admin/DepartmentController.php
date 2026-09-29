@@ -21,9 +21,29 @@ class DepartmentController extends Controller
             });
         }
 
+        if ($request->has('faculty_filter') && $request->faculty_filter != '') {
+            $query->where('faculty', $request->faculty_filter);
+        }
+
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'assigned') {
+                $query->whereNotNull('faculty')->where('faculty', '!=', '');
+            } elseif ($request->status == 'unassigned') {
+                $query->where(function($q) {
+                    $q->whereNull('faculty')->orWhere('faculty', '');
+                });
+            }
+        }
+
         $departments = $query->withCount('teachers')->latest()->paginate(15)->appends($request->all());
         
-        return view('admin.departments', compact('departments'));
+        $totalDepartments = Department::count();
+        $assignedFaculties = Department::whereNotNull('faculty')->where('faculty', '!=', '')->count();
+        $unassignedFaculties = $totalDepartments - $assignedFaculties;
+        
+        $faculties = Department::distinct('faculty')->whereNotNull('faculty')->pluck('faculty');
+        
+        return view('admin.departments', compact('departments', 'totalDepartments', 'assignedFaculties', 'unassignedFaculties', 'faculties'));
     }
 
     public function store(Request $request)

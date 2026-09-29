@@ -16,6 +16,34 @@
     </div>
 </div>
 
+    <!-- Stats Row -->
+    <div class="stats-grid grid-3">
+        <div class="stat-card {{ !request()->has('status') || request('status') == '' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.departments.index') }}'" style="cursor: pointer;" title="View All Departments">
+            <div class="stat-icon-wrap blue"><i class="fas fa-building-columns"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Total Departments</div>
+                <div class="stat-number">{{ $totalDepartments ?? 0 }}</div>
+                <div class="stat-trend up"><i class="fas fa-list"></i> Registered</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'assigned' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.departments.index', ['status' => 'assigned']) }}'" style="cursor: pointer;" title="Assigned Faculties">
+            <div class="stat-icon-wrap emerald"><i class="fas fa-landmark"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Assigned Faculty</div>
+                <div class="stat-number">{{ $assignedFaculties ?? 0 }}</div>
+                <div class="stat-trend neutral"><i class="fas fa-check"></i> Has Faculty</div>
+            </div>
+        </div>
+        <div class="stat-card {{ request('status') == 'unassigned' ? 'active-filter' : '' }}" onclick="window.location.href='{{ route('admin.departments.index', ['status' => 'unassigned']) }}'" style="cursor: pointer;" title="Unassigned Departments">
+            <div class="stat-icon-wrap amber"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Unassigned</div>
+                <div class="stat-number">{{ $unassignedFaculties ?? 0 }}</div>
+                <div class="stat-trend down"><i class="fas fa-clock"></i> Pending Faculty</div>
+            </div>
+        </div>
+    </div>
+
 <div class="data-card">
     <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div>
@@ -23,16 +51,25 @@
             <p class="card-subtitle">All active university departments</p>
         </div>
         <form action="{{ route('admin.departments.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
-            <div class="search-box position-relative">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" name="search" id="searchInput" placeholder="Search departments..." value="{{ request('search') }}" style="padding-right: 30px;">
-                @if(request('search'))
-                    <button type="button" class="btn-clear-search" onclick="window.location.href='{{ route('admin.departments.index') }}'" title="Clear Search">
-                        <i class="fas fa-times"></i>
-                    </button>
-                @endif
+            <select name="faculty_filter" class="form-select m-0" style="width: auto; min-width: 150px; height: 38px;" onchange="this.form.submit()">
+                <option value="">All Faculties</option>
+                @foreach($faculties as $fac)
+                    <option value="{{ $fac }}" {{ request('faculty_filter') == $fac ? 'selected' : '' }}>{{ $fac }}</option>
+                @endforeach
+            </select>
+
+            <div class="search-box position-relative m-0" style="height: 38px;">
+                <i class="fas fa-search search-icon" style="top: 50%; transform: translateY(-50%);"></i>
+                <input type="text" name="search" id="searchInput" placeholder="Search departments..." value="{{ request('search') }}" style="height: 100%; border-radius: var(--radius-md); padding-right: 30px;">
             </div>
-            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;"><i class="fas fa-search"></i> Search</button>
+            
+            <button type="submit" class="btn btn-primary m-0" style="padding: 0 16px; font-weight: 500; height: 38px; display: flex; align-items: center;">Search</button>
+
+            @if(request('search') || request('faculty_filter'))
+                <a href="{{ route('admin.departments.index') }}" class="btn-reset-filter m-0" title="Clear Filters">
+                    <i class="fas fa-rotate-left"></i> Reset
+                </a>
+            @endif
         </form>
     </div>
     <div class="card-body">
