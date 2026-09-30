@@ -109,15 +109,23 @@
                             <h5 class="card-title"><i class="fas fa-clipboard-list"></i> Recent Records</h5>
                             <p class="card-subtitle">Latest entries across the system</p>
                         </div>
-                        <div class="d-flex gap-2">
-                            <div class="search-box">
-                                <i class="fas fa-search search-icon"></i>
-                                <input type="text" placeholder="Search records...">
+                        <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2 m-0 p-0">
+                            <div class="search-box position-relative m-0" style="height: 38px;">
+                                <i class="fas fa-search search-icon" style="top: 50%; transform: translateY(-50%);"></i>
+                                <input type="text" name="search" placeholder="Search records..." value="{{ request('search') }}" style="height: 100%; border-radius: var(--radius-md); padding-right: 30px; border: 1px solid var(--border);">
                             </div>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                                <i class="fas fa-plus"></i> <span class="d-none d-sm-inline">Add New</span>
+                            <button type="submit" class="btn btn-primary m-0" style="padding: 0 16px; font-weight: 500; height: 38px; display: flex; align-items: center;">Search</button>
+                            
+                            @if(request('search'))
+                                <a href="{{ route('admin.dashboard') }}" class="btn-reset-filter m-0" title="Clear Filters" style="height: 38px; display: flex; align-items: center;">
+                                    <i class="fas fa-rotate-left"></i> Reset
+                                </a>
+                            @endif
+
+                            <button type="button" class="btn btn-primary m-0" data-bs-toggle="modal" data-bs-target="#addModal" style="height: 38px; display: flex; align-items: center;">
+                                <i class="fas fa-plus"></i> <span class="d-none d-sm-inline ms-1">Add New</span>
                             </button>
-                        </div>
+                        </form>
                     </div>
                     <div class="card-body">
                         <div class="table-wrap">
@@ -173,7 +181,10 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="4" class="text-center">No recent records found.</td>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="fas fa-inbox mb-2" style="font-size: 24px; display: block; opacity: 0.5;"></i>
+                                            No recent records found.
+                                        </td>
                                     </tr>
                                     @endforelse
                                 </tbody>

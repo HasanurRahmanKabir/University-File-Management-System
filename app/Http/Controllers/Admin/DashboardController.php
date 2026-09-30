@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $currentMonth = now()->month;
         $lastMonth = now()->subMonth()->month;
@@ -45,8 +45,19 @@ class DashboardController extends Controller
                 CourseMaterial::whereMonth('created_at', $lastMonth)->count()
             )
         ];
+        $query = User::latest();
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('student_id', 'like', "%{$search}%");
+            });
+            $recentRecords = $query->take(20)->get(); // Show more if searching
+        } else {
+            $recentRecords = $query->take(5)->get();
+        }
         
-        $recentRecords = User::latest()->take(5)->get();
         $recentActivities = \App\Models\ActivityLog::with('user')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('stats', 'trends', 'recentRecords', 'recentActivities'));
