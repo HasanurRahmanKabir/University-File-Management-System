@@ -1,19 +1,17 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Departments - Admin Dashboard')
 @section('page-title', 'Departments')
 @section('breadcrumb', 'Departments')
 
 @section('content')
-<div class="page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+<div class="page-header">
     <div class="heading-group">
         <h2>Academic Departments</h2>
         <p>Manage main faculties and administrative departments.</p>
     </div>
-    <div style="display:flex; gap:8px; margin-right: 15px;">
-        <button class="btn btn-primary mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#addDeptModal">
-            <i class="fas fa-plus-circle"></i> Add Department
-        </button>
-    </div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeptModal">
+        <i class="fas fa-plus-circle"></i> Add Department
+    </button>
 </div>
 
     <!-- Stats Row -->
@@ -77,17 +75,17 @@
             <table class="premium-table w-100">
                 <thead>
                     <tr>
-                        <th style="width: 16.6%;">Department Name</th>
-                        <th class="text-center" style="width: 33.4%;">Short Code</th>
-                        <th class="text-center" style="width: 33.4%;">Total Faculty</th>
-                        <th class="text-end" style="width: 16.6%;">Action</th>
+                        <th><div style="min-width: 250px; display: inline-block;">Department Name</div></th>
+                        <th><div style="min-width: 150px; display: inline-block; text-align: center;">Short Code</div></th>
+                        <th><div style="min-width: 180px; display: inline-block; text-align: center;">Total Faculty</div></th>
+                        <th class="text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($departments as $dept)
                     <tr>
                         <td>
-                            <div class="user-cell">
+                            <div class="user-cell" style="min-width: 250px;">
                                 @php
                                     $deptName = trim($dept->name ?? 'Unknown');
                                     $words = preg_split("/\s+/", $deptName);
@@ -104,11 +102,15 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center">
-                            <span class="badge dark">{{ $dept->code ?? 'N/A' }}</span>
+                        <td>
+                            <div style="min-width: 150px; display: inline-block; text-align: center;">
+                                <span class="badge dark">{{ $dept->code ?? 'N/A' }}</span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            <span class="badge neutral"><i class="fas fa-users"></i> {{ $dept->teachers_count }} Faculty</span>
+                        <td>
+                            <div style="min-width: 180px; display: inline-block; text-align: center;">
+                                <span class="badge neutral"><i class="fas fa-users"></i> {{ $dept->teachers_count }} Faculty</span>
+                            </div>
                         </td>
                         <td class="text-end">
                             <div class="action-group justify-content-end">
