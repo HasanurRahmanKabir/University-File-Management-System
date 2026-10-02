@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Course Files - Admin Dashboard')
 @section('page-title', 'Course Materials')
 @section('breadcrumb', 'Course Files')
@@ -409,6 +409,20 @@
 
     /* Page header + actions â€” tiny devices */
     @media (max-width: 768px) {
+        .cf-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 12px 16px;
+        }
+        .cf-toolbar form {
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .cf-toolbar .search-box {
+            flex: 1 1 auto;
+            width: 100% !important;
+            min-width: 0;
+        }
         .page-header {
             flex-direction: column !important;
             align-items: stretch !important;
@@ -491,7 +505,7 @@
         <h2>Course Materials</h2>
         <p>Browse by course, organize folders, and manage uploaded files.</p>
     </div>
-    <div class="d-flex flex-wrap align-items-center gap-2" style="margin-right: 8px;">
+    <div class="header-actions d-flex flex-wrap gap-2 align-items-center">
         <div class="cf-view-switch" role="group" aria-label="View mode">
             <a href="{{ route('admin.course-files.index') }}"
                class="{{ $viewMode === 'library' || $viewMode === 'browser' ? 'active' : '' }}"
@@ -504,14 +518,16 @@
                 <i class="fas fa-list"></i> All Files
             </a>
         </div>
-        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#createFolderModal"
-            @if($activeCourse) onclick="prefillFolderCourse({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }}, @js($activeFolder?->name))" @endif>
-            <i class="fas fa-folder-plus"></i> New Folder
-        </button>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal"
-            @if($activeCourse) onclick="prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }})" @endif>
-            <i class="fas fa-cloud-upload-alt"></i> Upload Material
-        </button>
+        <div class="d-flex flex-column flex-sm-row gap-2 flex-grow-1">
+            <button class="btn btn-secondary flex-grow-1" data-bs-toggle="modal" data-bs-target="#createFolderModal"
+                @if($activeCourse) onclick="prefillFolderCourse({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }}, @js($activeFolder?->name))" @endif>
+                <i class="fas fa-folder-plus"></i> New Folder
+            </button>
+            <button class="btn btn-primary flex-grow-1" data-bs-toggle="modal" data-bs-target="#uploadModal"
+                @if($activeCourse) onclick="prefillUploadContext({{ $activeCourse->id }}, {{ $activeFolder->id ?? 'null' }})" @endif>
+                <i class="fas fa-cloud-upload-alt"></i> Upload Material
+            </button>
+        </div>
     </div>
 </div>
 
@@ -699,11 +715,11 @@
             <table class="premium-table w-100">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th class="text-center">Type</th>
-                        <th class="text-center">Uploaded By</th>
-                        <th class="text-center">Size</th>
-                        <th class="text-center">Modified</th>
+                        <th><div style="min-width: 250px; display: inline-block;">Name</div></th>
+                        <th><div style="min-width: 100px; display: inline-block; text-align: center;">Type</div></th>
+                        <th><div style="min-width: 150px; display: inline-block; text-align: center;">Uploaded By</div></th>
+                        <th><div style="min-width: 100px; display: inline-block; text-align: center;">Size</div></th>
+                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Modified</div></th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -749,10 +765,10 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center"><span class="folder-badge"><i class="fas fa-folder"></i> Folder</span></td>
-                        <td class="text-center"><span class="user-sub">{{ $folder->creator->name ?? 'â€”' }}</span></td>
-                        <td class="text-center"><span class="user-sub">â€”</span></td>
-                        <td class="text-center"><span class="user-sub">{{ $folder->updated_at?->diffForHumans() }}</span></td>
+                        <td><div style="min-width: 100px; display: inline-block; text-align: center;"><span class="folder-badge"><i class="fas fa-folder"></i> Folder</span></div></td>
+                        <td><div style="min-width: 150px; display: inline-block; text-align: center;"><span class="user-sub">{{ $folder->creator->name ?? 'â€”' }}</span></div></td>
+                        <td><div style="min-width: 100px; display: inline-block; text-align: center;"><span class="user-sub">â€”</span></div></td>
+                        <td><div style="min-width: 120px; display: inline-block; text-align: center;"><span class="user-sub">{{ $folder->updated_at?->diffForHumans() }}</span></div></td>
                         <td>
                             <div class="action-group" onclick="event.stopPropagation();">
                                 <a href="{{ route('admin.course-files.index', ['folder_id' => $folder->id]) }}" class="action-btn" style="background-color: var(--primary-light); color: var(--primary);" title="Open">
@@ -799,16 +815,20 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center">
-                            <a href="{{ route('admin.course-files.download', $material->id) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-                                <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
-                            </a>
+                        <td>
+                            <div style="min-width: 100px; display: inline-block; text-align: center;">
+                                <a href="{{ route('admin.course-files.download', $material->id) }}" target="_blank" class="badge {{ $badgeClass }}" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                                    <i class="fas {{ $icon }}"></i> {{ strtoupper($ext) }}
+                                </a>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            <div class="user-name" style="font-size:0.82rem;">{{ $material->uploader->name ?? 'Unknown' }}</div>
+                        <td>
+                            <div style="min-width: 150px; display: inline-block; text-align: center;">
+                                <div class="user-name" style="font-size:0.82rem;">{{ $material->uploader->name ?? 'Unknown' }}</div>
+                            </div>
                         </td>
-                        <td class="text-center"><span class="user-sub">{{ $sizeLabel }}</span></td>
-                        <td class="text-center"><span class="user-sub">{{ $material->updated_at->format('d M Y') }}</span></td>
+                        <td><div style="min-width: 100px; display: inline-block; text-align: center;"><span class="user-sub">{{ $sizeLabel }}</span></div></td>
+                        <td><div style="min-width: 120px; display: inline-block; text-align: center;"><span class="user-sub">{{ $material->updated_at->format('d M Y') }}</span></div></td>
                         <td>
                             <div class="action-group">
                                 @if(in_array($ext, ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp']))
@@ -1386,7 +1406,8 @@
             allowEmptyOption: true,
             wrapperClass: 'ts-wrapper form-select ts-faculty',
             plugins: ['dropdown_input'],
-            sortField: { field: 'text', direction: 'asc' }
+            sortField: { field: 'text', direction: 'asc' },
+            onDelete: function(values, e) { return e ? false : true; }
         };
         const tsConfigCourse = { ...tsConfig, wrapperClass: 'ts-wrapper form-select ts-course' };
         const tsConfigFolder = { ...tsConfig, wrapperClass: 'ts-wrapper form-select ts-folder' };
