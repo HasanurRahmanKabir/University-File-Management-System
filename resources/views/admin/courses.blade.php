@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Courses - Admin Dashboard')
 @section('page-title', 'Course Information')
 @section('breadcrumb', 'Course Information')
@@ -97,49 +97,74 @@
         </form>
     </div>
     <div class="card-body">
-        <div class="table-wrap">
-            <table class="premium-table">
-                <thead><tr><th>Course Code</th><th class="text-center">Credit</th><th>Course Title</th><th>Course Subtitle</th><th class="text-center">Department</th><th class="text-center">Classification</th><th class="text-center">Status</th><th class="text-center">Action</th></tr></thead>
+        <div class="table-wrap table-responsive">
+            <table class="premium-table w-100">
+                <thead>
+                    <tr>
+                        <th><div style="min-width: 150px; display: inline-block;">Course Code</div></th>
+                        <th><div style="min-width: 100px; display: inline-block; text-align: center;">Credit</div></th>
+                        <th><div style="min-width: 250px; display: inline-block;">Course Title</div></th>
+                        <th><div style="min-width: 200px; display: inline-block;">Course Subtitle</div></th>
+                        <th><div style="min-width: 180px; display: inline-block; text-align: center;">Department</div></th>
+                        <th><div style="min-width: 180px; display: inline-block; text-align: center;">Classification</div></th>
+                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Status</div></th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @forelse($courses as $course)
                     <tr>
-                        <td><span class="badge dark"><i class="fas fa-hashtag"></i> {{ $course->course_code }}</span></td>
-                        <td class="text-center">
-                            <span class="badge info"><i class="fas fa-star"></i> {{ $course->credit ?? 'N/A' }}</span>
+                        <td>
+                            <div style="min-width: 150px; display: inline-block;">
+                                <span class="badge dark"><i class="fas fa-hashtag"></i> {{ $course->course_code }}</span>
+                            </div>
                         </td>
                         <td>
-                            <div class="user-name">{{ $course->title }}</div>
+                            <div style="min-width: 100px; display: inline-block; text-align: center;">
+                                <span class="badge info"><i class="fas fa-star"></i> {{ $course->credit ?? 'N/A' }}</span>
+                            </div>
                         </td>
                         <td>
-                            <span style="color:var(--text-secondary); font-size:0.85rem;">{{ $course->subtitle ?? 'N/A' }}</span>
+                            <div class="user-name" style="min-width: 250px;">{{ $course->title }}</div>
                         </td>
-                        <td class="text-center">
-                            @php $deptColors = ['info', 'warning', 'success', 'dark', 'neutral']; @endphp
-                            <span class="badge {{ $deptColors[strlen($course->department?->name ?? 'A') % count($deptColors)] }}">
-                                <i class="fas fa-building-columns"></i> {{ $course->department?->name ?? 'N/A' }}
-                            </span>
+                        <td>
+                            <div style="min-width: 200px; display: inline-block;">
+                                <span style="color:var(--text-secondary); font-size:0.85rem;">{{ $course->subtitle ?? 'N/A' }}</span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            @if($course->category_id)
-                                <div class="d-flex flex-column align-items-center gap-1">
-                                    <span style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Category (Major)</span>
-                                    <span class="badge primary"><i class="fas fa-layer-group"></i> {{ $course->category?->name ?? 'N/A' }}</span>
-                                </div>
-                            @elseif($course->subcategory_id)
-                                <div class="d-flex flex-column align-items-center gap-1">
-                                    <span style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Subcategory (Minor)</span>
-                                    <span class="badge info"><i class="fas fa-tags"></i> {{ $course->subcategory?->name ?? 'N/A' }}</span>
-                                </div>
-                            @else
-                                <span class="badge neutral"><i class="fas fa-minus"></i> Unclassified</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 180px; display: inline-block; text-align: center;">
+                                @php $deptColors = ['info', 'warning', 'success', 'dark', 'neutral']; @endphp
+                                <span class="badge {{ $deptColors[strlen($course->department?->name ?? 'A') % count($deptColors)] }}">
+                                    <i class="fas fa-building-columns"></i> {{ $course->department?->name ?? 'N/A' }}
+                                </span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            @if($course->is_active)
-                                <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                            @else
-                                <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 180px; display: inline-block; text-align: center;">
+                                @if($course->category_id)
+                                    <div class="d-flex flex-column align-items-center gap-1">
+                                        <span style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Category (Major)</span>
+                                        <span class="badge primary"><i class="fas fa-layer-group"></i> {{ $course->category?->name ?? 'N/A' }}</span>
+                                    </div>
+                                @elseif($course->subcategory_id)
+                                    <div class="d-flex flex-column align-items-center gap-1">
+                                        <span style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Subcategory (Minor)</span>
+                                        <span class="badge info"><i class="fas fa-tags"></i> {{ $course->subcategory?->name ?? 'N/A' }}</span>
+                                    </div>
+                                @else
+                                    <span class="badge neutral"><i class="fas fa-minus"></i> Unclassified</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            <div style="min-width: 120px; display: inline-block; text-align: center;">
+                                @if($course->is_active)
+                                    <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
+                                @else
+                                    <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <div class="action-group">
