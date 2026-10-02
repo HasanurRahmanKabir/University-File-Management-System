@@ -112,7 +112,7 @@
                         <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2 m-0 p-0">
                             <div class="search-box position-relative m-0" style="height: 38px;">
                                 <i class="fas fa-search search-icon" style="top: 50%; transform: translateY(-50%);"></i>
-                                <input type="text" name="search" placeholder="Search records..." value="{{ request('search') }}" style="height: 100%; border-radius: var(--radius-md); padding-right: 30px; border: 1px solid var(--border);">
+                                <input type="text" name="search" placeholder="Search records..." value="{{ request('search') }}" style="height: 100%; padding-right: 30px;">
                             </div>
                             <button type="submit" class="btn btn-primary m-0" style="padding: 0 16px; font-weight: 500; height: 38px; display: flex; align-items: center;">Search</button>
                             
