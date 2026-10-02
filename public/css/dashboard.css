@@ -1601,6 +1601,11 @@ img { max-width: 100%; }
     .stats-grid, .stats-grid.grid-3 { grid-template-columns: 1fr; }
     .quick-actions { grid-template-columns: 1fr; }
     .top-header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1030; }
+    .header-left { min-width: 0; flex: 1; overflow: hidden; }
+    .header-left > div { min-width: 0; flex: 1; overflow: hidden; }
+    .header-left .page-title { font-size: 0.95rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 1.2; }
+    .header-left .breadcrumb-trail { display: none !important; }
+    .header-right { gap: 8px !important; flex-shrink: 0; }
     .content-wrapper { padding: 76px 12px 16px 12px; overflow-x: hidden; width: 100%; }
     .welcome-banner { padding: 20px; word-break: break-word; }
     .welcome-banner .welcome-title { font-size: 1.15rem; }
@@ -1636,6 +1641,7 @@ img { max-width: 100%; }
     .top-header { padding: 0 5px 0 45px; justify-content: space-between; align-items: center; gap: 5px; }
     .sidebar-toggler { width: 30px; height: 30px; top: 15px; left: 8px; font-size: 0.8rem; }
     .header-left { min-width: 0; flex: 1; overflow: hidden; }
+    .header-left > div { min-width: 0; flex: 1; overflow: hidden; }
     .header-left .page-title { font-size: 0.85rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; line-height: 1.2; }
     .header-left .breadcrumb-trail { display: none !important; }
     .header-right { gap: 5px !important; flex-shrink: 0; }

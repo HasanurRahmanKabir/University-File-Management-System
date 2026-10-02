@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Course Files - Admin Dashboard')
 @section('page-title', 'Course Materials')
 @section('breadcrumb', 'Course Files')
@@ -6,7 +6,7 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
-    /* TomSelect — match admin form controls */
+    /* TomSelect â€” match admin form controls */
     .ts-wrapper.form-select { padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; }
     .ts-control { border: 1.5px solid #475569 !important; border-radius: var(--radius-md) !important; background: var(--bg-input) !important; color: var(--text-body) !important; font-size: 0.85rem !important; padding: 9px 13px !important; min-height: 42px !important; box-shadow: var(--shadow-sm) !important; display: flex; align-items: center; transition: all var(--duration-base) var(--ease); }
     .ts-wrapper.focus .ts-control { border-color: var(--primary) !important; box-shadow: 0 0 0 3px var(--primary-glow) !important; background: white !important; outline: none !important; }
@@ -42,7 +42,7 @@
     .cf-breadcrumb .sep { color: var(--border); font-weight: 400; }
     .cf-breadcrumb .current { color: var(--text-heading); }
 
-    /* View switcher — segmented control */
+    /* View switcher â€” segmented control */
     .cf-view-switch {
         display: inline-flex;
         align-items: stretch;
@@ -97,7 +97,7 @@
     /* Course library grid */
     .course-lib-grid {
         display: grid;
-        /* 5 columns → 15 items = 3 full rows (no half row) */
+        /* 5 columns â†’ 15 items = 3 full rows (no half row) */
         grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 20px;
         padding: 22px 24px 28px;
@@ -105,7 +105,7 @@
     }
     @media (max-width: 1400px) {
         .course-lib-grid {
-            /* 3 columns → 15 items = 5 full rows */
+            /* 3 columns â†’ 15 items = 5 full rows */
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
     }
@@ -281,7 +281,7 @@
     }
     .upload-steps .step i { display: block; margin-bottom: 4px; font-size: 0.9rem; color: var(--primary); }
 
-    /* Library filter toolbar — single professional row */
+    /* Library filter toolbar â€” single professional row */
     .cf-lib-header {
         display: flex;
         align-items: center;
@@ -407,7 +407,7 @@
         }
     }
 
-    /* Page header + actions — tiny devices */
+    /* Page header + actions â€” tiny devices */
     @media (max-width: 768px) {
         .page-header {
             flex-direction: column !important;
@@ -596,7 +596,7 @@
                             <span><i class="fas fa-user-slash"></i> No teacher assigned</span>
                         @endif
                         @if($course->department)
-                            <span>·</span>
+                            <span>Â·</span>
                             <span><i class="fas fa-building-columns"></i> {{ $course->department->code ?? $course->department->name }}</span>
                         @endif
                     </div>
@@ -665,7 +665,7 @@
                     Unassigned
                 @endif
                 @if($activeCourse->department)
-                    · {{ $activeCourse->department->name }}
+                    Â· {{ $activeCourse->department->name }}
                 @endif
             </p>
         </div>
@@ -742,16 +742,16 @@
                                     <div class="user-sub">
                                         {{ $folder->materials_count }} file{{ $folder->materials_count !== 1 ? 's' : '' }}
                                         @if(($folder->children_count ?? 0) > 0)
-                                            · {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
+                                            Â· {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
                                         @endif
-                                        · by {{ $folder->creator->name ?? 'Admin' }}
+                                        Â· by {{ $folder->creator->name ?? 'Admin' }}
                                     </div>
                                 </div>
                             </div>
                         </td>
                         <td class="text-center"><span class="folder-badge"><i class="fas fa-folder"></i> Folder</span></td>
-                        <td class="text-center"><span class="user-sub">{{ $folder->creator->name ?? '—' }}</span></td>
-                        <td class="text-center"><span class="user-sub">—</span></td>
+                        <td class="text-center"><span class="user-sub">{{ $folder->creator->name ?? 'â€”' }}</span></td>
+                        <td class="text-center"><span class="user-sub">â€”</span></td>
                         <td class="text-center"><span class="user-sub">{{ $folder->updated_at?->diffForHumans() }}</span></td>
                         <td>
                             <div class="action-group" onclick="event.stopPropagation();">
@@ -843,7 +843,7 @@
                             <td colspan="6" class="text-center py-5">
                                 <div class="empty-state">
                                     <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
-                                    <h6 class="text-heading fw-bold">No folders or files match “{{ request('search') }}”</h6>
+                                    <h6 class="text-heading fw-bold">No folders or files match â€œ{{ request('search') }}â€</h6>
                                     <p class="text-muted small">Try another keyword or clear search.</p>
                                 </div>
                             </td>
@@ -974,7 +974,7 @@
                                     <i class="fas fa-folder" style="color:#f59e0b; margin-right:4px;"></i>{{ Str::limit($material->folder->name, 14) }}
                                 </a>
                                 @else
-                                    <span style="font-size:0.75rem; color: var(--text-secondary);">— Root —</span>
+                                    <span style="font-size:0.75rem; color: var(--text-secondary);">â€” Root â€”</span>
                                 @endif
                             </td>
                             <td class="text-center">
@@ -1053,7 +1053,7 @@
                             <select name="course_id" id="add_course" class="form-select" required placeholder="Select Course">
                                 <option value="">Select Course</option>
                                 @foreach($courses as $course)
-                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} — {{ $course->title }}</option>
+                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} â€” {{ $course->title }}</option>
                                 @endforeach
                             </select>
                         <small style="color:var(--text-muted); font-size:0.75rem; margin-top:4px; display:block;">File will be attached to this course only.</small>
@@ -1077,7 +1077,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Material Title <span class="text-danger">*</span></label>
-                        <input type="text" name="title" class="form-input" placeholder="e.g. Lecture 01 — Introduction" required>
+                        <input type="text" name="title" class="form-input" placeholder="e.g. Lecture 01 â€” Introduction" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Choose File <span class="text-danger">*</span></label>
@@ -1085,7 +1085,7 @@
                             <div id="upload_default_ui">
                                 <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                                 <p>Drag &amp; drop your file here, or <span class="browse-link">browse</span></p>
-                                <small style="color:var(--text-muted); font-size:0.72rem;">PDF, DOC, PPT, ZIP, images — Max 20 MB</small>
+                                <small style="color:var(--text-muted); font-size:0.72rem;">PDF, DOC, PPT, ZIP, images â€” Max 20 MB</small>
                             </div>
                             <div id="upload_file_preview" style="display: none; padding: 10px; text-align: center;">
                                 <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
@@ -1100,9 +1100,9 @@
                             <input type="file" id="upload_file_input" name="file" class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" required style="z-index:10; cursor:pointer;" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.zip,.rar,.7z,.jpg,.jpeg,.png,.gif,.webp,.txt">
                         </div>
                     </div>
-                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                    <div class="form-actions">
                         <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Confirm Upload</button>
+                        <button type="submit" class="btn btn-primary" ><i class="fas fa-check-circle"></i> Confirm Upload</button>
                     </div>
                 </form>
             </div>
@@ -1130,7 +1130,7 @@
                         <select name="course_id" id="modal_create_course" class="form-select" required placeholder="Select Course">
                             <option value="">Select Course</option>
                             @foreach($courses as $course)
-                                <option value="{{ $course->id }}">{{ $course->course_code }} — {{ $course->title }}</option>
+                                <option value="{{ $course->id }}">{{ $course->course_code }} â€” {{ $course->title }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -1142,7 +1142,7 @@
                         <label class="form-label">Folder Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-input" placeholder="e.g. Lecture Notes, Week 1, Assignments..." required maxlength="100">
                     </div>
-                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                    <div class="form-actions">
                         <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155;" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" style="padding:10px 32px;"><i class="fas fa-folder-plus"></i> Create Folder</button>
                     </div>
@@ -1167,7 +1167,7 @@
                         <label class="form-label">Folder Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="edit_folder_name" class="form-input" required maxlength="100">
                     </div>
-                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                    <div class="form-actions">
                         <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155;" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" style="padding:10px 32px;"><i class="fas fa-check"></i> Save Changes</button>
                     </div>
@@ -1194,7 +1194,7 @@
                             <select name="course_id" id="edit_course_id" class="form-select" required placeholder="Select Course">
                                 <option value="">Select Course</option>
                                 @foreach($courses as $course)
-                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} — {{ $course->title }}</option>
+                                <option value="{{ $course->id }}" data-teacher="{{ $course->teacher_id }}">{{ $course->course_code }} â€” {{ $course->title }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -1227,9 +1227,9 @@
                         <input type="file" name="file" class="form-input" style="padding:8px;" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.zip,.rar,.7z,.jpg,.jpeg,.png,.gif,.webp,.txt">
                         <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">Leave empty if you don't want to change the file.</small>
                     </div>
-                    <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                    <div class="form-actions">
                         <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155;" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancel</button>
-                        <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Update Material</button>
+                        <button type="submit" class="btn btn-primary" ><i class="fas fa-check-circle"></i> Update Material</button>
                     </div>
                 </form>
             </div>
@@ -1566,3 +1566,4 @@
     });
 </script>
 @endpush
+

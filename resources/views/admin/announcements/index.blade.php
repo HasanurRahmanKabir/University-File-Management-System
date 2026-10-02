@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'University Announcements - Admin Dashboard')
 @section('page-title', 'University Announcements')
 @section('breadcrumb', 'University Announcements')
@@ -238,3 +238,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 @include('partials.sweetalert')
 @endpush
+

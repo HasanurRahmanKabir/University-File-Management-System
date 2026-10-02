@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'My Profile')
 
 @section('content')
@@ -35,3 +35,4 @@
     </div>
 </div>
 @endsection
+

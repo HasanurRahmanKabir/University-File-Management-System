@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Account Settings')
 
 @section('content')
@@ -116,3 +116,4 @@
     }
 </script>
 @endsection
+

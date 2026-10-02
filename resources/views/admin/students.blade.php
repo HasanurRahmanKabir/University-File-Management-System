@@ -188,11 +188,11 @@
                 <thead>
                     <tr>
                         <th>Student Name</th>
-                        <th class="text-center">Student ID</th>
-                        <th class="text-center">Department</th>
-                        <th class="text-center">Semester</th>
-                        <th class="text-center">Enrolled Courses</th>
-                        <th class="text-center">Status</th>
+                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Student ID</div></th>
+                        <th><div style="min-width: 150px; display: inline-block; text-align: center;">Department</div></th>
+                        <th><div style="min-width: 100px; display: inline-block; text-align: center;">Semester</div></th>
+                        <th><div style="min-width: 160px; display: inline-block; text-align: center;">Enrolled Courses</div></th>
+                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Status</div></th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -214,28 +214,36 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center"><span class="badge dark">{{ $student->student_id }}</span></td>
-                        <td class="text-center">
-                            @if($student->department)
-                                <span class="badge neutral">{{ $student->department->name }}</span>
-                            @else
-                                <span class="text-muted small">-</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 120px; display: inline-block; text-align: center;">
+                                <span class="badge dark">{{ $student->student_id }}</span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            @if($student->semester)
-                                <span class="badge neutral">{{ $student->semester }}</span>
-                            @else
-                                <span class="text-muted small">-</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 150px; display: inline-block; text-align: center;">
+                                @if($student->department)
+                                    <span class="badge neutral">{{ $student->department->name }}</span>
+                                @else
+                                    <span class="text-muted small">-</span>
+                                @endif
+                            </div>
                         </td>
-                        <td class="text-center">
-                            @php
-                                $enrolled = $student->enrolledCourses->pluck('id')->toArray();
-                                $courseNames = $courses->whereIn('id', $enrolled)->pluck('course_code')->toArray();
-                            @endphp
-                            @if(count($courseNames) > 0)
-                                <div class="d-flex flex-wrap justify-content-center gap-1">
+                        <td>
+                            <div style="min-width: 100px; display: inline-block; text-align: center;">
+                                @if($student->semester)
+                                    <span class="badge neutral">{{ $student->semester }}</span>
+                                @else
+                                    <span class="text-muted small">-</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            <div style="min-width: 160px; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 0 auto;">
+                                @php
+                                    $enrolled = $student->enrolledCourses->pluck('id')->toArray();
+                                    $courseNames = $courses->whereIn('id', $enrolled)->pluck('course_code')->toArray();
+                                @endphp
+                                @if(count($courseNames) > 0)
                                     @foreach(array_slice($courseNames, 0, 3) as $code)
                                         <span class="badge info">{{ $code }}</span>
                                     @endforeach
@@ -244,17 +252,19 @@
                                             +{{ count($courseNames) - 3 }} more
                                         </span>
                                     @endif
-                                </div>
-                            @else
-                                <span class="text-muted small">No courses</span>
-                            @endif
+                                @else
+                                    <span class="text-muted small">No courses</span>
+                                @endif
+                            </div>
                         </td>
-                        <td class="text-center">
-                            @if($student->is_active)
-                                <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                            @else
-                                <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 120px; display: inline-block; text-align: center;">
+                                @if($student->is_active)
+                                    <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
+                                @else
+                                    <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <div class="action-group">
@@ -359,10 +369,12 @@
                             </div>
                         </div>
                         <div class="form-grid">
-                            <div class="form-group" style="position: relative;">
+                            <div class="form-group">
                                 <label class="form-label">Set Password <span class="text-danger">*</span></label>
-                                <input type="password" id="add_password" name="password" class="form-input" placeholder="Create a secure password" required minlength="8" style="padding-right: 40px;">
-                                <i class="fas fa-eye toggle-password" onclick="togglePassword('add_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
+                                <div style="position: relative;">
+                                    <input type="password" id="add_password" name="password" class="form-input" placeholder="Create a secure password" required minlength="8" style="padding-right: 40px;">
+                                    <i class="fas fa-eye toggle-password" onclick="togglePassword('add_password', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Account Status</label>
@@ -385,9 +397,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
-                            <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" data-bs-dismiss="modal" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'"><i class="fas fa-times"></i> Cancel</button>
-                            <button type="submit" class="btn btn-primary" style="padding:10px 48px;"><i class="fas fa-check-circle"></i> Add Student</button>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Add Student</button>
                         </div>
                     </form>
                 </div>
@@ -462,10 +474,12 @@
                             </div>
                         </div>
                         <div class="form-grid">
-                            <div class="form-group" style="position: relative;">
+                            <div class="form-group">
                                 <label class="form-label">Update Password</label>
-                                <input type="password" id="edit_password" name="password" class="form-input" placeholder="Leave blank to keep current" style="padding-right: 40px;">
-                                <i class="fas fa-eye toggle-password" onclick="togglePassword('edit_password', this)" style="position: absolute; right: 15px; bottom: 12px; cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
+                                <div style="position: relative;">
+                                    <input type="password" id="edit_password" name="password" class="form-input" placeholder="Leave blank to keep current" style="padding-right: 40px;">
+                                    <i class="fas fa-eye toggle-password" onclick="togglePassword('edit_password', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 0.9rem;"></i>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Account Status</label>
@@ -830,3 +844,4 @@
     }
 </script>
 @endpush
+

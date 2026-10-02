@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Departments - Admin Dashboard')
 @section('page-title', 'Departments')
 @section('breadcrumb', 'Departments')
@@ -278,3 +278,4 @@
     });
 </script>
 @endpush
+

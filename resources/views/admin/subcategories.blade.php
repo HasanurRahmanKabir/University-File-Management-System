@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Subcategories - Admin Dashboard')
 @section('page-title', 'Subcategories')
 @section('breadcrumb', 'Subcategories')
@@ -452,3 +452,4 @@
     });
 </script>
 @endpush
+

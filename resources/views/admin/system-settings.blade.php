@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'System Settings - Admin Dashboard')
 @section('page-title', 'System Settings')
 @section('breadcrumb', 'Settings')
@@ -393,3 +393,4 @@
     }
 </script>
 @endpush
+
