@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Account Settings')
 
 @section('content')
@@ -42,9 +42,9 @@
                         <div class="row g-3 mb-4">
                             <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Current Password</label>
-                                <div class="form-control d-flex align-items-center p-0 @error('current_password') is-invalid @enderror" style="overflow: hidden; background-color: var(--bg-card);">
-                                    <input type="password" name="current_password" id="current_password" class="border-0 bg-transparent flex-grow-1 m-0" placeholder="Current password" style="outline: none; padding: 10px 15px; min-width: 0; box-shadow: none;">
-                                    <button class="btn border-0 text-muted m-0 d-flex align-items-center justify-content-center" type="button" onclick="togglePassword('current_password', this)" style="background: transparent; box-shadow: none; padding: 0 15px; height: 100%; min-width: 45px;">
+                                <div class="position-relative w-100 mb-0">
+                                    <input type="password" name="current_password" id="current_password" class="form-control form-input @error('current_password') is-invalid @enderror" placeholder="Current password" style="padding-right: 45px;">
+                                    <button class="btn border-0 text-muted position-absolute d-flex align-items-center justify-content-center" type="button" onclick="togglePassword('current_password', this)" style="right: 0; top: 0; height: 100%; width: 45px !important; background: transparent; box-shadow: none; padding: 0; z-index: 5;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -53,9 +53,9 @@
                             <div class="col-12 col-md-6 d-none d-md-block"></div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">New Password</label>
-                                <div class="form-control d-flex align-items-center p-0 @error('password') is-invalid @enderror" style="overflow: hidden; background-color: var(--bg-card);">
-                                    <input type="password" name="password" id="new_password" class="border-0 bg-transparent flex-grow-1 m-0" placeholder="Min 8 chars" style="outline: none; padding: 10px 15px; min-width: 0; box-shadow: none;">
-                                    <button class="btn border-0 text-muted m-0 d-flex align-items-center justify-content-center" type="button" onclick="togglePassword('new_password', this)" style="background: transparent; box-shadow: none; padding: 0 15px; height: 100%; min-width: 45px;">
+                                <div class="position-relative w-100 mb-0">
+                                    <input type="password" name="password" id="new_password" class="form-control form-input @error('password') is-invalid @enderror" placeholder="Min 8 chars" style="padding-right: 45px;">
+                                    <button class="btn border-0 text-muted position-absolute d-flex align-items-center justify-content-center" type="button" onclick="togglePassword('new_password', this)" style="right: 0; top: 0; height: 100%; width: 45px !important; background: transparent; box-shadow: none; padding: 0; z-index: 5;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
@@ -63,16 +63,16 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold">Confirm New Password</label>
-                                <div class="form-control d-flex align-items-center p-0" style="overflow: hidden; background-color: var(--bg-card);">
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="border-0 bg-transparent flex-grow-1 m-0" placeholder="Confirm password" style="outline: none; padding: 10px 15px; min-width: 0; box-shadow: none;">
-                                    <button class="btn border-0 text-muted m-0 d-flex align-items-center justify-content-center" type="button" onclick="togglePassword('password_confirmation', this)" style="background: transparent; box-shadow: none; padding: 0 15px; height: 100%; min-width: 45px;">
+                                <div class="position-relative w-100 mb-0">
+                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control form-input" placeholder="Confirm password" style="padding-right: 45px;">
+                                    <button class="btn border-0 text-muted position-absolute d-flex align-items-center justify-content-center" type="button" onclick="togglePassword('password_confirmation', this)" style="right: 0; top: 0; height: 100%; width: 45px !important; background: transparent; box-shadow: none; padding: 0; z-index: 5;">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-5">
+                        <div class="d-flex flex-column-reverse flex-sm-row justify-content-end gap-2 mt-5">
                             <a href="{{ route('admin.dashboard') }}" class="btn btn-light" style="border-radius: var(--radius-md);">Cancel</a>
                             <button type="submit" class="btn btn-primary" style="border-radius: var(--radius-md);">
                                 <i class="fas fa-save me-2"></i> Save Changes
