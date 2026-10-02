@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Categories - Admin Dashboard')
 @section('page-title', 'Categories')
 @section('breadcrumb', 'Categories')
@@ -25,16 +25,14 @@
 @endpush
 
 @section('content')
-<div class="page-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+<div class="page-header">
     <div class="heading-group">
         <h2>Core Course Categories</h2>
         <p>Manage core course categories and their status.</p>
     </div>
-    <div style="display:flex; gap:8px; margin-right: 15px;">
-        <button class="btn btn-primary mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-            <i class="fas fa-plus-circle"></i> Add Category
-        </button>
-    </div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+        <i class="fas fa-plus-circle"></i> Add Category
+    </button>
 </div>
 
     <!-- Stats Row -->
@@ -102,19 +100,19 @@
             <table class="premium-table w-100">
                 <thead>
                     <tr>
-                        <th style="width: 16.66%;">Category Name</th>
-                        <th style="width: 16.66%; text-align: center;">Core Topic</th>
-                        <th style="width: 16.66%; text-align: center;">Department</th>
-                        <th style="width: 16.66%; text-align: center;">Courses</th>
-                        <th style="width: 16.66%; text-align: center;">Status</th>
-                        <th style="width: 16.66%; text-align: center;">Action</th>
+                        <th><div style="min-width: 250px; display: inline-block;">Category Name</div></th>
+                        <th><div style="min-width: 200px; display: inline-block; text-align: center;">Core Topic</div></th>
+                        <th><div style="min-width: 200px; display: inline-block; text-align: center;">Department</div></th>
+                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Courses</div></th>
+                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Status</div></th>
+                        <th style="text-align: center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($categories as $category)
                     <tr>
                         <td>
-                            <div class="icon-cell">
+                            <div class="icon-cell" style="min-width: 250px;">
                                 @php
                                     $gradients = [
                                         'linear-gradient(135deg,#3b82f6,#60a5fa)',
@@ -133,23 +131,31 @@
                                 <div class="user-name">{{ $category->name }}</div>
                             </div>
                         </td>
-                        <td class="text-center">
-                            <span style="color:var(--text-secondary);font-size:0.82rem;">{{ $category->description ?? 'No topic description' }}</span>
+                        <td>
+                            <div style="min-width: 200px; display: inline-block; text-align: center;">
+                                <span style="color:var(--text-secondary);font-size:0.82rem;">{{ $category->description ?? 'No topic description' }}</span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            <span style="font-size:0.85rem; font-weight: 500; color: var(--text-body);">{{ $category->department->name ?? 'N/A' }}</span>
+                        <td>
+                            <div style="min-width: 200px; display: inline-block; text-align: center;">
+                                <span style="font-size:0.85rem; font-weight: 500; color: var(--text-body);">{{ $category->department->name ?? 'N/A' }}</span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            <span class="badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);">
-                                <i class="fas fa-book"></i> {{ $category->courses_count ?? 0 }}
-                            </span>
+                        <td>
+                            <div style="min-width: 120px; display: inline-block; text-align: center;">
+                                <span class="badge" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);">
+                                    <i class="fas fa-book"></i> {{ $category->courses_count ?? 0 }}
+                                </span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            @if($category->is_active)
-                                <span class="badge success"><span class="status-indicator active"></span> Active</span>
-                            @else
-                                <span class="badge danger"><span class="status-indicator inactive" style="background: var(--danger)"></span> Inactive</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 120px; display: inline-block; text-align: center;">
+                                @if($category->is_active)
+                                    <span class="badge success"><span class="status-indicator active"></span> Active</span>
+                                @else
+                                    <span class="badge danger"><span class="status-indicator inactive" style="background: var(--danger)"></span> Inactive</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <div class="action-group justify-content-center">
