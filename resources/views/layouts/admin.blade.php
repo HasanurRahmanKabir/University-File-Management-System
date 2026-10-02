@@ -400,6 +400,13 @@
         let searchTimeout = null;
 
         if (searchInput) {
+            searchInput.addEventListener('focus', function() {
+                const dropdownMenu = document.getElementById('globalSearchDropdown');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.add('show');
+                }
+            });
+
             searchInput.addEventListener('input', function() {
                 const val = this.value.trim();
                 if (val.length > 0) {
@@ -466,7 +473,7 @@
                             <div class="p-4 text-center">
                                 <i class="fas fa-box-open fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                                 <h6 class="text-heading fw-bold">No Results Found</h6>
-                                <p class="text-muted small mb-0">We couldn't find anything matching "${val}".<br>Try checking for typos or using different keywords.</p>
+                                <p class="text-muted small mb-0">We couldn't find anything matching "${val}".<br>Try checking your spelling or using different keywords.</p>
                             </div>
                         `;
                         return;
@@ -616,12 +623,19 @@
                     e.target.classList.remove('arrow-up');
                 }
             }, true);
-            // Click outside to close
+            // Click outside to close form-select
             document.addEventListener('click', function(e) {
                 if (!e.target.classList || !e.target.classList.contains('form-select')) {
                     document.querySelectorAll('.form-select.arrow-up').forEach(function(el) {
                         el.classList.remove('arrow-up');
                     });
+                }
+                
+                // Close global search dropdown when clicking outside
+                const searchContainer = document.getElementById('globalSearchContainer');
+                const searchDropdown = document.getElementById('globalSearchDropdown');
+                if (searchContainer && searchDropdown && !searchContainer.contains(e.target)) {
+                    searchDropdown.classList.remove('show');
                 }
             });
         });
