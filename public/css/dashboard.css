@@ -2203,6 +2203,15 @@ body .modal .ts-wrapper .ts-control,
     border-radius: 6px !important;
     background-color: #ffffff !important;
 }
+
+/* Fix for TomSelect Wrapper duplicating .form-select padding and borders */
+.ts-wrapper.form-select {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    height: auto !important;
+}
 /* Active Filter Card State */
 .stat-card.active-filter { border: 2px solid var(--primary) !important; box-shadow: 0 4px 12px var(--primary-glow) !important; transform: translateY(-2px); }
 

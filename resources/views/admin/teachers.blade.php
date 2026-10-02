@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Teachers - Admin Dashboard')
 @section('page-title', 'Teacher Management')
 @section('breadcrumb', 'Teacher Management')
@@ -68,12 +68,21 @@
     </div>
     <div class="card-body"><div class="table-wrap">
         <table class="premium-table">
-            <thead><tr><th>Teacher Name</th><th class="text-center">Email</th><th class="text-center">Department</th><th class="text-center">Status</th><th class="text-center">Offered Courses</th><th class="text-center">Action</th></tr></thead>
+            <thead>
+                <tr>
+                    <th><div style="min-width: 200px; display: inline-block;">Teacher Name</div></th>
+                    <th><div style="min-width: 180px; display: inline-block; text-align: center;">Email</div></th>
+                    <th><div style="min-width: 150px; display: inline-block; text-align: center;">Department</div></th>
+                    <th><div style="min-width: 120px; display: inline-block; text-align: center;">Status</div></th>
+                    <th><div style="min-width: 160px; display: inline-block; text-align: center;">Offered Courses</div></th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
             <tbody>
                 @forelse($users as $teacher)
                 <tr>
                     <td>
-                        <div class="user-cell">
+                        <div class="user-cell" style="min-width: 200px;">
                             @if($teacher->profile_image)
                                 <img src="{{ asset('storage/' . $teacher->profile_image) }}" alt="{{ $teacher->name }}" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
                             @else
@@ -87,27 +96,37 @@
                             </div>
                         </div>
                     </td>
-                    <td class="text-center"><span style="color:var(--text-secondary); font-size:0.82rem;">{{ $teacher->email }}</span></td>
-                    <td class="text-center">
-                        @if($teacher->department)
-                            <span class="badge primary"><i class="fas fa-building-columns"></i> {{ $teacher->department->name }}</span>
-                        @else
-                            <span class="badge neutral"><i class="fas fa-building-columns"></i> Not Assigned</span>
-                        @endif
+                    <td>
+                        <div style="min-width: 180px; display: inline-block; text-align: center;">
+                            <span style="color:var(--text-secondary); font-size:0.82rem;">{{ $teacher->email }}</span>
+                        </div>
                     </td>
-                    <td class="text-center">
-                        @if($teacher->is_active)
-                            <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                        @else
-                            <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                        @endif
+                    <td>
+                        <div style="min-width: 150px; display: inline-block; text-align: center;">
+                            @if($teacher->department)
+                                <span class="badge primary"><i class="fas fa-building-columns"></i> {{ $teacher->department->name }}</span>
+                            @else
+                                <span class="badge neutral"><i class="fas fa-building-columns"></i> Not Assigned</span>
+                            @endif
+                        </div>
                     </td>
-                    <td class="text-center">
-                        @forelse($teacher->courses as $course)
-                            <span class="badge success">{{ $course->course_code }}</span>
-                        @empty
-                            <span class="text-muted" style="font-size: 0.8rem;">No courses assigned</span>
-                        @endforelse
+                    <td>
+                        <div style="min-width: 120px; display: inline-block; text-align: center;">
+                            @if($teacher->is_active)
+                                <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
+                            @else
+                                <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
+                            @endif
+                        </div>
+                    </td>
+                    <td>
+                        <div style="min-width: 160px; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 0 auto;">
+                            @forelse($teacher->courses as $course)
+                                <span class="badge success">{{ $course->course_code }}</span>
+                            @empty
+                                <span class="text-muted" style="font-size: 0.8rem;">No courses assigned</span>
+                            @endforelse
+                        </div>
                     </td>
                     <td>
                         <div class="action-group justify-content-center">
@@ -580,7 +599,8 @@
                 allowEmptyOption: true,
                 wrapperClass: 'ts-wrapper form-select ts-department',
                 plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" }
+                sortField: { field: "text", direction: "asc" },
+                onDelete: function(values, e) { return false; }
             });
             let searchInput = addDept.dropdown.querySelector('input');
             if(searchInput) searchInput.setAttribute('placeholder', 'Search department...');
@@ -603,7 +623,8 @@
                 allowEmptyOption: true,
                 wrapperClass: 'ts-wrapper form-select ts-department',
                 plugins: ['dropdown_input'],
-                sortField: { field: "text", direction: "asc" }
+                sortField: { field: "text", direction: "asc" },
+                onDelete: function(values, e) { return false; }
             });
             let searchInput = window.editDeptSelect.dropdown.querySelector('input');
             if(searchInput) searchInput.setAttribute('placeholder', 'Search department...');
