@@ -133,8 +133,8 @@
                                 <thead>
                                     <tr>
                                         <th>Identity</th>
-                                        <th><div style="width: 90px; text-align: center;">Role</div></th>
-                                        <th><div style="width: 110px; text-align: center;">Assignment</div></th>
+                                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Role</div></th>
+                                        <th><div style="min-width: 150px; display: inline-block; text-align: center;">Assignment</div></th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -153,7 +153,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div style="width: 90px; text-align: center;">
+                                            <div style="min-width: 120px; display: inline-block; text-align: center;">
                                                 @if($record->role == 'admin')
                                                     <span class="badge dark"><i class="fas fa-shield-halved"></i> Admin</span>
                                                 @elseif($record->role == 'teacher')
@@ -164,7 +164,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div style="width: 110px; text-align: center;">
+                                            <div style="min-width: 150px; display: inline-block; text-align: center;">
                                                 <span class="badge neutral">{{ $record->student_id ?? 'N/A' }}</span>
                                             </div>
                                         </td>
@@ -294,9 +294,10 @@
                             <label class="form-label">ID / Email / Course Code</label>
                             <input type="text" class="form-input" name="id_email" placeholder="Enter ID or Email..." required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 4px;">
-                            <i class="fas fa-check-circle"></i> Confirm and Add
-                        </button>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Confirm and Add</button>
+                        </div>
                     </form>
                 </div>
             </div>
