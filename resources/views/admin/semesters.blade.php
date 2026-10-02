@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Semesters - Admin Dashboard')
 @section('page-title', 'Academic Semesters')
 @section('breadcrumb', 'Semesters')
@@ -119,11 +119,11 @@
             <table class="premium-table">
                 <thead>
                     <tr>
-                        <th>Semester Name</th>
-                        <th class="text-center">Departments</th>
-                        <th class="text-center">Year</th>
-                        <th class="text-center">Duration</th>
-                        <th class="text-center">Status</th>
+                        <th><div style="min-width: 200px; display: inline-block;">Semester Name</div></th>
+                        <th><div style="min-width: 250px; display: inline-block; text-align: center;">Departments</div></th>
+                        <th><div style="min-width: 100px; display: inline-block; text-align: center;">Year</div></th>
+                        <th><div style="min-width: 180px; display: inline-block; text-align: center;">Duration</div></th>
+                        <th><div style="min-width: 120px; display: inline-block; text-align: center;">Status</div></th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -131,7 +131,7 @@
                     @forelse($semesters as $semester)
                     <tr>
                         <td>
-                            <div class="user-cell">
+                            <div class="user-cell" style="min-width: 200px;">
                                 @php $colors = ['blue', 'purple', 'emerald', 'amber', 'rose', 'cyan', 'indigo', 'slate']; @endphp
                                 <div class="avatar-sm {{ $colors[strlen($semester->name) % 8] }} d-flex align-items-center justify-content-center text-white fw-bold">
                                     {{ strtoupper(substr($semester->name, 0, 1)) }}
@@ -142,8 +142,8 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="text-center" style="max-width: 250px;">
-                            <div class="d-flex flex-wrap gap-1 justify-content-center">
+                        <td>
+                            <div style="min-width: 250px; max-width: 300px; display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 0 auto;">
                                 @forelse($semester->departments as $dept)
                                     <span class="badge" style="background: #e0f2fe; color: #0284c7; margin-bottom: 2px;"><i class="fas fa-building"></i> {{ $dept->name }}</span>
                                 @empty
@@ -151,24 +151,32 @@
                                 @endforelse
                             </div>
                         </td>
-                        <td class="text-center"><span style="color:var(--text-secondary);font-weight:600;">{{ $semester->year ?? 'N/A' }}</span></td>
-                        <td class="text-center">
-                            @if($semester->start_date && $semester->end_date)
-                                <span class="badge neutral"><i class="fas fa-calendar"></i> {{ \Carbon\Carbon::parse($semester->start_date)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($semester->end_date)->format('M d, Y') }}</span>
-                            @elseif($semester->start_date)
-                                <span class="badge neutral"><i class="fas fa-calendar"></i> Starts: {{ \Carbon\Carbon::parse($semester->start_date)->format('M d, Y') }}</span>
-                            @elseif($semester->end_date)
-                                <span class="badge neutral"><i class="fas fa-calendar"></i> Ends: {{ \Carbon\Carbon::parse($semester->end_date)->format('M d, Y') }}</span>
-                            @else
-                                <span class="text-muted small">Not specified</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 100px; display: inline-block; text-align: center;">
+                                <span style="color:var(--text-secondary);font-weight:600;">{{ $semester->year ?? 'N/A' }}</span>
+                            </div>
                         </td>
-                        <td class="text-center">
-                            @if($semester->is_active)
-                                <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                            @else
-                                <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                            @endif
+                        <td>
+                            <div style="min-width: 180px; display: inline-block; text-align: center;">
+                                @if($semester->start_date && $semester->end_date)
+                                    <span class="badge neutral"><i class="fas fa-calendar"></i> {{ \Carbon\Carbon::parse($semester->start_date)->format('M d, Y') }} - {{ \Carbon\Carbon::parse($semester->end_date)->format('M d, Y') }}</span>
+                                @elseif($semester->start_date)
+                                    <span class="badge neutral"><i class="fas fa-calendar"></i> Starts: {{ \Carbon\Carbon::parse($semester->start_date)->format('M d, Y') }}</span>
+                                @elseif($semester->end_date)
+                                    <span class="badge neutral"><i class="fas fa-calendar"></i> Ends: {{ \Carbon\Carbon::parse($semester->end_date)->format('M d, Y') }}</span>
+                                @else
+                                    <span class="text-muted small">Not specified</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            <div style="min-width: 120px; display: inline-block; text-align: center;">
+                                @if($semester->is_active)
+                                    <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
+                                @else
+                                    <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
+                                @endif
+                            </div>
                         </td>
                         <td>
                             <div class="action-group">
