@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'My Profile')
 
 @section('content')
@@ -22,10 +22,10 @@
                     </span>
                     
                     <div class="mt-5 d-flex flex-column flex-sm-row justify-content-center gap-3">
-                        <a href="{{ route('admin.account-settings') }}" class="btn btn-primary px-4 py-2 w-100 w-sm-auto text-wrap" style="border-radius: var(--radius-md);">
+                        <a href="{{ route('admin.account-settings') }}" class="btn btn-primary px-4 py-2 text-wrap" style="border-radius: var(--radius-md);">
                             <i class="fas fa-cog me-2"></i> Edit Account Settings
                         </a>
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-light px-4 py-2 w-100 w-sm-auto text-wrap" style="border-radius: var(--radius-md);">
+                        <a href="{{ route('admin.dashboard') }}" class="btn btn-light px-4 py-2 text-wrap" style="border-radius: var(--radius-md);">
                             <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
                         </a>
                     </div>
