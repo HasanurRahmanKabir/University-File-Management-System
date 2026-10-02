@@ -2210,3 +2210,16 @@ body .modal .ts-wrapper .ts-control,
 
 .btn-reset-filter { height: 38px; padding: 0 14px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-decoration: none; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: #fff; transition: all 0.2s; white-space: nowrap; }
 .btn-reset-filter:hover { color: var(--danger); border-color: #fecaca; background: #fff1f2; }
+
+/* Mobile Dropdown Overflow Fix */
+@media (max-width: 576px) {
+    .notif-dropdown, .profile-dropdown {
+        position: fixed !important;
+        top: 65px !important;
+        left: 15px !important;
+        right: 15px !important;
+        width: auto !important;
+        max-width: none !important;
+        transform: none !important;
+    }
+}
