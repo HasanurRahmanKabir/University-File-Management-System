@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Admins - Admin Dashboard')
 @section('page-title', 'Admin Accounts')
 @section('breadcrumb', 'Admin Accounts')
@@ -69,12 +69,23 @@
     </div>
     <div class="card-body"><div class="table-wrap">
         <table class="premium-table">
-            <thead><tr><th>Admin Name</th><th class="text-center">Role</th><th class="text-center">Email Address</th><th class="text-center">Contact</th><th class="text-center">Status</th>@can('manage-admins')<th class="text-center">Action</th>@endcan</tr></thead>
+            <thead>
+                <tr>
+                    <th><div style="min-width: 200px; display: inline-block;">Admin Name</div></th>
+                    <th><div style="min-width: 130px; display: inline-block; text-align: center;">Role</div></th>
+                    <th><div style="min-width: 180px; display: inline-block; text-align: center;">Email Address</div></th>
+                    <th><div style="min-width: 140px; display: inline-block; text-align: center;">Contact</div></th>
+                    <th><div style="min-width: 120px; display: inline-block; text-align: center;">Status</div></th>
+                    @can('manage-admins')
+                    <th class="text-center">Action</th>
+                    @endcan
+                </tr>
+            </thead>
             <tbody>
                 @forelse($users as $admin)
                 <tr>
                     <td>
-                        <div class="user-cell">
+                        <div class="user-cell" style="min-width: 200px;">
                             @if($admin->profile_image)
                                 <img src="{{ asset('storage/' . $admin->profile_image) }}" alt="{{ $admin->name }}" class="avatar-sm" style="object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0;">
                             @else
@@ -87,21 +98,33 @@
                             </div>
                         </div>
                     </td>
-                    <td class="text-center"><span class="badge {{ $admin->role === 'super_admin' ? 'primary' : 'neutral' }}">{{ $admin->role === 'super_admin' ? 'Super Admin' : 'Admin' }}</span></td>
-                    <td class="text-center"><span style="color:var(--text-secondary);font-size:0.82rem;">{{ $admin->email }}</span></td>
-                    <td class="text-center">
-                        @if($admin->contact_number)
-                            <span class="badge neutral"><i class="fas fa-phone"></i> {{ $admin->contact_number }}</span>
-                        @else
-                            <span class="text-muted small">Not provided</span>
-                        @endif
+                    <td>
+                        <div style="min-width: 130px; display: inline-block; text-align: center;">
+                            <span class="badge {{ $admin->role === 'super_admin' ? 'primary' : 'neutral' }}">{{ $admin->role === 'super_admin' ? 'Super Admin' : 'Admin' }}</span>
+                        </div>
                     </td>
-                    <td class="text-center">
-                        @if($admin->is_active)
-                            <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
-                        @else
-                            <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
-                        @endif
+                    <td>
+                        <div style="min-width: 180px; display: inline-block; text-align: center;">
+                            <span style="color:var(--text-secondary);font-size:0.82rem;">{{ $admin->email }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="min-width: 140px; display: inline-block; text-align: center;">
+                            @if($admin->contact_number)
+                                <span class="badge neutral"><i class="fas fa-phone"></i> {{ $admin->contact_number }}</span>
+                            @else
+                                <span class="text-muted small">Not provided</span>
+                            @endif
+                        </div>
+                    </td>
+                    <td>
+                        <div style="min-width: 120px; display: inline-block; text-align: center;">
+                            @if($admin->is_active)
+                                <span class="badge success"><i class="fas fa-check-circle"></i> Active</span>
+                            @else
+                                <span class="badge danger"><i class="fas fa-times-circle"></i> Inactive</span>
+                            @endif
+                        </div>
                     </td>
                     @can('manage-admins')
                     <td>
