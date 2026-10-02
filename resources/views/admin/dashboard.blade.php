@@ -133,8 +133,8 @@
                                 <thead>
                                     <tr>
                                         <th>Identity</th>
-                                        <th>Role</th>
-                                        <th>Assignment</th>
+                                        <th><div style="width: 90px; text-align: center;">Role</div></th>
+                                        <th><div style="width: 110px; text-align: center;">Assignment</div></th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -153,15 +153,21 @@
                                             </div>
                                         </td>
                                         <td>
-                                            @if($record->role == 'admin')
-                                                <span class="badge dark"><i class="fas fa-shield-halved"></i> Admin</span>
-                                            @elseif($record->role == 'teacher')
-                                                <span class="badge success"><i class="fas fa-chalkboard-teacher"></i> Teacher</span>
-                                            @else
-                                                <span class="badge primary"><i class="fas fa-user-graduate"></i> Student</span>
-                                            @endif
+                                            <div style="width: 90px; text-align: center;">
+                                                @if($record->role == 'admin')
+                                                    <span class="badge dark"><i class="fas fa-shield-halved"></i> Admin</span>
+                                                @elseif($record->role == 'teacher')
+                                                    <span class="badge success"><i class="fas fa-chalkboard-teacher"></i> Teacher</span>
+                                                @else
+                                                    <span class="badge primary"><i class="fas fa-user-graduate"></i> Student</span>
+                                                @endif
+                                            </div>
                                         </td>
-                                        <td><span class="badge neutral">{{ $record->student_id ?? 'N/A' }}</span></td>
+                                        <td>
+                                            <div style="width: 110px; text-align: center;">
+                                                <span class="badge neutral">{{ $record->student_id ?? 'N/A' }}</span>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="action-group">
                                                 <button class="action-btn edit" data-bs-toggle="modal" data-bs-target="#editModal" 
