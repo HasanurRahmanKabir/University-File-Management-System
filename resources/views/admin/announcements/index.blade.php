@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'University Announcements - Admin Dashboard')
 @section('page-title', 'University Announcements')
 @section('breadcrumb', 'University Announcements')
@@ -19,14 +19,14 @@
         gap: 0.4rem;
         justify-content: center;
     }
-    table { table-layout: fixed; width: 100%; }
+    table { width: 100%; }
     th { color: var(--tx-m); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); }
-    .col-teacher { width: 16.66%; text-align: left !important; }
-    .col-type { width: 16.66%; text-align: center !important; }
-    .col-title { width: 16.66%; text-align: center !important; }
-    .col-details { width: 16.66%; text-align: center !important; }
-    .col-date { width: 16.66%; text-align: center !important; }
-    .col-action { width: 16.66%; text-align: right !important; }
+    .col-teacher { min-width: 220px; text-align: left !important; }
+    .col-type { min-width: 120px; text-align: center !important; }
+    .col-title { min-width: 180px; text-align: center !important; }
+    .col-details { min-width: 200px; text-align: center !important; }
+    .col-date { min-width: 160px; text-align: center !important; }
+    .col-action { min-width: 100px; text-align: right !important; }
     
     .teacher-info img {
         width: 36px;
