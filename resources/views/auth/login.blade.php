@@ -68,7 +68,7 @@
                 0 0 0 1px rgba(255,255,255,0.06),
                 0 20px 60px rgba(0,0,0,0.5),
                 0 4px 16px rgba(0,0,0,0.3);
-            padding: 48px 44px 40px;
+            padding: 40px 36px 32px;
             width: 100%;
             max-width: 420px;
             position: relative;
@@ -80,7 +80,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
         .logo-icon {
             width: 60px; height: 60px;
@@ -109,7 +109,7 @@
         /* Heading */
         .heading {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
         .heading h1 {
             font-size: 1.5rem;
@@ -211,9 +211,51 @@
         /* Footer */
         .footer {
             text-align: center;
-            margin-top: 28px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        /* Demo Login */
+        .demo-login {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+        }
+        .demo-login-title {
             font-size: 0.75rem;
-            color: #aaa;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748b;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .demo-btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .demo-btn {
+            background: rgba(5,150,105,0.06);
+            border: 1px solid rgba(5,150,105,0.15);
+            color: #059669;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .demo-btn:hover {
+            background: #059669;
+            color: #fff;
+            transform: translateY(-1px);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -221,6 +263,10 @@
         /* Small phones (< 480px) */
         @media (max-width: 480px) {
             html, body {
+                height: auto;
+                min-height: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
                 padding: 16px;
                 align-items: flex-start;
                 padding-top: 40px;
@@ -265,6 +311,7 @@
             .field label { font-size: 0.78rem; }
             .input-wrap input { height: 44px; font-size: 0.88rem; padding: 0 40px 0 12px; }
             .btn { height: 46px; font-size: 0.88rem; margin-top: 6px; }
+            .demo-btn-group { grid-template-columns: 1fr; }
             .footer { font-size: 0.7rem; margin-top: 20px; }
         }
 
@@ -342,6 +389,24 @@
         <button type="submit" class="btn" id="submitBtn">Sign in</button>
     </form>
 
+    <div class="demo-login">
+        <div class="demo-login-title">Quick Demo Login</div>
+        <div class="demo-btn-group">
+            <button type="button" class="demo-btn" onclick="autoFill('superadmin@gmail.com', '12345678')">
+                <i class="fas fa-user-shield"></i> Super Admin
+            </button>
+            <button type="button" class="demo-btn" onclick="autoFill('admin@gmail.com', '12345678')">
+                <i class="fas fa-user-cog"></i> Admin
+            </button>
+            <button type="button" class="demo-btn" onclick="autoFill('teacher@gmail.com', '12345678')">
+                <i class="fas fa-chalkboard-teacher"></i> Teacher
+            </button>
+            <button type="button" class="demo-btn" onclick="autoFill('student@gmail.com', '12345678')">
+                <i class="fas fa-user-graduate"></i> Student
+            </button>
+        </div>
+    </div>
+
     <div class="footer">{{ $globalSettings['footer_copyright'] ?? '© ' . date('Y') . ' University OBE System. All rights reserved.' }}</div>
 
 </div>
@@ -355,6 +420,16 @@
         const icon = document.getElementById('eyeIcon');
         pwd.type = pwd.type === 'password' ? 'text' : 'password';
         icon.className = pwd.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    }
+    
+    function autoFill(email, pwd) {
+        document.getElementById('email').value = email;
+        document.getElementById('password').value = pwd;
+        
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+        document.getElementById('loginForm').submit();
     }
     document.getElementById('loginForm').addEventListener('submit', function () {
         const btn = document.getElementById('submitBtn');
