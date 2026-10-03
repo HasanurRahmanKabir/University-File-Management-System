@@ -33,7 +33,7 @@ class AuthController extends Controller
 
             Auth::login($user);
             $request->session()->regenerate();
-            return $this->redirectBasedOnRole($user->role);
+            return $this->redirectBasedOnRole($user->role)->with('success', 'Welcome to your dashboard, ' . $user->name . '!');
         }
 
         return back()->withErrors([
@@ -46,7 +46,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect('/login')->with('success', 'You have been securely logged out.');
     }
 
     private function redirectBasedOnRole($role)
