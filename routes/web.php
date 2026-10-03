@@ -134,3 +134,33 @@ Route::middleware(['web', 'auth', 'is_student'])->prefix('student')->name('stude
     // Class Notices
     Route::get('/announcements', [StudentAnnouncementController::class, 'index'])->name('announcements.index');
 });
+
+// ========================================================================
+// Server Utility Routes
+// ========================================================================
+
+Route::get('/optimize-clear', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:cache');
+        \Illuminate\Support\Facades\Artisan::call('route:cache');
+        \Illuminate\Support\Facades\Artisan::call('view:cache');
+
+        return 'System cache cleared and performance optimized successfully!';
+    } catch (\Exception $e) {
+        return 'Error: '.$e->getMessage();
+    }
+});
+
+Route::get('/databasefresh-seed', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--seed' => true,
+            '--force' => true, 
+        ]);
+
+        return 'Database reset and seeded successfully!';
+    } catch (\Exception $e) {
+        return 'Error: '.$e->getMessage();
+    }
+});
