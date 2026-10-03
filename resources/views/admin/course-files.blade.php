@@ -1245,7 +1245,7 @@
                             <i class="fas fa-file-alt" id="edit_file_icon"></i> Current: <span id="edit_file_name"></span>
                         </div>
                         <input type="file" name="file" class="form-input" style="padding:8px;" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv,.zip,.rar,.7z,.jpg,.jpeg,.png,.gif,.webp,.txt">
-                        <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">Leave empty if you don't want to change the file.</small>
+                        <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;display:block;">Leave empty if you don't want to change the file. (Max: 20MB)</small>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-light" style="padding:10px 32px; font-weight:600; border: 1px solid #cbd5e1; background-color: #f1f5f9; color: #334155;" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancel</button>

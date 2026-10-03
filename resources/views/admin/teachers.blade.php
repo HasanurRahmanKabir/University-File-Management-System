@@ -182,7 +182,7 @@
     <!-- ADD TEACHER -->
     <div class="modal fade" id="addTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head gradient"><h5 class="modal-title"><i class="fas fa-user-plus"></i> Register Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form action="{{ route('admin.teacher-info.store') }}" method="POST" enctype="multipart/form-data">@csrf
         <div class="form-group mb-4">
-            <label class="form-label d-block text-muted small mb-2">Profile Image (Optional)</label>
+            <label class="form-label d-block text-muted small mb-2">Profile Image (Optional) <span style="font-size:0.75rem; margin-left:5px;">(Recommended: 300x300px, Max: 2MB)</span></label>
             <div class="avatar-upload-container">
                 <div class="avatar-preview-box" id="add_upload_zone">
                     <input type="file" name="profile_image" id="add_profile_image" class="d-none" accept="image/png, image/jpeg, image/gif" onchange="previewAvatar(this, 'add_preview_img', 'add_placeholder', 'add_remove_btn')">
@@ -251,7 +251,7 @@
     <div class="modal fade" id="editTeacherModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content premium"><div class="modal-head dark-grad"><h5 class="modal-title"><i class="fas fa-pen"></i> Edit Teacher</h5><button type="button" class="close-btn" data-bs-dismiss="modal"><i class="fas fa-xmark"></i></button></div><div class="modal-body-content"><form id="editTeacherForm" action="" method="POST" enctype="multipart/form-data">@csrf @method('PUT')
         <input type="hidden" name="remove_image" id="remove_image_hidden" value="0">
         <div class="form-group mb-4">
-            <label class="form-label d-block text-muted small mb-2">Update Profile Image</label>
+            <label class="form-label d-block text-muted small mb-2">Update Profile Image <span style="font-size:0.75rem; margin-left:5px;">(Recommended: 300x300px, Max: 2MB)</span></label>
             <div class="avatar-upload-container">
                 <div class="avatar-preview-box" id="edit_upload_zone">
                     <input type="file" name="profile_image" id="edit_profile_image" class="d-none" accept="image/png, image/jpeg, image/gif" onchange="previewAvatar(this, 'edit_preview_img', 'edit_placeholder', 'edit_remove_btn')">

@@ -327,7 +327,7 @@
                     <form method="POST" action="{{ route('admin.student-info.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group mb-4">
-                            <label class="form-label d-block text-muted small mb-2">Profile Image (Optional)</label>
+                            <label class="form-label d-block text-muted small mb-2">Profile Image (Optional) <span style="font-size:0.75rem; margin-left:5px;">(Recommended: 300x300px, Max: 2MB)</span></label>
                             <div class="avatar-upload-container">
                                 <div class="avatar-preview-box" id="add_upload_zone">
                                     <input type="file" name="profile_image" id="add_profile_image" class="d-none" accept="image/png, image/jpeg, image/gif" onchange="previewAvatar(this, 'add_preview_img', 'add_placeholder', 'add_remove_btn')">
@@ -417,7 +417,7 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group mb-4">
-                            <label class="form-label d-block text-muted small mb-2">Update Profile Image</label>
+                            <label class="form-label d-block text-muted small mb-2">Update Profile Image <span style="font-size:0.75rem; margin-left:5px;">(Recommended: 300x300px, Max: 2MB)</span></label>
                             <div class="avatar-upload-container">
                                 <div class="avatar-preview-box" id="edit_upload_zone">
                                     <input type="file" name="profile_image" id="edit_profile_image" class="d-none" accept="image/png, image/jpeg, image/gif" onchange="previewAvatar(this, 'edit_preview_img', 'edit_placeholder', 'edit_remove_btn')">

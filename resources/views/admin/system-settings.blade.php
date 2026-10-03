@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'System Settings - Admin Dashboard')
 @section('page-title', 'System Settings')
 @section('breadcrumb', 'Settings')
@@ -137,7 +137,7 @@
                         <small class="text-muted" style="font-size: 0.75rem; margin-top: 4px; display: block;">This text will be displayed in the browser tab for all admin pages.</small>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">Dashboard Logo</label>
+                        <label class="form-label mb-1">Dashboard Logo <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 200x50px)</small></label>
                         <div class="file-upload-wrapper">
                             <input type="hidden" name="remove_admin_logo" value="0">
                             <input type="file" name="admin_logo" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'admin-logo-preview')">
@@ -155,7 +155,7 @@
                     </div>
 
                     <div class="form-group mt-3 mb-0">
-                        <label class="form-label">Dashboard Favicon</label>
+                        <label class="form-label mb-1">Dashboard Favicon <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 32x32px)</small></label>
                         <div class="file-upload-wrapper" style="min-height: 100px;">
                             <input type="hidden" name="remove_admin_favicon" value="0">
                             <input type="file" name="admin_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'admin-favicon-preview')">
@@ -189,7 +189,7 @@
                         <small class="text-muted" style="font-size: 0.75rem; margin-top: 4px; display: block;">This text will be displayed in the browser tab for all teacher pages.</small>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">Dashboard Logo</label>
+                        <label class="form-label mb-1">Dashboard Logo <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 200x50px)</small></label>
                         <div class="file-upload-wrapper">
                             <input type="hidden" name="remove_teacher_logo" value="0">
                             <input type="file" name="teacher_logo" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'teacher-logo-preview')">
@@ -207,7 +207,7 @@
                     </div>
 
                     <div class="form-group mt-3 mb-0">
-                        <label class="form-label">Dashboard Favicon</label>
+                        <label class="form-label mb-1">Dashboard Favicon <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 32x32px)</small></label>
                         <div class="file-upload-wrapper" style="min-height: 100px;">
                             <input type="hidden" name="remove_teacher_favicon" value="0">
                             <input type="file" name="teacher_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'teacher-favicon-preview')">
@@ -241,7 +241,7 @@
                         <small class="text-muted" style="font-size: 0.75rem; margin-top: 4px; display: block;">This text will be displayed in the browser tab for all student pages.</small>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="form-label">Dashboard Logo</label>
+                        <label class="form-label mb-1">Dashboard Logo <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 200x50px)</small></label>
                         <div class="file-upload-wrapper">
                             <input type="hidden" name="remove_student_logo" value="0">
                             <input type="file" name="student_logo" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'student-logo-preview')">
@@ -259,7 +259,7 @@
                     </div>
 
                     <div class="form-group mt-3 mb-0">
-                        <label class="form-label">Dashboard Favicon</label>
+                        <label class="form-label mb-1">Dashboard Favicon <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 32x32px)</small></label>
                         <div class="file-upload-wrapper" style="min-height: 100px;">
                             <input type="hidden" name="remove_student_favicon" value="0">
                             <input type="file" name="student_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'student-favicon-preview')">
@@ -306,7 +306,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-0">
-                                <label class="form-label">Login Page Logo</label>
+                                <label class="form-label mb-1">Login Page Logo <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 150x150px)</small></label>
                                 <div class="file-upload-wrapper">
                                     <input type="hidden" name="remove_login_logo" value="0">
                                     <input type="file" name="login_logo" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'login-logo-preview')">
@@ -324,7 +324,7 @@
                             </div>
 
                             <div class="form-group mt-3 mb-0">
-                                <label class="form-label">Login Page Favicon</label>
+                                <label class="form-label mb-1">Login Page Favicon <small class="text-muted fw-normal" style="font-size:0.75rem; margin-left:5px;">(Recommended: 32x32px)</small></label>
                                 <div class="file-upload-wrapper" style="min-height: 100px;">
                                     <input type="hidden" name="remove_login_favicon" value="0">
                                     <input type="file" name="login_favicon" class="file-upload-input" accept="image/*" onchange="previewImage(this, 'login-favicon-preview')">
