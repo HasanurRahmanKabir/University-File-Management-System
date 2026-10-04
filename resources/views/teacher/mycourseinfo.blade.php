@@ -1,6 +1,6 @@
 @extends('layouts.teacher')
 
-@section('title', 'My Course Info — TeacherHub OBE')
+@section('title', 'My Course Info — Teacher FMS')
 @section('page_title', 'My Course Info')
 
 @push('styles')

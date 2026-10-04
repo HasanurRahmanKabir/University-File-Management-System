@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ $globalSettings['login_subtitle'] ?? 'Welcome to the Official File Management Portal of our University. Sign in to access your dashboard.' }}">
-    <title>{{ $globalSettings['login_tab_title'] ?? 'Sign In — University OBE Portal' }}</title>
+    <title>{{ $globalSettings['login_tab_title'] ?? 'Sign In — University File Management System' }}</title>
     @if(isset($globalSettings['login_favicon']) && $globalSettings['login_favicon'])
         <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $globalSettings['login_favicon']) }}">
     @endif
@@ -345,7 +345,7 @@
             <div class="logo-icon">
                 <i class="fas fa-graduation-cap"></i>
             </div>
-            <div class="logo-name">UniOBE Portal</div>
+            <div class="logo-name">University FMS</div>
             <div class="logo-tagline">{{ $globalSettings['login_logo_tagline'] ?? 'University File Management System' }}</div>
         @endif
     </div>
@@ -407,7 +407,7 @@
         </div>
     </div>
 
-    <div class="footer">{{ $globalSettings['footer_copyright'] ?? '© ' . date('Y') . ' University OBE System. All rights reserved.' }}</div>
+    <div class="footer">{{ $globalSettings['footer_copyright'] ?? '© ' . date('Y') . ' University File Management System. All rights reserved.' }}</div>
 
 </div>
 

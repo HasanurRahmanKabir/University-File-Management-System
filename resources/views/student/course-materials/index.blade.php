@@ -1,6 +1,6 @@
-Ôªø@extends('layouts.student')
+@extends('layouts.student')
 
-@section('title', 'Course Materials ‚Äî StudentHub OBE')
+@section('title', 'Course Materials ó Student FMS')
 @section('page-title', 'Course Materials')
 @section('breadcrumb', 'Course Materials')
 
@@ -325,7 +325,7 @@
         background:var(--bg-muted); color:var(--tx-h); border-color:#94a3b8;
     }
 
-    /* Download ZIP ‚Äî Drive / OneDrive style control */
+    /* Download ZIP ó Drive / OneDrive style control */
     .sm-zip-btn {
         height:40px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center;
         gap:6px; box-sizing:border-box; white-space:nowrap; text-decoration:none;
@@ -425,7 +425,7 @@
             <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
                 <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-book-open"></i></div>
                 @if(request('search'))
-                    <h5 style="color:var(--tx-h); font-weight:600;">No courses match ‚Äú{{ request('search') }}‚Äù</h5>
+                    <h5 style="color:var(--tx-h); font-weight:600;">No courses match ì{{ request('search') }}î</h5>
                     <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">Try another keyword, or use Reset above to clear search.</p>
                 @else
                     <h5 style="color:var(--tx-h); font-weight:600;">No courses enrolled</h5>
@@ -524,7 +524,7 @@
                 @php
                     $folderSize = (int) ($folder->public_files_size ?? 0);
                     $folderSizeLabel = $folderSize <= 0
-                        ? '‚Äî'
+                        ? 'ó'
                         : ($folderSize < 1024
                             ? $folderSize.' B'
                             : ($folderSize < 1048576
@@ -540,7 +540,7 @@
                                 <div class="t-sub">
                                     {{ $folder->public_files_count }} file{{ $folder->public_files_count !== 1 ? 's' : '' }}
                                     @if(($folder->children_count ?? 0) > 0)
-                                        ¬∑ {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
+                                        ∑ {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
                                     @endif
                                 </div>
                             </div>
@@ -551,11 +551,11 @@
                         @if($folderSize > 0)
                             <span class="cell-size">{{ $folderSizeLabel }}</span>
                         @else
-                            <span class="cell-muted">‚Äî</span>
+                            <span class="cell-muted">ó</span>
                         @endif
                     </div>
                     <div class="c-date" role="cell">
-                        <span class="cell-date">{{ optional($folder->created_at)->format('d M Y') ?? '‚Äî' }}</span>
+                        <span class="cell-date">{{ optional($folder->created_at)->format('d M Y') ?? 'ó' }}</span>
                     </div>
                     <div class="c-action" role="cell" onclick="event.stopPropagation();">
                         <div class="sm-action-group">
@@ -625,7 +625,7 @@
                     @if(request('search') && $browserFolders->isEmpty())
                     <div class="sm-file-empty">
                         <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-search"></i></div>
-                        <h5 style="color:var(--tx-h); font-weight:600;">No folders or files match ‚Äú{{ request('search') }}‚Äù</h5>
+                        <h5 style="color:var(--tx-h); font-weight:600;">No folders or files match ì{{ request('search') }}î</h5>
                         <p style="color:var(--tx-m); font-size:0.9rem; margin:0;">Try another keyword or clear search.</p>
                     </div>
                     @elseif(!request('search') && $browserFolders->isEmpty())

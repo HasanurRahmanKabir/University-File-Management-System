@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Course Info — StudentHub OBE')
+@section('title', 'Course Info — Student FMS')
 @section('page-title', 'Course Info')
 @section('breadcrumb', 'Course Info')
 

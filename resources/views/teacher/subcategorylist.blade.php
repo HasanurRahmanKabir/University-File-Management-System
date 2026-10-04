@@ -1,6 +1,6 @@
 @extends('layouts.teacher')
 
-@section('title', 'Subcategory List — TeacherHub OBE')
+@section('title', 'Subcategory List — Teacher FMS')
 @section('page_title', 'Subcategory List')
 
 @section('content')

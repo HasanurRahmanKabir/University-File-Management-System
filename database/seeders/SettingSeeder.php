@@ -13,7 +13,7 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            ['key' => 'seo_meta_description', 'value' => 'University OBE File Management System'],
+            ['key' => 'seo_meta_description', 'value' => 'University File Management System'],
             ['key' => 'system_email', 'value' => 'admin@university.com'],
             ['key' => 'academic_session', 'value' => '2025-2026'],
             ['key' => 'brand_tagline', 'value' => 'File Management'],

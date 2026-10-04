@@ -1,6 +1,6 @@
 @extends('layouts.teacher')
 
-@section('title', 'My Profile — TeacherHub OBE')
+@section('title', 'My Profile — Teacher FMS')
 @section('page_title', 'My Profile')
 
 @section('content')

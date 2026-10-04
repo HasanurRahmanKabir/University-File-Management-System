@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Account Settings — StudentHub OBE')
+@section('title', 'Account Settings — Student FMS')
 @section('page-title', 'Account Settings')
 @section('breadcrumb', 'Account Settings')
 
