@@ -58,34 +58,38 @@
         </a>
     </div>
     <div class="d-card-body p0">
-        <div class="t-wrap">
-            <table class="t-tbl dash-course-tbl">
-                <thead>
-                    <tr>
-                        <th style="width: 20%;">Course Code</th>
-                        <th style="width: 20%;">Course Title</th>
-                        <th style="width: 20%;">Files</th>
-                        <th style="width: 20%;">Year</th>
-                        <th style="width: 20%; text-align:right;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($recentCourses as $course)
-                    <tr>
-                        <td><span class="t-code">{{ $course->course_code }}</span></td>
-                        <td><span class="t-name">{{ $course->title }}</span></td>
-                        <td><span class="badge b-blue">{{ $course->materials_count }} files</span></td>
-                        <td style="color:var(--tx-s);">{{ date('Y') }}</td>
-                        <td style="text-align:right;"><button class="btn-ico bi-view" title="Quick View" data-bs-toggle="modal" data-bs-target="#viewCourseModal{{ $course->id }}"><i class="fas fa-eye"></i></button></td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center" style="padding: 20px; color: var(--tx-s);">No recent courses found.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+        @if($recentCourses->isEmpty())
+            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+                <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
+                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Recent Courses</h5>
+                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">You haven't been assigned any courses for the current academic session.</p>
+            </div>
+        @else
+            <div class="t-wrap">
+                <table class="t-tbl dash-course-tbl">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Course Code</th>
+                            <th style="width: 20%;">Course Title</th>
+                            <th style="width: 20%;">Files</th>
+                            <th style="width: 20%;">Year</th>
+                            <th style="width: 20%; text-align:right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentCourses as $course)
+                        <tr>
+                            <td><span class="t-code">{{ $course->course_code }}</span></td>
+                            <td><span class="t-name">{{ $course->title }}</span></td>
+                            <td><span class="badge b-blue">{{ $course->materials_count }} files</span></td>
+                            <td style="color:var(--tx-s);">{{ date('Y') }}</td>
+                            <td style="text-align:right;"><button class="btn-ico bi-view" title="Quick View" data-bs-toggle="modal" data-bs-target="#viewCourseModal{{ $course->id }}"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 </div>
 

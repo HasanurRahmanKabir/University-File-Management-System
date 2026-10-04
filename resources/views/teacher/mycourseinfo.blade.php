@@ -1,4 +1,4 @@
-@extends('layouts.teacher')
+﻿@extends('layouts.teacher')
 
 @section('title', 'My Course Info — Teacher FMS')
 @section('page_title', 'My Course Info')
@@ -83,7 +83,14 @@
         @endif
     </div>
     <div class="d-card-body p0">
-        <div class="t-wrap">
+        @if($runningCourses->isEmpty())
+            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+                                <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
+                                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Running Courses</h5>
+                                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">There are no active courses assigned to you for the current semester.</p>
+                            </div>
+        @else
+            <div class="t-wrap">
             <table class="t-tbl dash-course-tbl">
                 <thead>
                     <tr>
@@ -96,7 +103,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($runningCourses as $course)
+                    @foreach($runningCourses as $course)
                     <tr>
                         <td class="text-start" style="white-space: nowrap;"><span class="t-code">{{ $course->course_code }}</span></td>
                         <td><span class="t-name">{{ $course->title }}</span></td>
@@ -137,20 +144,11 @@
                             @endif
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
-                                <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
-                                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Running Courses</h5>
-                                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">There are no active courses assigned to you for the current semester.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    @endforeach
+                  </tbody>
+              </table>
+          </div>
+        @endif
     </div>
 </div>
 
@@ -598,3 +596,5 @@
     });
 </script>
 @endpush
+
+

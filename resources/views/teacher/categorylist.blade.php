@@ -1,4 +1,4 @@
-@extends('layouts.teacher')
+﻿@extends('layouts.teacher')
 
 @section('title', 'Category List — Teacher FMS')
 @section('page_title', 'Category List')
@@ -6,7 +6,7 @@
 @section('content')
 <div class="page-header d-flex justify-content-between align-items-center mb-4">
     <div class="heading-group">
-        <h2 class="mb-1" style="font-size: 1.5rem; font-weight: 700; color: var(--text-heading); letter-spacing: -0.5px;">Course Categories</h2>
+        <h2 class="mb-1" style="font-size: 1.5rem; font-weight: 600; color: var(--text-heading); letter-spacing: -0.5px;">Course Categories</h2>
         <p class="text-muted m-0" style="font-size: 0.85rem;">Your assigned courses grouped by major categories.</p>
     </div>
 </div>
@@ -89,3 +89,5 @@
 </div>
 @endif
 @endsection
+
+

@@ -1,4 +1,4 @@
-@extends('layouts.teacher')
+﻿@extends('layouts.teacher')
 
 @section('title', 'Course Announcements — Teacher FMS')
 @section('page_title', 'Course Announcements')
@@ -35,7 +35,7 @@
 
 <div class="page-header d-flex justify-content-between align-items-center mb-4">
     <div class="heading-group">
-        <h2 class="mb-1" style="font-size:1.5rem;font-weight:700;color:var(--text-heading);letter-spacing:-0.5px;">Course Announcements</h2>
+        <h2 class="mb-1" style="font-size:1.5rem;font-weight: 600;color:var(--text-heading);letter-spacing:-0.5px;">Course Announcements</h2>
         <p class="text-muted m-0" style="font-size:0.85rem;">Manage announcements, assignments, and notices for your courses.</p>
     </div>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#announcementModal"
@@ -48,14 +48,10 @@
 @if($announcements->isEmpty())
     <div class="d-card" style="animation-delay:.12s">
         <div class="d-card-body">
-            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:60px 20px;text-align:center;">
-                <div class="empty-ico" style="font-size:3.5rem;color:var(--bd-dark,#cbd5e1);margin-bottom:18px;"><i class="fas fa-bullhorn"></i></div>
-                <h5 style="color:var(--tx-h);font-weight:700;margin-bottom:6px;">No Announcements Yet</h5>
-                <p style="color:var(--tx-m);font-size:0.9rem;max-width:400px;margin:0 auto 20px;">Click "Add Announcement" to create your first notice, assignment, or exam alert for your courses.</p>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#announcementModal"
-                    style="padding:10px 24px;border-radius:8px;font-weight:600;box-shadow:0 4px 12px rgba(59,130,246,0.25);">
-                    <i class="fas fa-plus-circle me-2"></i>Add Announcement
-                </button>
+            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px;text-align:center;">
+                <div class="empty-ico" style="font-size: 3rem;color:var(--bd-dark,#cbd5e1);margin-bottom: 15px;"><i class="fas fa-bullhorn"></i></div>
+                <h5 style="color:var(--tx-h);font-weight: 600;margin-bottom: 5px;">No Announcements Yet</h5>
+                <p style="color:var(--tx-m);font-size:0.9rem;max-width:400px;margin:0 auto 20px;">There are no notices, assignments, or exam alerts created for your courses yet.</p>
             </div>
         </div>
     </div>
@@ -168,7 +164,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content" style="border:none;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.15);">
             <div class="modal-header" id="modalHeaderBg" style="background:linear-gradient(135deg,var(--primary,#3b82f6) 0%,#2563eb 100%);color:white;border-top-left-radius:16px;border-top-right-radius:16px;padding:1.25rem 1.5rem;border-bottom:none;">
-                <h5 class="modal-title" id="announcementModalLabel" style="font-weight:700;font-size:1.1rem;margin:0;display:flex;align-items:center;gap:8px;">
+                <h5 class="modal-title" id="announcementModalLabel" style="font-weight: 600;font-size:1.1rem;margin:0;display:flex;align-items:center;gap:8px;">
                     <i id="modalHeaderIcon" class="fas fa-plus-circle"></i>
                     <span id="modalTitleText">Add Announcement</span>
                 </h5>
@@ -351,3 +347,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 @include('partials.sweetalert')
 @endpush
+

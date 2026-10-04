@@ -1,4 +1,4 @@
-@extends('layouts.teacher')
+﻿@extends('layouts.teacher')
 
 @section('title', 'Course Materials — Teacher FMS')
 @section('page_title', 'Course Materials')
@@ -301,8 +301,8 @@
                 </div>
             @endif
         @else
-            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
-                <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-book-open"></i></div>
+            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align:center;">
+                <div style="font-size:3rem; color:#cbd5e1; margin-bottom: 15px;"><i class="fas fa-book-open"></i></div>
                 @if(request('search'))
                     <h5 style="color:var(--tx-h); font-weight:600;">No courses match “{{ request('search') }}”</h5>
                     <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">Try another keyword, or use Reset above to clear search.</p>
@@ -514,8 +514,8 @@
                         @if(request('search') && $browserFolders->isEmpty())
                         <tr>
                             <td colspan="5">
-                                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
-                                    <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-search"></i></div>
+                                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align:center;">
+                                    <div style="font-size:3rem; color:#cbd5e1; margin-bottom: 15px;"><i class="fas fa-search"></i></div>
                                     <h5 style="color:var(--tx-h); font-weight:600;">No folders or files match “{{ request('search') }}”</h5>
                                     <p style="color:var(--tx-m); font-size:0.9rem;">Try another keyword or clear search.</p>
                                 </div>
@@ -524,8 +524,8 @@
                         @elseif(!request('search') && $browserFolders->isEmpty())
                         <tr>
                             <td colspan="5">
-                                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
-                                    <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-folder-open"></i></div>
+                                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align:center;">
+                                    <div style="font-size:3rem; color:#cbd5e1; margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
                                     @if($activeFolder)
                                         <h5 style="color:var(--tx-h); font-weight:600;">This folder is empty</h5>
                                         <p style="color:var(--tx-m); font-size:0.9rem;">Create a subfolder or upload files here.</p>
@@ -1116,3 +1116,5 @@
     });
 </script>
 @endpush
+
+
