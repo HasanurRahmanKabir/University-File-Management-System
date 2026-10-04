@@ -135,7 +135,7 @@
                             <div class="empty-state">
                                 <div class="empty-ico"><i class="fas fa-folder-open"></i></div>
                                 <div class="empty-title">No Courses Enrolled</div>
-                                <div class="empty-sub">You are not enrolled in any courses for the current semester. Please contact your department if this is a mistake.</div>
+                                <div class="empty-sub" style="text-align: center !important; margin: 0 auto !important; max-width: 350px !important; display: block !important; white-space: normal !important;">You are not enrolled in any courses for the current semester. Please contact your department if this is a mistake.</div>
                             </div>
                         </td>
                     </tr>
@@ -169,3 +169,6 @@
     });
 </script>
 @endpush
+
+
+

@@ -107,7 +107,7 @@
         <div class="empty-state">
             <div class="empty-ico"><i class="fas fa-box-open"></i></div>
             <div class="empty-title">No Categories Found</div>
-            <div class="empty-sub">You are not enrolled in any active category courses.</div>
+            <div class="empty-sub" style="text-align: center !important; margin: 0 auto !important; max-width: 350px !important; display: block !important; white-space: normal !important;">You are not enrolled in any active category courses.</div>
         </div>
     </div>
 </div>
@@ -118,3 +118,5 @@
 </div>
 
 @endsection
+
+

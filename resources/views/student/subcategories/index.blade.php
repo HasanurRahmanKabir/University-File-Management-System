@@ -111,7 +111,7 @@
         <div class="empty-state">
             <div class="empty-ico"><i class="fas fa-box-open"></i></div>
             <div class="empty-title">No Subcategories Found</div>
-            <div class="empty-sub">You are not enrolled in any active courses with subcategories.</div>
+            <div class="empty-sub" style="text-align: center !important; margin: 0 auto !important; max-width: 350px !important; display: block !important; white-space: normal !important;">You are not enrolled in any active courses with subcategories.</div>
         </div>
     </div>
 </div>
@@ -122,3 +122,5 @@
 </div>
 
 @endsection
+
+
