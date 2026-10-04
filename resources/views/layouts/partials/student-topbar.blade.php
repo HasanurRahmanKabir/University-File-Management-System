@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="tb-right">
-        <div class="tb-user-info d-none d-sm-flex" style="text-align:right; flex-direction: column; justify-content: center;">
+        <div class="tb-user-info d-none d-sm-block" style="text-align:right; display: flex; flex-direction: column; justify-content: center;">
             <div class="tb-uname">{{ Auth::user()->name ?? 'Student' }}</div>
             <div class="tb-urole">Student</div>
         </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <meta name="description" content="{{ $globalSettings['seo_meta_description'] ?? 'Student Dashboard — University File Management System' }}">
-    <title>@yield('page-title', 'Student') — {{ $globalSettings['student_tab_title'] ?? 'Student Dashboard - University FMS' }}</title>
+    <title>@yield('page-title', 'Student') — {{ $globalSettings['student_tab_title'] ?? 'Student Dashboard - File Management System' }}</title>
     @if(isset($globalSettings['student_favicon']) && $globalSettings['student_favicon'])
         <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $globalSettings['student_favicon']) }}">
     @endif

@@ -12,7 +12,7 @@
             @endif
             <div class="brand-text" style="flex: 1; min-width: 0;">
                 <span class="sb-brand-name" style="word-wrap: break-word; white-space: normal;">{{ $globalSettings['student_dashboard_name'] ?? 'StudentHub' }}</span>
-                <span class="sb-brand-tag" style="word-wrap: break-word; white-space: normal;">{{ $globalSettings['brand_tagline'] ?? 'University FMS' }}</span>
+                <span class="sb-brand-tag" style="word-wrap: break-word; white-space: normal;">{{ $globalSettings['brand_tagline'] ?? 'File Management System' }}</span>
             </div>
             <i class="fas fa-bars sb-desktop-toggler" id="toggleBtn" style="cursor: pointer; align-self: flex-start; margin-top: 2px; color: var(--tx-m); font-size: 1.1rem; padding: 4px;"></i>
         </div>

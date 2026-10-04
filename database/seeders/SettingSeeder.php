@@ -16,7 +16,7 @@ class SettingSeeder extends Seeder
             ['key' => 'seo_meta_description', 'value' => 'University File Management System'],
             ['key' => 'system_email', 'value' => 'admin@university.com'],
             ['key' => 'academic_session', 'value' => '2025-2026'],
-            ['key' => 'brand_tagline', 'value' => 'File Management'],
+            ['key' => 'brand_tagline', 'value' => 'File Management System'],
             ['key' => 'footer_copyright', 'value' => '© 2026 University File Management System'],
             ['key' => 'admin_dashboard_name', 'value' => 'UniAdmin'],
             ['key' => 'admin_tab_title', 'value' => 'University Admin Panel'],

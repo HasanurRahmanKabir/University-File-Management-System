@@ -345,7 +345,7 @@
             <div class="logo-icon">
                 <i class="fas fa-graduation-cap"></i>
             </div>
-            <div class="logo-name">University FMS</div>
+            <div class="logo-name">File Management System</div>
             <div class="logo-tagline">{{ $globalSettings['login_logo_tagline'] ?? 'University File Management System' }}</div>
         @endif
     </div>
