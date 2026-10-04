@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@gmail.com'],
             [
-                'name' => 'Admin Demo',
+                'name' => 'Admin',
                 'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
                 'role' => 'admin',
                 'is_active' => true,
@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'teacher@gmail.com'],
             [
-                'name' => 'Teacher Demo',
+                'name' => 'Teacher',
                 'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
                 'role' => 'teacher',
                 'is_active' => true,
@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'student@gmail.com'],
             [
-                'name' => 'Student Demo',
+                'name' => 'Student',
                 'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
                 'role' => 'student',
                 'is_active' => true,
