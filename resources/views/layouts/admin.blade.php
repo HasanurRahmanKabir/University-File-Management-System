@@ -31,7 +31,7 @@
             </div>
             <div class="brand-text" style="flex: 1; min-width: 0; word-wrap: break-word; padding-top: 2px;">
                 <span class="brand-name nav-text" style="display: block; line-height: 1.2; margin-bottom: 2px;">{{ $globalSettings['admin_dashboard_name'] ?? 'UniAdmin' }}</span>
-                <span class="brand-tagline nav-text" style="display: block; line-height: 1.2;">{{ $globalSettings['brand_tagline'] ?? 'File Management' }}</span>
+                <span class="brand-tagline nav-text" style="display: block; line-height: 1.2;">{{ $globalSettings['brand_tagline'] ?? 'File Management System' }}</span>
             </div>
             <!-- Desktop Inline Toggler -->
             <button class="desktop-toggler" id="toggleBtn" title="Toggle Sidebar" style="display: flex; flex-shrink: 0; margin-top: 2px; align-self: flex-start; margin-left: auto; color: rgba(255, 255, 255, 0.7); background: transparent; border: none; font-size: 1.25rem; width: 32px; height: 32px; cursor: pointer; align-items: center; justify-content: center; transition: color 0.2s ease;">
