@@ -1,4 +1,4 @@
-@extends('layouts.student')
+﻿@extends('layouts.student')
 
 @section('title', 'Course Info — Student FMS')
 @section('page-title', 'Course Info')
@@ -49,6 +49,7 @@
 @section('content')
 <!-- Running Semester -->
 <div class="d-card" style="animation-delay:.06s">
+    @if(!$runningCourses->isEmpty())
     <div class="d-card-header">
         <div class="sc-card-header-wrap">
             <div class="d-card-title">
@@ -61,45 +62,44 @@
         </div>
     </div>
     <div class="d-card-body p0">
-        <div class="t-wrap">
-            <table class="t-tbl sc-course-tbl">
-                <thead>
-                    <tr>
-                        <th class="text-start">Course Code</th>
-                        <th class="text-center">Course Title</th>
-                        <th class="text-center">Instructor</th>
-                        <th class="text-center">Course Credit</th>
-                        <th class="text-center">Year</th>
-                        <th class="text-end">Semester</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($runningCourses as $course)
-                    <tr>
-                        <td class="text-start"><span class="t-code">{{ $course->course_code }}</span></td>
-                        <td class="text-center"><span class="t-name">{{ $course->title ?? $course->course_name ?? 'Course' }}</span></td>
-                        <td class="text-center cell-muted">{{ optional($course->teacher)->name ?? 'TBA' }}</td>
-                        <td class="text-center"><span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span></td>
-                        <td class="text-center cell-muted">{{ optional($course->created_at)->format('Y') ?? 'N/A' }}</td>
-                        <td class="text-end">
-                            <span class="badge b-blue">{{ $activeSemester ? $activeSemester->name : 'Current' }}</span>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state sc-empty d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
-                                <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
-                                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Running Courses</h5>
-                                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">You are not enrolled in any courses for the current semester.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <div class="t-wrap">
+                <table class="t-tbl sc-course-tbl">
+                    <thead>
+                        <tr>
+                            <th class="text-start">Course Code</th>
+                            <th class="text-center">Course Title</th>
+                            <th class="text-center">Instructor</th>
+                            <th class="text-center">Course Credit</th>
+                            <th class="text-center">Year</th>
+                            <th class="text-end">Semester</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($runningCourses as $course)
+                        <tr>
+                            <td class="text-start"><span class="t-code">{{ $course->course_code }}</span></td>
+                            <td class="text-center"><span class="t-name">{{ $course->title ?? $course->course_name ?? 'Course' }}</span></td>
+                            <td class="text-center cell-muted">{{ optional($course->teacher)->name ?? 'TBA' }}</td>
+                            <td class="text-center"><span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span></td>
+                            <td class="text-center cell-muted">{{ optional($course->created_at)->format('Y') ?? 'N/A' }}</td>
+                            <td class="text-end">
+                                <span class="badge b-blue">{{ $activeSemester ? $activeSemester->name : 'Current' }}</span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @else
+    <div class="d-card-body p0">
+        <div class="empty-state sc-empty d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+            <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
+            <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Running Courses</h5>
+            <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto;">You are not enrolled in any courses for the current semester.</p>
         </div>
     </div>
+    @endif
 </div>
 
 @forelse($groupedPreviousCourses as $semesterName => $courses)
@@ -155,3 +155,6 @@
 @endforelse
 
 @endsection
+
+
+

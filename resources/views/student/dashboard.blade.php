@@ -1,4 +1,4 @@
-@extends('layouts.student')
+﻿@extends('layouts.student')
 
 @section('title', 'Dashboard — Student FMS')
 @section('page-title', 'Dashboard')
@@ -80,6 +80,7 @@
 
 <!-- Course Table -->
 <div class="d-card" style="animation-delay:.20s">
+    @if(!$recentCourses->isEmpty())
     <div class="d-card-header">
         <div class="d-card-title">
             <div class="d-card-ico" style="background:#eff6ff;color:#2563eb;"><i class="fas fa-graduation-cap"></i></div>
@@ -109,41 +110,40 @@
         </a>
     </div>
     <div class="d-card-body p0">
-        <div class="t-wrap">
-            <table class="t-tbl dash-course-tbl">
-                <thead>
-                    <tr>
-                        <th>Course Code</th>
-                        <th>Course Title</th>
-                        <th>Instructor</th>
-                        <th>Year</th>
-                        <th>Semester</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($recentCourses as $course)
-                    <tr>
-                        <td><span class="t-code">{{ $course->course_code }}</span></td>
-                        <td><span class="t-name">{{ $course->title ?? $course->course_name ?? 'Course' }}</span></td>
-                        <td class="cell-muted">{{ optional($course->teacher)->name ?? 'TBA' }}</td>
-                        <td class="cell-muted">{{ optional($course->created_at)->format('Y') ?? 'N/A' }}</td>
-                        <td><span class="badge b-blue">{{ Auth::user()->semester ?? 'Current Semester' }}</span></td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" style="padding: 0; border-bottom: none;">
-                            <div class="empty-state">
-                                <div class="empty-ico"><i class="fas fa-folder-open"></i></div>
-                                <div class="empty-title">No Courses Enrolled</div>
-                                <div class="empty-sub" style="text-align: center !important; margin: 0 auto !important; max-width: 350px !important; display: block !important; white-space: normal !important;">You are not enrolled in any courses for the current semester. Please contact your department if this is a mistake.</div>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <div class="t-wrap">
+                <table class="t-tbl dash-course-tbl">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Title</th>
+                            <th>Instructor</th>
+                            <th>Year</th>
+                            <th>Semester</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentCourses as $course)
+                        <tr>
+                            <td><span class="t-code">{{ $course->course_code }}</span></td>
+                            <td><span class="t-name">{{ $course->title ?? $course->course_name ?? 'Course' }}</span></td>
+                            <td class="cell-muted">{{ optional($course->teacher)->name ?? 'TBA' }}</td>
+                            <td class="cell-muted">{{ optional($course->created_at)->format('Y') ?? 'N/A' }}</td>
+                            <td><span class="badge b-blue">{{ Auth::user()->semester ?? 'Current Semester' }}</span></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @else
+    <div class="d-card-body p0">
+        <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+            <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
+            <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Courses Enrolled</h5>
+            <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">You are not enrolled in any courses for the current semester. Please contact your department if this is a mistake.</p>
         </div>
     </div>
+    @endif
 </div>
 @endsection
 
@@ -169,6 +169,9 @@
     });
 </script>
 @endpush
+
+
+
 
 
 

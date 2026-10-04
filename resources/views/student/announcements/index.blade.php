@@ -45,12 +45,12 @@
     @if($announcements->isEmpty())
         <div class="d-card" style="animation-delay:.12s">
             <div class="d-card-body">
-                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:60px 20px;text-align:center;">
-                    <div class="empty-ico" style="font-size:4rem;color:var(--bd-dark,#cbd5e1);margin-bottom:20px;">
+                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+                    <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;">
                         <i class="fas fa-envelope-open-text"></i>
                     </div>
-                    <h5 style="color:var(--tx-h);font-weight:600;margin-bottom:8px;font-size:1.5rem;">No Announcements Found</h5>
-                    <p style="color:var(--tx-m);font-size:1rem;max-width:500px;margin:0 auto;">You're all caught up! There are no notices for your enrolled courses right now.</p>
+                    <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Announcements Found</h5>
+                    <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">You're all caught up! There are no notices for your enrolled courses right now.</p>
                 </div>
             </div>
         </div>

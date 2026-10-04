@@ -76,10 +76,10 @@
     <div class="col-12">
         <div class="d-card" style="animation-delay:.12s">
             <div class="d-card-body">
-                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 60px 20px; text-align: center;">
-                    <div class="empty-ico" style="font-size: 4rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 20px;"><i class="fas fa-user-slash"></i></div>
-                    <h4 style="color: var(--tx-h); font-weight: 700; margin-bottom: 8px;">No Instructors Found</h4>
-                    <p style="color: var(--tx-m); font-size: 0.95rem; max-width: 450px; margin: 0 auto; line-height: 1.5;">You are currently not enrolled in any courses, or no instructors have been assigned to your courses yet.</p>
+                <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+                    <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-user-slash"></i></div>
+                    <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Instructors Found</h5>
+                    <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">You are currently not enrolled in any courses, or no instructors have been assigned to your courses yet.</p>
                 </div>
             </div>
         </div>

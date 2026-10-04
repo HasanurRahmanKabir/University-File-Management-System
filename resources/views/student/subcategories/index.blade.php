@@ -108,10 +108,10 @@
 @empty
 <div class="d-card">
     <div class="d-card-body" style="text-align: center; padding: 40px;">
-        <div class="empty-state">
-            <div class="empty-ico"><i class="fas fa-box-open"></i></div>
-            <div class="empty-title">No Subcategories Found</div>
-            <div class="empty-sub" style="text-align: center !important; margin: 0 auto !important; max-width: 350px !important; display: block !important; white-space: normal !important;">You are not enrolled in any active courses with subcategories.</div>
+        <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+            <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-box-open"></i></div>
+            <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Subcategories Found</h5>
+            <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">You are not enrolled in any active courses with subcategories.</p>
         </div>
     </div>
 </div>

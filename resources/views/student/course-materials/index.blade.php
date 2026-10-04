@@ -1,6 +1,6 @@
-@extends('layouts.student')
+ï»¿@extends('layouts.student')
 
-@section('title', 'Course Materials — Student FMS')
+@section('title', 'Course Materials ï¿½ Student FMS')
 @section('page-title', 'Course Materials')
 @section('breadcrumb', 'Course Materials')
 
@@ -325,7 +325,7 @@
         background:var(--bg-muted); color:var(--tx-h); border-color:#94a3b8;
     }
 
-    /* Download ZIP — Drive / OneDrive style control */
+    /* Download ZIP ï¿½ Drive / OneDrive style control */
     .sm-zip-btn {
         height:40px; padding:0 16px; display:inline-flex; align-items:center; justify-content:center;
         gap:6px; box-sizing:border-box; white-space:nowrap; text-decoration:none;
@@ -376,6 +376,7 @@
 {{-- ===================== COURSE LIBRARY ===================== --}}
 @if(($viewMode ?? 'library') === 'library')
 <div class="d-card" style="animation-delay:.05s">
+    @if($courseLibrary && $courseLibrary->count() > 0)
     <div class="d-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
         <div>
             <div class="d-card-title m-0">
@@ -396,7 +397,6 @@
         </form>
     </div>
     <div class="d-card-body">
-        @if($courseLibrary && $courseLibrary->count() > 0)
             <div class="sm-course-grid">
                 @foreach($courseLibrary as $course)
                 <a href="{{ route('student.course-materials.index', ['course_id' => $course->id]) }}" class="sm-course-card">
@@ -421,19 +421,21 @@
                     {{ $courseLibrary->links('pagination::bootstrap-5') }}
                 </div>
             @endif
-        @else
-            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding:48px 20px; text-align:center;">
-                <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-book-open"></i></div>
-                @if(request('search'))
-                    <h5 style="color:var(--tx-h); font-weight:600;">No courses match “{{ request('search') }}”</h5>
-                    <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">Try another keyword, or use Reset above to clear search.</p>
-                @else
-                    <h5 style="color:var(--tx-h); font-weight:600;">No courses enrolled</h5>
-                    <p style="color:var(--tx-m); font-size:0.9rem; max-width:380px;">When you are enrolled in active courses, their materials will appear here.</p>
-                @endif
-            </div>
-        @endif
     </div>
+    @else
+    <div class="d-card-body" style="text-align: center; padding: 40px;">
+        <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+            <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-book-open"></i></div>
+            @if(request('search'))
+                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No courses match "{{ request('search') }}"</h5>
+                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">Try another keyword, or use Reset above to clear search.</p>
+            @else
+                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No courses enrolled</h5>
+                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">When you are enrolled in active courses, their materials will appear here.</p>
+            @endif
+        </div>
+    </div>
+    @endif
 </div>
 @endif
 
@@ -524,7 +526,7 @@
                 @php
                     $folderSize = (int) ($folder->public_files_size ?? 0);
                     $folderSizeLabel = $folderSize <= 0
-                        ? '—'
+                        ? 'ï¿½'
                         : ($folderSize < 1024
                             ? $folderSize.' B'
                             : ($folderSize < 1048576
@@ -540,7 +542,7 @@
                                 <div class="t-sub">
                                     {{ $folder->public_files_count }} file{{ $folder->public_files_count !== 1 ? 's' : '' }}
                                     @if(($folder->children_count ?? 0) > 0)
-                                        · {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
+                                        ï¿½ {{ $folder->children_count }} subfolder{{ $folder->children_count !== 1 ? 's' : '' }}
                                     @endif
                                 </div>
                             </div>
@@ -551,11 +553,11 @@
                         @if($folderSize > 0)
                             <span class="cell-size">{{ $folderSizeLabel }}</span>
                         @else
-                            <span class="cell-muted">—</span>
+                            <span class="cell-muted">ï¿½</span>
                         @endif
                     </div>
                     <div class="c-date" role="cell">
-                        <span class="cell-date">{{ optional($folder->created_at)->format('d M Y') ?? '—' }}</span>
+                        <span class="cell-date">{{ optional($folder->created_at)->format('d M Y') ?? 'ï¿½' }}</span>
                     </div>
                     <div class="c-action" role="cell" onclick="event.stopPropagation();">
                         <div class="sm-action-group">
@@ -625,7 +627,7 @@
                     @if(request('search') && $browserFolders->isEmpty())
                     <div class="sm-file-empty">
                         <div style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"><i class="fas fa-search"></i></div>
-                        <h5 style="color:var(--tx-h); font-weight:600;">No folders or files match “{{ request('search') }}”</h5>
+                        <h5 style="color:var(--tx-h); font-weight:600;">No folders or files match ï¿½{{ request('search') }}ï¿½</h5>
                         <p style="color:var(--tx-m); font-size:0.9rem; margin:0;">Try another keyword or clear search.</p>
                     </div>
                     @elseif(!request('search') && $browserFolders->isEmpty())
@@ -717,3 +719,10 @@
     });
 </script>
 @endpush
+
+
+
+
+
+
+

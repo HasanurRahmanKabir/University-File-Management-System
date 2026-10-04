@@ -56,58 +56,57 @@
         <span class="badge {{ $badgeClass }}" style="white-space: nowrap;">{{ $category->courses->count() }} {{ $category->courses->count() == 1 ? 'Course' : 'Courses' }}</span>
     </div>
     <div class="d-card-body p0">
-        <div class="t-wrap">
-            <table class="t-tbl cat-course-tbl" style="width: 100%; min-width: 600px; text-align: center; border-collapse: collapse;">
-                <thead>
-                    <tr>
-                        <th style="text-align: center; width: 10%; min-width: 80px;">#</th>
-                        <th style="text-align: center; width: 15%; min-width: 120px;">Course Code</th>
-                        <th style="text-align: center; width: 25%; min-width: 150px;">Course Name</th>
-                        <th style="text-align: center; width: 25%; min-width: 150px;">Instructor</th>
-                        <th style="text-align: center; width: 25%; min-width: 150px;">Course Credit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($category->courses as $cIndex => $course)
-                    <tr>
-                        <td style="text-align: center; max-width: 80px;">
-                            <span class="row-num">{{ str_pad($cIndex + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                        </td>
-                        <td style="text-align: center; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <span class="t-code">{{ $course->course_code }}</span>
-                        </td>
-                        <td style="text-align: center; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <span class="t-name" title="{{ $course->title }}">{{ $course->title }}</span>
-                        </td>
-                        <td style="text-align: center; color:var(--tx-s); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            {{ optional($course->teacher)->name ?? 'TBA' }}
-                        </td>
-                        <td style="text-align: center; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" style="text-align: center; padding: 20px; color: var(--tx-s);">
-                            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
-                                <i class="fas fa-folder-open" style="font-size:2rem; color:var(--b-color);"></i>
-                                <span>No courses found in this category.</span>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+        @if($category->courses->isEmpty())
+            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+                <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-folder-open"></i></div>
+                <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Courses Found</h5>
+                <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">No courses found in this category.</p>
+            </div>
+        @else
+            <div class="t-wrap">
+                <table class="t-tbl cat-course-tbl" style="width: 100%; min-width: 600px; text-align: center; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; width: 10%; min-width: 80px;">#</th>
+                            <th style="text-align: center; width: 15%; min-width: 120px;">Course Code</th>
+                            <th style="text-align: center; width: 25%; min-width: 150px;">Course Name</th>
+                            <th style="text-align: center; width: 25%; min-width: 150px;">Instructor</th>
+                            <th style="text-align: center; width: 25%; min-width: 150px;">Course Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($category->courses as $cIndex => $course)
+                        <tr>
+                            <td style="text-align: center; max-width: 80px;">
+                                <span class="row-num">{{ str_pad($cIndex + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            </td>
+                            <td style="text-align: center; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <span class="t-code">{{ $course->course_code }}</span>
+                            </td>
+                            <td style="text-align: center; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <span class="t-name" title="{{ $course->title }}">{{ $course->title }}</span>
+                            </td>
+                            <td style="text-align: center; color:var(--tx-s); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                {{ optional($course->teacher)->name ?? 'TBA' }}
+                            </td>
+                            <td style="text-align: center; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                <span class="badge b-gray">{{ $course->credit ?? 'N/A' }}</span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 </div>
 @empty
 <div class="d-card">
     <div class="d-card-body" style="text-align: center; padding: 40px;">
-        <div class="empty-state">
-            <div class="empty-ico"><i class="fas fa-box-open"></i></div>
-            <div class="empty-title">No Categories Found</div>
-            <div class="empty-sub" style="text-align: center !important; margin: 0 auto !important; max-width: 350px !important; display: block !important; white-space: normal !important;">You are not enrolled in any active category courses.</div>
+        <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 40px 20px; text-align: center;">
+            <div class="empty-ico" style="font-size: 3rem; color: var(--bd-dark, #cbd5e1); margin-bottom: 15px;"><i class="fas fa-box-open"></i></div>
+            <h5 style="color: var(--tx-h); font-weight: 600; margin-bottom: 5px;">No Categories Found</h5>
+            <p style="color: var(--tx-m); font-size: 0.9rem; max-width: 400px; margin: 0 auto; white-space: normal;">You are not enrolled in any active category courses.</p>
         </div>
     </div>
 </div>
