@@ -567,10 +567,10 @@
 {{-- ===================== COURSE LIBRARY ===================== --}}
 @if($viewMode === 'library')
 <div class="data-card">
-    <div class="cf-lib-header">
-        <div class="cf-lib-title-block">
-            <h5 class="card-title mb-0"><i class="fas fa-graduation-cap"></i> Select a Course</h5>
-            <p class="card-subtitle mb-0">Open a course to manage its folders and materials</p>
+    <div class="card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h5 class="card-title"><i class="fas fa-graduation-cap"></i> Select a Course</h5>
+            <p class="card-subtitle">Open a course to manage its folders and materials</p>
         </div>
         <form action="{{ route('admin.course-files.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2" id="searchForm">
             <select name="department_id" class="form-select m-0" style="width: auto; min-width: 150px; height: 38px;" onchange="this.form.submit()" aria-label="Filter by department">
