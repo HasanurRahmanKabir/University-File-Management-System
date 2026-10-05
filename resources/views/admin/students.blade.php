@@ -293,12 +293,13 @@
                     <tr>
                         <td colspan="7" class="text-center py-5">
                             <div class="empty-state">
-                                <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                                 @if(request('search'))
+                                    <i class="fas fa-search fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                                     <h6 class="text-heading fw-bold">No results found for "{{ request('search') }}"</h6>
                                     <p class="text-muted small">We couldn't find any student matching your search criteria.</p>
                                     <a href="{{ route('admin.student-info.index') }}" class="btn btn-sm btn-primary mt-3">Clear Search</a>
                                 @else
+                                    <i class="fas fa-user-graduate fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
                                     <h6 class="text-heading fw-bold">No students found</h6>
                                     <p class="text-muted small">Add your first student to see them listed here.</p>
                                 @endif
