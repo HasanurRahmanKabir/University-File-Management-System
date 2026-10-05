@@ -103,8 +103,8 @@
                     <tr>
                         <th><div style="min-width: 150px; display: inline-block;">Course Code</div></th>
                         <th><div style="min-width: 100px; display: inline-block; text-align: center;">Credit</div></th>
-                        <th><div style="min-width: 250px; display: inline-block;">Course Title</div></th>
-                        <th><div style="min-width: 200px; display: inline-block;">Course Subtitle</div></th>
+                        <th><div style="min-width: 250px; display: inline-block; text-align: center;">Course Title</div></th>
+                        <th><div style="min-width: 200px; display: inline-block; text-align: center;">Course Subtitle</div></th>
                         <th><div style="min-width: 180px; display: inline-block; text-align: center;">Department</div></th>
                         <th><div style="min-width: 180px; display: inline-block; text-align: center;">Classification</div></th>
                         <th><div style="min-width: 120px; display: inline-block; text-align: center;">Status</div></th>
@@ -125,10 +125,12 @@
                             </div>
                         </td>
                         <td>
-                            <div class="user-name" style="min-width: 250px;">{{ $course->title }}</div>
+                            <div style="min-width: 250px; display: inline-block; text-align: center;">
+                                <div class="user-name" style="display: inline-block;">{{ $course->title }}</div>
+                            </div>
                         </td>
                         <td>
-                            <div style="min-width: 200px; display: inline-block;">
+                            <div style="min-width: 200px; display: inline-block; text-align: center;">
                                 <span style="color:var(--text-secondary); font-size:0.85rem;">{{ $course->subtitle ?? 'N/A' }}</span>
                             </div>
                         </td>
