@@ -120,12 +120,14 @@
                         </div>
                     </td>
                     <td>
-                        <div style="min-width: 160px; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 0 auto;">
-                            @forelse($teacher->courses as $course)
-                                <span class="badge success">{{ $course->course_code }}</span>
-                            @empty
-                                <span class="text-muted" style="font-size: 0.8rem;">No courses assigned</span>
-                            @endforelse
+                        <div style="min-width: 160px; display: inline-block; text-align: center;">
+                            <div style="display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px;">
+                                @forelse($teacher->courses as $course)
+                                    <span class="badge success">{{ $course->course_code }}</span>
+                                @empty
+                                    <span class="text-muted" style="font-size: 0.8rem;">No courses assigned</span>
+                                @endforelse
+                            </div>
                         </div>
                     </td>
                     <td>

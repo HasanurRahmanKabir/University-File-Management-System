@@ -238,23 +238,25 @@
                             </div>
                         </td>
                         <td>
-                            <div style="min-width: 160px; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 0 auto;">
-                                @php
-                                    $enrolled = $student->enrolledCourses->pluck('id')->toArray();
-                                    $courseNames = $courses->whereIn('id', $enrolled)->pluck('course_code')->toArray();
-                                @endphp
-                                @if(count($courseNames) > 0)
-                                    @foreach(array_slice($courseNames, 0, 3) as $code)
-                                        <span class="badge info">{{ $code }}</span>
-                                    @endforeach
-                                    @if(count($courseNames) > 3)
-                                        <span class="badge neutral" title="{{ implode(', ', array_slice($courseNames, 3)) }}">
-                                            +{{ count($courseNames) - 3 }} more
-                                        </span>
+                            <div style="min-width: 160px; display: inline-block; text-align: center;">
+                                <div style="display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px;">
+                                    @php
+                                        $enrolled = $student->enrolledCourses->pluck('id')->toArray();
+                                        $courseNames = $courses->whereIn('id', $enrolled)->pluck('course_code')->toArray();
+                                    @endphp
+                                    @if(count($courseNames) > 0)
+                                        @foreach(array_slice($courseNames, 0, 3) as $code)
+                                            <span class="badge info">{{ $code }}</span>
+                                        @endforeach
+                                        @if(count($courseNames) > 3)
+                                            <span class="badge neutral" title="{{ implode(', ', array_slice($courseNames, 3)) }}">
+                                                +{{ count($courseNames) - 3 }} more
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span class="text-muted small">No courses</span>
                                     @endif
-                                @else
-                                    <span class="text-muted small">No courses</span>
-                                @endif
+                                </div>
                             </div>
                         </td>
                         <td>
