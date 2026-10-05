@@ -143,12 +143,14 @@
                             </div>
                         </td>
                         <td>
-                            <div style="min-width: 250px; max-width: 300px; display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 0 auto;">
-                                @forelse($semester->departments as $dept)
-                                    <span class="badge" style="background: #e0f2fe; color: #0284c7; margin-bottom: 2px;"><i class="fas fa-building"></i> {{ $dept->name }}</span>
-                                @empty
-                                    <span class="badge neutral"><i class="fas fa-globe"></i> Global/None</span>
-                                @endforelse
+                            <div style="min-width: 250px; display: inline-block; text-align: center;">
+                                <div style="display: inline-flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
+                                    @forelse($semester->departments as $dept)
+                                        <span class="badge" style="background: #e0f2fe; color: #0284c7; margin-bottom: 2px;"><i class="fas fa-building"></i> {{ $dept->name }}</span>
+                                    @empty
+                                        <span class="badge neutral"><i class="fas fa-globe"></i> Global/None</span>
+                                    @endforelse
+                                </div>
                             </div>
                         </td>
                         <td>
