@@ -164,3 +164,12 @@ Route::get('/databasefresh-seed', function () {
         return 'Error: '.$e->getMessage();
     }
 });
+
+Route::get('/storage-link', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('storage:link');
+        return 'Storage linked successfully! <br><a href="/">Go back home</a>';
+    } catch (\Exception $e) {
+        return 'Error creating storage link: ' . $e->getMessage();
+    }
+});
