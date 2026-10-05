@@ -184,13 +184,11 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6">
-                            <div class="empty-state d-flex flex-column align-items-center justify-content-center" style="padding: 60px 20px;">
-                                <div class="empty-ico" style="font-size: 4rem; color: var(--border-color); margin-bottom: 20px;">
-                                    <i class="fas fa-bullhorn"></i>
-                                </div>
-                                <h5 class="fw-bold" style="color: var(--tx-h);">No Announcements Found</h5>
-                                <p class="text-muted" style="max-width: 400px; margin: 0 auto; text-align: center;">There are no active course announcements in the system.</p>
+                        <td colspan="6" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-bullhorn fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                                <h6 class="text-heading fw-bold">No announcements found</h6>
+                                <p class="text-muted small">There are no active course announcements in the system.</p>
                             </div>
                         </td>
                     </tr>

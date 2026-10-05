@@ -187,9 +187,12 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="4" class="text-center py-5 text-muted">
-                                            <i class="fas fa-inbox mb-2" style="font-size: 24px; display: block; opacity: 0.5;"></i>
-                                            No recent records found.
+                                        <td colspan="4" class="text-center py-5">
+                                            <div class="empty-state">
+                                                <i class="fas fa-inbox fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                                                <h6 class="text-heading fw-bold">No recent records found</h6>
+                                                <p class="text-muted small">There are no recent user registrations or system records.</p>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforelse
@@ -216,8 +219,12 @@
                                 <div class="activity-time">{{ $activity->created_at->diffForHumans() }}</div>
                             </div>
                             @empty
-                            <div class="activity-item">
-                                <div class="activity-text">No recent activities.</div>
+                            <div class="text-center py-5">
+                                <div class="empty-state">
+                                    <i class="fas fa-history fa-3x text-muted mb-3" style="opacity: 0.2;"></i>
+                                    <h6 class="text-heading fw-bold">No recent activities</h6>
+                                    <p class="text-muted small">There are currently no recent system updates or actions to display.</p>
+                                </div>
                             </div>
                             @endforelse
                         </div>
